@@ -1,0 +1,27 @@
+package Persistence.InMemory;
+
+import Model.Annuncio;
+import Persistence.AnnuncioDao;
+
+public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implements AnnuncioDao {
+
+        private static InMemoryAnnuncioDao instance;
+
+        private InMemoryAnnuncioDao() {}
+
+        public static InMemoryAnnuncioDao getInstance() {
+            if(instance == null) {
+                instance = new InMemoryAnnuncioDao();
+            }
+            return instance;
+        }
+
+        public String getKey(Annuncio annuncio) {
+            return annuncio.getTitolo();
+        }
+
+        public Annuncio create(String titolo){
+            return new Annuncio(titolo);
+        }
+
+}
