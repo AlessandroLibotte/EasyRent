@@ -9,7 +9,7 @@ public enum PersistenceProvider {
     private final String name;
     private final Class<? extends DaoFactory> daoFactoryClass;
 
-    private PersistenceProvider(String name, Class<? extends DaoFactory> daoFactoryClass) {
+    PersistenceProvider(String name, Class<? extends DaoFactory> daoFactoryClass) {
         this.name = name;
         this.daoFactoryClass = daoFactoryClass;
     }
