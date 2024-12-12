@@ -1,7 +1,7 @@
-package Persistence.InMemory;
+package persistence.memory;
 
-import Model.User;
-import Persistence.UserDao;
+import model.User;
+import persistence.UserDao;
 
 public class InMemoryUserDao extends InMemoryDao<String, User> implements UserDao {
 

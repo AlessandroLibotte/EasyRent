@@ -1,4 +1,4 @@
-package Persistence;
+package persistence;
 
 public interface Dao<ID, E> {
 

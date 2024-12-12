@@ -1,6 +1,6 @@
-package Persistence.InMemory;
+package persistence.memory;
 
-import Persistence.DaoFactory;
+import persistence.DaoFactory;
 
 public class InMemoryDaoFactory extends DaoFactory {
 

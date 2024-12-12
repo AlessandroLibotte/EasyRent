@@ -1,7 +1,7 @@
-package Persistence.InMemory;
+package persistence.memory;
 
-import Model.Annuncio;
-import Persistence.AnnuncioDao;
+import model.Annuncio;
+import persistence.AnnuncioDao;
 
 public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implements AnnuncioDao {
 

@@ -1,19 +1,19 @@
-package View.ViewTTY;
+package view.viewcli;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import Bean.loginBean;
-import Control.LoginController;
+import bean.LoginBean;
+import control.LoginController;
 
-public class ViewTTYLogin {
+public class ViewCliLogin {
 
     boolean quit;
     BufferedReader br;
     LoginController lc;
 
-    public ViewTTYLogin() {
+    public ViewCliLogin() {
         quit = false;
         br = new BufferedReader(new InputStreamReader(System.in));
         lc = LoginController.getInstance();
@@ -48,7 +48,7 @@ public class ViewTTYLogin {
                     password = br.readLine();
                     break;
                 case "3":
-                    int val = lc.validate(new loginBean(username, password));
+                    int val = lc.validate(new LoginBean(username, password));
                     if (val == 1){
                         Printer.printMsgln("Login Successful Affittuario");
                     }
@@ -102,6 +102,7 @@ public class ViewTTYLogin {
             Printer.printMsgln("]");
             Printer.printMsgln("\t7) Register");
             Printer.printMsgln("\t8) Back");
+            Printer.printMsg(": ");
 
             String action = br.readLine();
 
@@ -138,7 +139,7 @@ public class ViewTTYLogin {
                     if (role != 0 && role != 1) role = 0;
                     break;
                 case "7":
-                    if (lc.register(new loginBean(nome, cognome, email, password, telefono, role))) {
+                    if (lc.register(new LoginBean(nome, cognome, email, password, telefono, role))) {
                         Printer.printMsgln("Registration Successful");
                         return;
                     }

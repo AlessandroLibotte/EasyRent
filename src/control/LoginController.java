@@ -1,11 +1,11 @@
-package Control;
+package control;
 
-import Bean.loginBean;
-import Model.Affittuario;
-import Model.Locatore;
-import Model.User;
-import Persistence.DaoFactory;
-import Persistence.UserDao;
+import bean.LoginBean;
+import model.Affittuario;
+import model.Locatore;
+import model.User;
+import persistence.DaoFactory;
+import persistence.UserDao;
 
 public class LoginController {
 
@@ -22,7 +22,7 @@ public class LoginController {
         return instance;
     }
 
-    public int validate(loginBean lb) {
+    public int validate(LoginBean lb) {
 
         UserDao userDao = DaoFactory.getInstance().getUserDao();
 
@@ -44,7 +44,7 @@ public class LoginController {
         return 0;
     }
 
-    public boolean register(loginBean lb) {
+    public boolean register(LoginBean lb) {
 
         UserDao userDao = DaoFactory.getInstance().getUserDao();
 

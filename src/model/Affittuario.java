@@ -1,13 +1,13 @@
-package Model;
+package model;
 
-public class Locatore extends User{
+public class Affittuario extends User{
 
     String nome;
     String cognome;
     String telefono;
-    //Vector<Annuncio> annunci;
+    // Vector<Prenotazione> prenotazioni;
 
-    public Locatore(User user) {
+    public Affittuario(User user) {
         super(user.getEmail());
         this.password = user.getPassword();
     }
@@ -32,5 +32,4 @@ public class Locatore extends User{
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-
 }

@@ -1,4 +1,4 @@
-package Persistence;
+package persistence;
 
 public abstract class DaoFactory {
 

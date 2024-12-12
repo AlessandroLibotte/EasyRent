@@ -1,6 +1,6 @@
-package Persistence;
+package persistence;
 
-import Model.Annuncio;
+import model.Annuncio;
 
 public interface AnnuncioDao extends Dao<String, Annuncio>{
 

@@ -1,6 +1,6 @@
-package Bean;
+package bean;
 
-public class loginBean {
+public class LoginBean {
 
     String nome;
     String cognome;
@@ -10,13 +10,13 @@ public class loginBean {
     int role;
 
     //login constructor
-    public loginBean(String email, String password) {
+    public LoginBean(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
     //register constructor
-    public loginBean(String nome, String cognome, String email, String password, String telefono, int role) {
+    public LoginBean(String nome, String cognome, String email, String password, String telefono, int role) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;

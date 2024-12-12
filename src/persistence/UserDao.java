@@ -1,6 +1,6 @@
-package Persistence;
+package persistence;
 
-import Model.User;
+import model.User;
 
 public interface UserDao extends Dao<String, User>{
 

@@ -1,4 +1,4 @@
-package View.ViewTTY;
+package view.viewcli;
 
 public class Printer {
     private Printer(){}

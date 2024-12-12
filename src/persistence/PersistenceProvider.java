@@ -1,6 +1,6 @@
-package Persistence;
+package persistence;
 
-import Persistence.InMemory.InMemoryDaoFactory;
+import persistence.memory.InMemoryDaoFactory;
 
 public enum PersistenceProvider {
 

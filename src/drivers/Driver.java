@@ -1,6 +1,8 @@
-import Persistence.PersistenceProvider;
-import View.ViewTTY.ViewTTYLogin;
-import Persistence.DaoFactory;
+package drivers;
+
+import persistence.PersistenceProvider;
+import view.viewcli.ViewCliLogin;
+import persistence.DaoFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -9,7 +11,7 @@ public class Driver {
 
         setPersistenceProvider("in memory");
 
-        ViewTTYLogin login = new ViewTTYLogin();
+        ViewCliLogin login = new ViewCliLogin();
         login.loginMenu();
     }
 

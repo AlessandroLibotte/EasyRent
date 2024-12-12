@@ -1,9 +1,9 @@
-package Persistence.InMemory;
+package persistence.memory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import Persistence.Dao;
+import persistence.Dao;
 
 public abstract class InMemoryDao<K, V> implements Dao<K, V> {
 
