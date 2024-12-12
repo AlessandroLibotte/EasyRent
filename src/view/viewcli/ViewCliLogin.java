@@ -86,16 +86,7 @@ public class ViewCliLogin {
             Printer.printMsgln("\t1) Enter Email [" + email + "]");
             Printer.printMsgln("\t2) Enter Password [" + password + "]");
             Printer.printMsg("\t3) Select Role [");
-            switch (role){
-                case 0:
-                    Printer.printMsg("Affittuario");
-                    break;
-                case 1:
-                    Printer.printMsg("Locatore");
-                    break;
-                default:
-                    Printer.printMsg("Invalid Role");
-            }
+            Printer.printMsg(getCurrentRole(role));
             Printer.printMsgln("]");
             Printer.printMsgln("\t4) Personal info (optional)");
             Printer.printMsgln("\t5) Register");
@@ -127,6 +118,7 @@ public class ViewCliLogin {
                     nome = personalInfo[0];
                     cognome = personalInfo[1];
                     telefono = personalInfo[2];
+                    break;
                 case "5":
                     if (lc.register(new LoginBean(nome, cognome, email, password, telefono, role))) {
                         Printer.printMsgln("Registration Successful");
@@ -181,6 +173,14 @@ public class ViewCliLogin {
             }
         }
         return null;
+    }
+
+    String getCurrentRole(int role){
+        return switch (role) {
+            case 0 -> "Affittuario";
+            case 1 -> "Locatore";
+            default -> "Invalid Role";
+        };
     }
 
 }
