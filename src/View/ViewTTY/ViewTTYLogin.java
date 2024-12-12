@@ -26,36 +26,36 @@ public class ViewTTYLogin {
 
         while(!quit) {
 
-            System.out.println("EasyRent Login");
-            System.out.println("\t1) Enter Username [" + username + "]");
-            System.out.println("\t2) Enter Password [" + password + "]");
-            System.out.println("\t3) Login");
-            System.out.println("\t4) Register");
-            System.out.println("\t5) Quit");
+            Printer.printMsg("EasyRent Login");
+            Printer.printMsg("\t1) Enter Username [" + username + "]");
+            Printer.printMsg("\t2) Enter Password [" + password + "]");
+            Printer.printMsg("\t3) Login");
+            Printer.printMsg("\t4) Register");
+            Printer.printMsg("\t5) Quit");
             System.out.print(": ");
 
             String action = br.readLine();
 
             switch(action) {
                 case "1":
-                    System.out.println("Enter Username");
+                    Printer.printMsg("Enter Username");
                     System.out.print("\t: ");
                     username = br.readLine();
                     break;
                 case "2":
-                    System.out.println("Enter Password");
+                    Printer.printMsg("Enter Password");
                     System.out.print("\t: ");
                     password = br.readLine();
                     break;
                 case "3":
                     int val = lc.validate(new loginBean(username, password));
                     if (val == 1){
-                        System.out.println("Login Successful Affittuario");
+                        Printer.printMsg("Login Successful Affittuario");
                     }
                     else if (val == 2){
-                        System.out.println("Login Successful Locatore");
+                        Printer.printMsg("Login Successful Locatore");
                     }
-                    else System.out.println("Invalid Username or Password");
+                    else Printer.printMsg("Invalid Username or Password");
                     break;
                 case "4":
                     registerMenu();
@@ -82,12 +82,12 @@ public class ViewTTYLogin {
 
         while(!quit) {
 
-            System.out.println("Register");
-            System.out.println("\t1) Enter Name [" + nome + "]");
-            System.out.println("\t2) Enter Surname [" + cognome + "]");
-            System.out.println("\t3) Enter Email [" + email + "]");
-            System.out.println("\t4) Enter Password [" + password + "]");
-            System.out.println("\t5) Enter Phone Number [" + telefono + "]");
+            Printer.printMsg("Register");
+            Printer.printMsg("\t1) Enter Name [" + nome + "]");
+            Printer.printMsg("\t2) Enter Surname [" + cognome + "]");
+            Printer.printMsg("\t3) Enter Email [" + email + "]");
+            Printer.printMsg("\t4) Enter Password [" + password + "]");
+            Printer.printMsg("\t5) Enter Phone Number [" + telefono + "]");
             System.out.print("\t6) Select Role [");
             switch (role){
                 case 0:
@@ -97,50 +97,50 @@ public class ViewTTYLogin {
                     System.out.print("Locatore");
                     break;
             }
-            System.out.println("]");
-            System.out.println("\t7) Register");
-            System.out.println("\t8) Back");
+            Printer.printMsg("]");
+            Printer.printMsg("\t7) Register");
+            Printer.printMsg("\t8) Back");
 
             String action = br.readLine();
 
             switch(action) {
                 case "1":
-                    System.out.println("Enter Name");
+                    Printer.printMsg("Enter Name");
                     System.out.print("\t: ");
                     nome = br.readLine();
                     break;
                 case "2":
-                    System.out.println("Enter Surname");
+                    Printer.printMsg("Enter Surname");
                     System.out.print("\t: ");
                     cognome = br.readLine();
                     break;
                 case "3":
-                    System.out.println("Enter Email");
+                    Printer.printMsg("Enter Email");
                     System.out.print("\t: ");
                     email = br.readLine();
                     break;
                 case "4":
-                    System.out.println("Enter Password");
+                    Printer.printMsg("Enter Password");
                     System.out.print("\t: ");
                     password = br.readLine();
                     break;
                 case "5":
-                    System.out.println("Enter Phone Number");
+                    Printer.printMsg("Enter Phone Number");
                     System.out.print("\t: ");
                     telefono = br.readLine();
                     break;
                 case "6":
-                    System.out.println("Select Role [0: affittuario, 1: locatore]");
+                    Printer.printMsg("Select Role [0: affittuario, 1: locatore]");
                     System.out.print("\t: ");
                     role = Integer.parseInt(br.readLine());
                     if (role != 0 && role != 1) role = 0;
                     break;
                 case "7":
                     if (lc.register(new loginBean(nome, cognome, email, password, telefono, role))) {
-                        System.out.println("Registration Successful");
+                        Printer.printMsg("Registration Successful");
                         return;
                     }
-                    else System.out.println("Registration unsuccessful");
+                    else Printer.printMsg("Registration unsuccessful");
                     break;
                 case "8":
                     return;
