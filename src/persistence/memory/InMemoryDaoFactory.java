@@ -12,4 +12,8 @@ public class InMemoryDaoFactory extends DaoFactory {
         return InMemoryAnnuncioDao.getInstance();
     }
 
+    public InMemoryImmobileDao getImmobileDao() {
+        return InMemoryImmobileDao.getInstance();
+    }
+
 }

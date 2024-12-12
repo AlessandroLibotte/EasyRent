@@ -22,6 +22,13 @@ public class LoginController {
         return instance;
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
     public int validate(LoginBean lb) {
 
         UserDao userDao = DaoFactory.getInstance().getUserDao();
