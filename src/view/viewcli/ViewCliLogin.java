@@ -172,7 +172,7 @@ public class ViewCliLogin {
                     break;
             }
         }
-        return null;
+        return new String[0];
     }
 
     String getCurrentRole(int role){
