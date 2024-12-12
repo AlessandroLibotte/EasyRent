@@ -11,13 +11,13 @@ public abstract class DaoFactory {
         persistenceProvider = provider;
     }
 
-    public static DaoFactory getInstance() throws NoImplementationForPersistenceProviderException {
+    public static DaoFactory getInstance() {
         if (instance == null) {
             try {
                 instance = persistenceProvider.getDaoFactoryClass().getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
                      InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                throw new NoImplementationForPersistenceProviderException(persistenceProvider, e);
+                throw new RuntimeException();
             }
         }
         return instance;
