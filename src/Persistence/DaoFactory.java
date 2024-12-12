@@ -17,7 +17,7 @@ public abstract class DaoFactory {
                 instance = persistenceProvider.getDaoFactoryClass().getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
                      InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                throw new RuntimeException();
+                throw new IllegalArgumentException("Couldn't load instance");
             }
         }
         return instance;
