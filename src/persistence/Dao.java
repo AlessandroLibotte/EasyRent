@@ -1,12 +1,12 @@
 package persistence;
 
-public interface Dao<ID, E> {
+public interface Dao<K, E> {
 
-    E create(ID id);
+    E create(K id);
 
-    E load(ID id);
+    E load(K id);
     void store(E entity);
-    void delete(ID id);
-    boolean exists(ID id);
+    void delete(K id);
+    boolean exists(K id);
 
 }
