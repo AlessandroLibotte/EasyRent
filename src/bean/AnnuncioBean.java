@@ -1,15 +1,16 @@
 package bean;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class AnnuncioBean {
 
     String titolo;
+    String newTitolo;
     String indirizzo;
     String descrizione;
     boolean[] servizi;
 
-    Vector<String> annunci;
+    ArrayList<String> annunci;
 
 
     public AnnuncioBean(String titolo, String indirizzo, String Descrizione, boolean[] servizi) {
@@ -19,8 +20,20 @@ public class AnnuncioBean {
         this.servizi = servizi;
     }
 
-    public AnnuncioBean(Vector<String> annunci) {
+    public AnnuncioBean(ArrayList<String> annunci) {
         this.annunci = annunci;
+    }
+
+    public AnnuncioBean(String titolo) {
+        this.titolo = titolo;
+    }
+
+    public AnnuncioBean(String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi) {
+        this.titolo = oldTitolo;
+        this.newTitolo = newTitolo;
+        this.indirizzo = indirizzo;
+        this.descrizione = descrizione;
+        this.servizi = servizi;
     }
 
     public String getTitolo() {
@@ -28,6 +41,13 @@ public class AnnuncioBean {
     }
     public void setTitolo(String titolo) {
         this.titolo = titolo;
+    }
+
+    public String getNewTitolo() {
+        return newTitolo;
+    }
+    public void setNewTitolo(String newTitolo) {
+        this.newTitolo = newTitolo;
     }
 
     public String getIndirizzo() {
@@ -51,10 +71,11 @@ public class AnnuncioBean {
         this.servizi = servizi;
     }
 
-    public Vector<String> getAnnunci() {
-        return annunci;
+    public ArrayList<String> getAnnunci() {
+        if(annunci != null) return annunci;
+        return new ArrayList<>();
     }
-    public void setAnnunci(Vector<String> annunci) {
+    public void setAnnunci(ArrayList<String> annunci) {
         this.annunci = annunci;
     }
 
