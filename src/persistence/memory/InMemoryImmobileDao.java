@@ -20,8 +20,8 @@ public class InMemoryImmobileDao extends InMemoryDao<String, Immobile> implement
         return immobile.getIndirizzo();
     }
 
-    public Immobile create(String Key){
-        return new Immobile(Key);
+    public Immobile create(String key){
+        return new Immobile(key);
     }
 
 }

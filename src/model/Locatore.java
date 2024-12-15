@@ -1,13 +1,13 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Locatore extends User{
 
     String nome;
     String cognome;
     String telefono;
-    ArrayList<Annuncio> annunci;
+    List<Annuncio> annunci;
 
     public Locatore(User user) {
         super(user.getEmail());
@@ -35,10 +35,10 @@ public class Locatore extends User{
         this.telefono = telefono;
     }
 
-    public ArrayList<Annuncio> getAnnunci() {
+    public List<Annuncio> getAnnunci() {
         return annunci;
     }
-    public void setAnnunci(ArrayList<Annuncio> annunci) {
+    public void setAnnunci(List<Annuncio> annunci) {
         this.annunci = annunci;
     }
 

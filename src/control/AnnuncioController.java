@@ -56,7 +56,7 @@ public class AnnuncioController {
         LoginController lc = LoginController.getInstance();
 
         Locatore loc = (Locatore) lc.getCurrentUser();
-        ArrayList<Annuncio> anns = loc.getAnnunci();
+        ArrayList<Annuncio> anns = (ArrayList<Annuncio>) loc.getAnnunci();
 
         if (anns == null) {anns = new ArrayList<>();}
 
@@ -90,7 +90,7 @@ public class AnnuncioController {
         //get current user's annunci
         LoginController lc = LoginController.getInstance();
         Locatore loc = (Locatore) lc.getCurrentUser();
-        ArrayList<Annuncio> anns = loc.getAnnunci();
+        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
 
         //remove old annuncio from current user's annunci
         anns.remove(ann);
@@ -123,7 +123,7 @@ public class AnnuncioController {
         LoginController lc = LoginController.getInstance();
         Locatore loc = (Locatore) lc.getCurrentUser();
 
-        ArrayList<Annuncio> anns = loc.getAnnunci();
+        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
         if (anns == null) {return new AnnuncioBean(new ArrayList<>());}
 
         ArrayList<String> annTitls = new ArrayList<>();
@@ -149,7 +149,7 @@ public class AnnuncioController {
 
         Locatore loc = (Locatore) lc.getCurrentUser();
 
-        ArrayList<Annuncio> anns = loc.getAnnunci();
+        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
 
         anns.remove(annuncioDao.load(annBean.getTitolo()));
 
