@@ -3,6 +3,7 @@ package view.viewcli;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import bean.LoginBean;
 import control.LoginController;
@@ -54,6 +55,8 @@ public class ViewCliLogin {
                     }
                     else if (val == 2){
                         Printer.printMsgln("Login Successful Locatore");
+                        ViewCliLocatore view = new ViewCliLocatore();
+                        quit = view.mainMenu();
                     }
                     else Printer.printMsgln("Invalid Username or Password");
                     break;
@@ -113,8 +116,8 @@ public class ViewCliLogin {
                     if (role != 0 && role != 1) role = 0;
                     break;
                 case "4":
-                    String[] personalInfo = registerPersonalDataMenu();
-                    if (personalInfo == null) break;
+                    String[] personalInfo = registerPersonalDataMenu(nome, cognome, telefono);
+                    if (Arrays.equals(personalInfo, new String[0])) break;
                     nome = personalInfo[0];
                     cognome = personalInfo[1];
                     telefono = personalInfo[2];
@@ -134,11 +137,7 @@ public class ViewCliLogin {
         }
     }
 
-    String[] registerPersonalDataMenu() throws IOException {
-
-        String nome = "";
-        String cognome = "";
-        String telefono = "";
+    String[] registerPersonalDataMenu(String nome, String cognome, String telefono) throws IOException {
 
         while(!quit) {
 
@@ -147,6 +146,8 @@ public class ViewCliLogin {
             Printer.printMsgln("\t2) Enter Surname [" + cognome + "]");
             Printer.printMsgln("\t3) Enter Phone Number [" + telefono + "]");
             Printer.printMsgln("\t4) Confirm");
+            Printer.printMsgln("\t5) Back");
+            Printer.printMsg(": ");
 
             String action = br.readLine();
 
@@ -168,6 +169,8 @@ public class ViewCliLogin {
                     break;
                 case "4":
                     return new String[]{nome, cognome, telefono};
+                case "5":
+                    return new String[0];
                 default:
                     break;
             }

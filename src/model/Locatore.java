@@ -1,11 +1,13 @@
 package model;
 
+import java.util.List;
+
 public class Locatore extends User{
 
     String nome;
     String cognome;
     String telefono;
-    //Vector<Annuncio> annunci;
+    List<Annuncio> annunci;
 
     public Locatore(User user) {
         super(user.getEmail());
@@ -31,6 +33,13 @@ public class Locatore extends User{
     }
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public List<Annuncio> getAnnunci() {
+        return annunci;
+    }
+    public void setAnnunci(List<Annuncio> annunci) {
+        this.annunci = annunci;
     }
 
 }

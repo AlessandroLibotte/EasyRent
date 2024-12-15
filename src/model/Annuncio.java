@@ -4,6 +4,7 @@ public class Annuncio {
 
     String titolo;
     String descrizione;
+    Immobile immobile;
     int voto;
 
     public Annuncio(String titolo){
@@ -22,6 +23,13 @@ public class Annuncio {
     }
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public Immobile getImmobile() {
+        return immobile;
+    }
+    public void setImmobile(Immobile immobile) {
+        this.immobile = immobile;
     }
 
     public int getVoto() {
