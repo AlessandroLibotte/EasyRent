@@ -73,15 +73,13 @@ public class AnnuncioController {
     }
 
     public boolean modifcaAnnuncio(AnnuncioBean ab){
-        /*
-            TODO: implement modification failure
-        */
 
         //get daos
         AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
         ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
 
         //load old annuncio
+        if(!annuncioDao.exists(ab.getOldTitolo())) return false;
         Annuncio ann = annuncioDao.load(ab.getOldTitolo());
 
         //remove old annuncio from memory
