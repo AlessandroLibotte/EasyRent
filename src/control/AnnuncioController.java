@@ -79,10 +79,10 @@ public class AnnuncioController {
         ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
 
         //load old annuncio
-        Annuncio ann = annuncioDao.load(ab.getTitolo());
+        Annuncio ann = annuncioDao.load(ab.getOldTitolo());
 
         //remove old annuncio from memory
-        annuncioDao.delete(ab.getTitolo());
+        annuncioDao.delete(ab.getOldTitolo());
 
         //get current user's annunci
         LoginController lc = LoginController.getInstance();
@@ -93,7 +93,7 @@ public class AnnuncioController {
         anns.remove(ann);
 
         //set new annuncio's parameters
-        ann.setTitolo(ab.getNewTitolo());
+        ann.setTitolo(ab.getTitolo());
         ann.setDescrizione(ab.getDescrizione());
 
         Immobile imm = getCreateImmobile(ab.getIndirizzo());
@@ -139,6 +139,10 @@ public class AnnuncioController {
     }
 
     public void eliminaAnnuncio(AnnuncioBean annBean){
+
+        /*
+        To be implemented
+         */
 
     }
 

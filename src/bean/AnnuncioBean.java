@@ -1,26 +1,27 @@
 package bean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AnnuncioBean {
 
     String titolo;
-    String newTitolo;
+    String oldTitolo;
     String indirizzo;
     String descrizione;
     boolean[] servizi;
 
-    ArrayList<String> annunci;
+    List<String> annunci;
 
 
-    public AnnuncioBean(String titolo, String indirizzo, String Descrizione, boolean[] servizi) {
+    public AnnuncioBean(String titolo, String indirizzo, String descrizione, boolean[] servizi) {
         this.titolo = titolo;
         this.indirizzo = indirizzo;
-        this.descrizione = Descrizione;
+        this.descrizione = descrizione;
         this.servizi = servizi;
     }
 
-    public AnnuncioBean(ArrayList<String> annunci) {
+    public AnnuncioBean(List<String> annunci) {
         this.annunci = annunci;
     }
 
@@ -29,8 +30,8 @@ public class AnnuncioBean {
     }
 
     public AnnuncioBean(String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi) {
-        this.titolo = oldTitolo;
-        this.newTitolo = newTitolo;
+        this.oldTitolo = oldTitolo;
+        this.titolo = newTitolo;
         this.indirizzo = indirizzo;
         this.descrizione = descrizione;
         this.servizi = servizi;
@@ -43,11 +44,11 @@ public class AnnuncioBean {
         this.titolo = titolo;
     }
 
-    public String getNewTitolo() {
-        return newTitolo;
+    public String getOldTitolo() {
+        return oldTitolo;
     }
-    public void setNewTitolo(String newTitolo) {
-        this.newTitolo = newTitolo;
+    public void setOldTitolo(String newTitolo) {
+        this.oldTitolo = newTitolo;
     }
 
     public String getIndirizzo() {
@@ -71,11 +72,11 @@ public class AnnuncioBean {
         this.servizi = servizi;
     }
 
-    public ArrayList<String> getAnnunci() {
+    public List<String> getAnnunci() {
         if(annunci != null) return annunci;
         return new ArrayList<>();
     }
-    public void setAnnunci(ArrayList<String> annunci) {
+    public void setAnnunci(List<String> annunci) {
         this.annunci = annunci;
     }
 
