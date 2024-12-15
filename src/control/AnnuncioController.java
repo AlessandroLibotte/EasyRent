@@ -73,6 +73,9 @@ public class AnnuncioController {
     }
 
     public boolean modifcaAnnuncio(AnnuncioBean ab){
+        /*
+            TODO: implement modification failure
+        */
 
         //get daos
         AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
@@ -140,9 +143,21 @@ public class AnnuncioController {
 
     public void eliminaAnnuncio(AnnuncioBean annBean){
 
-        /*
-        To be implemented
-         */
+        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
+
+        LoginController lc = LoginController.getInstance();
+
+        Locatore loc = (Locatore) lc.getCurrentUser();
+
+        ArrayList<Annuncio> anns = loc.getAnnunci();
+
+        anns.remove(annuncioDao.load(annBean.getTitolo()));
+
+        loc.setAnnunci(anns);
+
+        lc.setCurrentUser(loc);
+
+        annuncioDao.delete(annBean.getTitolo());
 
     }
 

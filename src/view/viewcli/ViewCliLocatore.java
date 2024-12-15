@@ -77,7 +77,9 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            Printer.printMsgln("Crea nuovo Annuncio ");
+            if(mod) Printer.printMsgln("Crea nuovo Annuncio ");
+            else Printer.printMsgln("Modifica Annuncio ");
+
             Printer.printMsgln("\t1) Titolo: " + titolo);
             Printer.printMsgln("\t2) Indirizzo: " + indirizzo);
             Printer.printMsgln("\t3) Descrizione: " + descrizione);
@@ -124,9 +126,12 @@ public class ViewCliLocatore {
 
     private String creaModificaAnnuncio(boolean mod, AnnuncioBean annuncioBean) {
         if(mod){
-            ac.modifcaAnnuncio(annuncioBean);
-            Printer.printMsgln("Annuncio modificato");
-            return annuncioBean.getTitolo();
+            if (ac.modifcaAnnuncio(annuncioBean)){
+                Printer.printMsgln("Annuncio modificato");
+                return annuncioBean.getTitolo();
+            }
+            else Printer.printMsgln("Errore durante la modifica");
+            return annuncioBean.getOldTitolo();
         }
 
         if (ac.creaAnnuncio(annuncioBean)) {
@@ -166,13 +171,14 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            Printer.printMsgln("Annuncio: " + ann.getTitolo());
-            Printer.printMsgln("Indirizzo: " + ann.getIndirizzo());
-            Printer.printMsgln("Descrizione: " + ann.getDescrizione());
-            Printer.printMsgln("Servizi: " + Arrays.toString(ann.getServizi()));
-            Printer.printMsgln("\t1) Modifica annuncio");
-            Printer.printMsgln("\t2) Elimina annuncio");
-            Printer.printMsgln("\t3) Back");
+            Printer.printMsgln("Pagina Annuncio");
+            Printer.printMsgln("\tTitolo: " + ann.getTitolo());
+            Printer.printMsgln("\tIndirizzo: " + ann.getIndirizzo());
+            Printer.printMsgln("\tDescrizione: " + ann.getDescrizione());
+            Printer.printMsgln("\tServizi: " + Arrays.toString(ann.getServizi()));
+            Printer.printMsgln("1) Modifica annuncio");
+            Printer.printMsgln("2) Elimina annuncio");
+            Printer.printMsgln("3) Back");
 
             Printer.printMsg(": ");
             String action = br.readLine();
