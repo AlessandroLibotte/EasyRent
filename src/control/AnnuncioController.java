@@ -4,6 +4,7 @@ import bean.AnnuncioBean;
 import model.Annuncio;
 import model.Immobile;
 import model.Locatore;
+import model.Prenotazione;
 import persistence.AnnuncioDao;
 import persistence.DaoFactory;
 import persistence.ImmobileDao;
@@ -50,8 +51,11 @@ public class AnnuncioController {
 
         Immobile imm = getCreateImmobile(ab.getIndirizzo());
         imm.setServizi(ab.getServizi());
+        imm.setMaxOspiti(ab.getMaxOspiti());
 
         ann.setImmobile(imm);
+
+        ann.setPrenotazioni(new ArrayList<>());
 
         LoginController lc = LoginController.getInstance();
 
@@ -99,6 +103,7 @@ public class AnnuncioController {
 
         Immobile imm = getCreateImmobile(ab.getIndirizzo());
         imm.setServizi(ab.getServizi());
+        imm.setMaxOspiti(ab.getMaxOspiti());
 
         ann.setImmobile(imm);
 
@@ -136,7 +141,7 @@ public class AnnuncioController {
         AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
         return new AnnuncioBean(ann.getTitolo(), ann.getImmobile().getIndirizzo(), ann.getDescrizione(),
-                ann.getImmobile().getServizi());
+                ann.getImmobile().getServizi(), ann.getImmobile().getMaxOspiti());
     }
 
     public void eliminaAnnuncio(AnnuncioBean annBean){
@@ -156,6 +161,25 @@ public class AnnuncioController {
         lc.setCurrentUser(loc);
 
         annuncioDao.delete(annBean.getTitolo());
+
+    }
+
+    public AnnuncioBean getPrenotazioniAnnuncio(AnnuncioBean annBean){
+
+        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
+
+        Annuncio ann = annuncioDao.load(annBean.getTitolo());
+
+        ArrayList<Prenotazione> prens = (ArrayList<Prenotazione>)ann.getPrenotazioni();
+        if(prens == null) return new AnnuncioBean(new ArrayList<>());
+
+        ArrayList<String> prenotatori = new ArrayList<>();
+
+        for(Prenotazione pren : prens){
+            prenotatori.add(pren.getPrenotante());
+        }
+
+        return new AnnuncioBean(prenotatori);
 
     }
 

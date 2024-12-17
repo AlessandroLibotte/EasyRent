@@ -59,6 +59,7 @@ public class ViewCliLocatore {
         String indirizzo;
         String descrizione;
         boolean[] servizi;
+        int maxOspiti;
         String oldTitolo = titolo;
 
         boolean mod = false;
@@ -69,10 +70,12 @@ public class ViewCliLocatore {
             indirizzo = ann.getIndirizzo();
             descrizione = ann.getDescrizione();
             servizi = ann.getServizi();
+            maxOspiti = ann.getMaxOspiti();
         } else {
             indirizzo = "";
             descrizione = "";
             servizi = new boolean[0];
+            maxOspiti = 1;
         }
 
         while(!quit) {
@@ -84,11 +87,12 @@ public class ViewCliLocatore {
             Printer.printMsgln("\t2) Indirizzo: " + indirizzo);
             Printer.printMsgln("\t3) Descrizione: " + descrizione);
             Printer.printMsgln("\t4) Servizi: " + Arrays.toString(servizi));
+            Printer.printMsgln("\t5) Massimo numero ospiti: " + maxOspiti);
 
-            if(mod) Printer.printMsgln("\t5) Appica modifiche");
-            else Printer.printMsgln("\t5) Crea");
+            if(mod) Printer.printMsgln("\t6) Appica modifiche");
+            else Printer.printMsgln("\t6) Crea");
 
-            Printer.printMsgln("\t6) Annulla");
+            Printer.printMsgln("\t7) Annulla");
             Printer.printMsg(": ");
 
             String action = br.readLine();
@@ -114,8 +118,13 @@ public class ViewCliLocatore {
                     Printer.printMsg("\t: ");
                     break;
                 case "5":
-                    return creaModificaAnnuncio(mod, new AnnuncioBean(oldTitolo, titolo, indirizzo, descrizione, servizi));
+                    Printer.printMsgln("Massimo numero ospiti:");
+                    Printer.printMsg("\t: ");
+                    maxOspiti = Integer.parseInt(br.readLine());
+                    break;
                 case "6":
+                    return creaModificaAnnuncio(mod, new AnnuncioBean(oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti));
+                case "7":
                     return "";
                 default:
                     break;
@@ -176,26 +185,55 @@ public class ViewCliLocatore {
             Printer.printMsgln("\tIndirizzo: " + ann.getIndirizzo());
             Printer.printMsgln("\tDescrizione: " + ann.getDescrizione());
             Printer.printMsgln("\tServizi: " + Arrays.toString(ann.getServizi()));
-            Printer.printMsgln("1) Modifica annuncio");
-            Printer.printMsgln("2) Elimina annuncio");
-            Printer.printMsgln("3) Back");
+            Printer.printMsgln("\tMassimo numero ospiti: " + ann.getMaxOspiti());
+            Printer.printMsgln("1) Visualizza Prenotazioni");
+            Printer.printMsgln("2) Modifica annuncio");
+            Printer.printMsgln("3) Elimina annuncio");
+            Printer.printMsgln("4) Back");
 
             Printer.printMsg(": ");
             String action = br.readLine();
 
             switch (action) {
                 case "1":
+                    paginaPrenotazioni(ann.getTitolo());
+                    break;
+                case "2":
                     String newTitolo = creaModificaAnnuncioMenu(ann.getTitolo());
                     ann = ac.getAnnuncio(new AnnuncioBean(newTitolo));
                     break;
-                case "2":
+                case "3":
                     ac.eliminaAnnuncio(ann);
                     return;
-                case "3":
+                case "4":
                     return;
                 default:
                     break;
             }
+        }
+    }
+
+    public void paginaPrenotazioni(String titolo) throws IOException {
+
+        ArrayList<String> prenotazioni = (ArrayList<String>) ac.getPrenotazioniAnnuncio(new AnnuncioBean(titolo)).getAnnunci();
+
+        while(!quit) {
+
+            int i = 1;
+            Printer.printMsgln("Prenotazioni per l'annuncio " + titolo +": ");
+            for (String p: prenotazioni) {
+                Printer.printMsgln("\t" + i + ") " + p);
+                i++;
+            }
+            Printer.printMsgln("\t"+ i+ ") Back");
+
+            Printer.printMsg(": ");
+            int action = Integer.parseInt(br.readLine());
+
+            if (action <= 0 || action > i) continue;
+
+            if (action == i) return;
+
         }
     }
 

@@ -1,6 +1,8 @@
 package persistence.memory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import persistence.Dao;
@@ -32,6 +34,10 @@ public abstract class InMemoryDao<K, V> implements Dao<K, V> {
     public void store(V entity) {
         K key = getKey(entity);
         store(key, entity);
+    }
+
+    public List<V> loadAll(){
+        return new ArrayList<>(memory.values());
     }
 
     protected abstract K getKey(V value);

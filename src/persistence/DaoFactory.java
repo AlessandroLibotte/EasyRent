@@ -15,5 +15,6 @@ public abstract class DaoFactory {
     public abstract UserDao getUserDao();
     public abstract AnnuncioDao getAnnuncioDao();
     public abstract ImmobileDao getImmobileDao();
+    public abstract PrenotazioneDao getPrenotazioneDao();
 }
 

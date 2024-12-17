@@ -11,14 +11,17 @@ public class AnnuncioBean {
     String descrizione;
     boolean[] servizi;
 
+    int maxOspiti;
+
     List<String> annunci;
 
 
-    public AnnuncioBean(String titolo, String indirizzo, String descrizione, boolean[] servizi) {
+    public AnnuncioBean(String titolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
         this.titolo = titolo;
         this.indirizzo = indirizzo;
         this.descrizione = descrizione;
         this.servizi = servizi;
+        this.maxOspiti = maxOspiti;
     }
 
     public AnnuncioBean(List<String> annunci) {
@@ -29,12 +32,13 @@ public class AnnuncioBean {
         this.titolo = titolo;
     }
 
-    public AnnuncioBean(String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi) {
+    public AnnuncioBean(String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
         this.oldTitolo = oldTitolo;
         this.titolo = newTitolo;
         this.indirizzo = indirizzo;
         this.descrizione = descrizione;
         this.servizi = servizi;
+        this.maxOspiti = maxOspiti;
     }
 
     public String getTitolo() {
@@ -78,6 +82,14 @@ public class AnnuncioBean {
     }
     public void setAnnunci(List<String> annunci) {
         this.annunci = annunci;
+    }
+
+
+    public int getMaxOspiti() {
+        return maxOspiti;
+    }
+    public void setMaxOspiti(int maxOspiti) {
+        this.maxOspiti = maxOspiti;
     }
 
 }

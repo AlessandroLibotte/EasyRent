@@ -1,11 +1,22 @@
 package model;
 
+import java.util.List;
+
 public class Annuncio {
 
     String titolo;
     String descrizione;
     Immobile immobile;
     int voto;
+    List<Prenotazione> prenotazioni;
+
+    public List<Prenotazione> getPrenotazioni() {
+        return prenotazioni;
+    }
+
+    public void setPrenotazioni(List<Prenotazione> prenotazioni) {
+        this.prenotazioni = prenotazioni;
+    }
 
     public Annuncio(String titolo){
         this.titolo = titolo;

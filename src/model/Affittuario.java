@@ -5,7 +5,6 @@ public class Affittuario extends User{
     String nome;
     String cognome;
     String telefono;
-    // Vector<Prenotazione> prenotazioni;
 
     public Affittuario(User user) {
         super(user.getEmail());
@@ -32,4 +31,5 @@ public class Affittuario extends User{
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
 }

@@ -52,6 +52,8 @@ public class ViewCliLogin {
                     int val = lc.validate(new LoginBean(username, password));
                     if (val == 1){
                         Printer.printMsgln("Login Successful Affittuario");
+                        ViewCliAffittuario view = new ViewCliAffittuario();
+                        quit = view.mainMenu();
                     }
                     else if (val == 2){
                         Printer.printMsgln("Login Successful Locatore");

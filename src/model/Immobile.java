@@ -3,6 +3,16 @@ package model;
 public class Immobile {
 
     String indirizzo;
+    int maxOspiti;
+
+    public int getMaxOspiti() {
+        return maxOspiti;
+    }
+
+    public void setMaxOspiti(int maxOspiti) {
+        this.maxOspiti = maxOspiti;
+    }
+
     boolean[] servizi;
 
     public Immobile(String indirizzo) {
