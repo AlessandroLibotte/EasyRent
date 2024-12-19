@@ -1,10 +1,13 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Affittuario extends User{
 
     String nome;
     String cognome;
     String telefono;
+    ArrayList<Annuncio> prenotazioni;
 
     public Affittuario(User user) {
         super(user.getEmail());
@@ -32,4 +35,10 @@ public class Affittuario extends User{
         this.telefono = telefono;
     }
 
+    public ArrayList<Annuncio> getPrenotazioni() {
+        return prenotazioni;
+    }
+    public void setPrenotazioni(ArrayList<Annuncio> prenotazioni) {
+        this.prenotazioni = prenotazioni;
+    }
 }

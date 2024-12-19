@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static view.viewcli.ViewCliUtils.dynamicMenu;
+
 public class ViewCliLocatore {
 
     boolean quit;
@@ -80,8 +82,8 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            if(mod) Printer.printMsgln("Crea nuovo Annuncio ");
-            else Printer.printMsgln("Modifica Annuncio ");
+            if(mod) Printer.printMsgln("Modifica Annuncio");
+            else Printer.printMsgln("Crea nuovo Annuncio ");
 
             Printer.printMsgln("\t1) Titolo: " + titolo);
             Printer.printMsgln("\t2) Indirizzo: " + indirizzo);
@@ -155,20 +157,13 @@ public class ViewCliLocatore {
         while(!quit) {
 
             ArrayList<String> titles = (ArrayList<String>) ac.getCurrentUserAnnunci().getAnnunci();
-            int i = 1;
             Printer.printMsgln("I tuoi Annunci: ");
-            for (String t: titles) {
-                Printer.printMsgln("\t" + i + ") " + t);
-                i++;
-            }
-            Printer.printMsgln("\t"+ i+ ") Back");
 
-            Printer.printMsg(": ");
-            int action = Integer.parseInt(br.readLine());
+            int action = dynamicMenu(titles);
 
-            if (action <= 0 || action > i) continue;
+            if (action <= 0 || action > titles.size()+1) continue;
 
-            if (action == i) return;
+            if (action == titles.size()+1) return;
 
             paginaAnnuncio(titles.get(action-1));
 
@@ -219,20 +214,13 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            int i = 1;
             Printer.printMsgln("Prenotazioni per l'annuncio " + titolo +": ");
-            for (String p: prenotazioni) {
-                Printer.printMsgln("\t" + i + ") " + p);
-                i++;
-            }
-            Printer.printMsgln("\t"+ i+ ") Back");
 
-            Printer.printMsg(": ");
-            int action = Integer.parseInt(br.readLine());
+            int action = dynamicMenu(prenotazioni);
 
-            if (action <= 0 || action > i) continue;
+            if (action <= 0 || action > prenotazioni.size()+1) continue;
 
-            if (action == i) return;
+            if (action == prenotazioni.size()+1) return;
 
         }
     }

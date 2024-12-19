@@ -1,5 +1,7 @@
 package bean;
 
+import model.Prenotazione;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -23,12 +25,18 @@ public class PrenotazioneBean {
         this.numOspiti = numOspiti;
     }
 
-    public LocalDate formatDate(String strDate) throws DateTimeParseException {
-        return LocalDate.parse(strDate, dateFormatter);
-    }
-
     public PrenotazioneBean(List<String> searchResults) {
         this.searchResults = searchResults;
+    }
+
+    public PrenotazioneBean(Prenotazione p){
+        this.startDate = p.getStartDate();
+        this.endDate = p.getEndDate();
+        this.numOspiti = p.getNumOspiti();
+    }
+
+    public LocalDate formatDate(String strDate) throws DateTimeParseException {
+        return LocalDate.parse(strDate, dateFormatter);
     }
 
     public List<String> getSearchResults() {

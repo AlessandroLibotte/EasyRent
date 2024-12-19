@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
+import static view.viewcli.ViewCliUtils.dynamicMenu;
+
 
 public class ViewCliAffittuario {
 
@@ -41,6 +43,9 @@ public class ViewCliAffittuario {
                 case "1":
                     searchMenu();
                     break;
+                case "3":
+                    menuPrenotazioni();
+                    break;
                 case "4":
                     return false;
                 case "5":
@@ -50,6 +55,53 @@ public class ViewCliAffittuario {
             }
         }
         return false;
+    }
+
+    public void menuPrenotazioni() throws IOException {
+
+        PrenotazioneBean bean = pc.getPrenotazioni();
+
+        while(!quit) {
+
+            Printer.printMsgln("Hai prenotazioni per i seguenti annunci:");
+
+            int action = dynamicMenu(bean.getSearchResults());
+
+            if (action < 0 || action > bean.getSearchResults().size()+1) continue;
+
+            if (action == bean.getSearchResults().size()+1) return;
+
+            paginaPrenotazione(bean.getSearchResults().get(action-1));
+            return;
+
+        }
+
+    }
+
+    public void paginaPrenotazione(String titolo) throws IOException {
+
+        PrenotazioneBean pb = pc.getPrenotazioneInfo(new AnnuncioBean(titolo));
+
+        Printer.printMsgln("Dettagli della prenotazione per l'annuncio " + titolo);
+        Printer.printMsgln("\tData inizio soggiorno: " + pb.getStartDate());
+        Printer.printMsgln("\tData fine soggiorno: " + pb.getEndDate());
+        Printer.printMsgln("\tNumero ospiti: " + pb.getNumOspiti());
+        Printer.printMsgln("1) Pagina dell'annuncio");
+        Printer.printMsgln("2) Back");
+        Printer.printMsg(": ");
+
+        String action = br.readLine();
+
+        switch(action) {
+            case "1":
+                paginaAnnuncio(null, titolo);
+                break;
+            case "2":
+                return;
+            default:
+                break;
+        }
+
     }
 
     public void searchMenu() throws IOException {
@@ -69,7 +121,7 @@ public class ViewCliAffittuario {
             Printer.printMsgln("\t4) Numero ospiti ["+numOspiti+"]");
             Printer.printMsgln("\t5) Servizi");
             Printer.printMsgln("\t6) Cerca");
-            Printer.printMsgln("\t7) Annulla");
+            Printer.printMsgln("\t7) Back");
 
             Printer.printMsg(": ");
             String action = br.readLine();
@@ -119,19 +171,12 @@ public class ViewCliAffittuario {
         while (!quit) {
 
             Printer.printMsgln("Risultati ricerca");
-            int i = 1;
-            for (String titolo : bean.getSearchResults()) {
-                Printer.printMsgln("\t" + i + ") " + titolo);
-                i++;
-            }
-            Printer.printMsgln("\t" + i + ") Back");
 
-            Printer.printMsg(": ");
-            int action = Integer.parseInt(br.readLine());
+            int action = dynamicMenu(bean.getSearchResults());
 
-            if (action < 0 || action > i) continue;
+            if (action < 0 || action > bean.getSearchResults().size()+1) continue;
 
-            if (action == i) return;
+            if (action == bean.getSearchResults().size()+1) return;
 
             paginaAnnuncio(bean, bean.getSearchResults().get(action-1));
         }
@@ -148,7 +193,7 @@ public class ViewCliAffittuario {
             Printer.printMsgln("\tIndirizzo: " + ann.getIndirizzo());
             Printer.printMsgln("\tDescrizione: " + ann.getDescrizione());
             Printer.printMsgln("\tServizi: " + Arrays.toString(ann.getServizi()));
-            Printer.printMsgln("1) Prenota");
+            if(bean != null) Printer.printMsgln("1) Prenota");
             Printer.printMsgln("2) Back");
 
             Printer.printMsg(": ");
@@ -156,8 +201,10 @@ public class ViewCliAffittuario {
 
             switch (action) {
                 case "1":
-                    pc.Prenota(ann, bean);
-                    break;
+                    if(bean!= null) {
+                        pc.prenota(ann, bean);
+                        return;
+                    } else break;
                 case "2":
                     return;
                 default:
