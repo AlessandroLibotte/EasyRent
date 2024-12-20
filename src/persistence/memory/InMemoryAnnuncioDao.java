@@ -20,8 +20,6 @@ public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implement
             return annuncio.getTitolo();
         }
 
-        public Annuncio create(String titolo){
-            return new Annuncio(titolo);
-        }
+
 
 }

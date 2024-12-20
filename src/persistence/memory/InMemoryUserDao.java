@@ -18,8 +18,5 @@ public class InMemoryUserDao extends InMemoryDao<String, User> implements UserDa
         return user.getEmail();
     }
 
-    public User create(String email){
-        return new User(email);
-    }
 
 }

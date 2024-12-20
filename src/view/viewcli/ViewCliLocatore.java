@@ -14,13 +14,13 @@ import static view.viewcli.ViewCliUtils.dynamicMenu;
 public class ViewCliLocatore {
 
     boolean quit;
-    BufferedReader br;
-    AnnuncioController ac;
+    BufferedReader reader;
+    AnnuncioController annuncioController;
 
     public ViewCliLocatore() {
         quit = false;
-        br = new BufferedReader(new InputStreamReader(System.in));
-        ac = AnnuncioController.getInstance();
+        reader = new BufferedReader(new InputStreamReader(System.in));
+        annuncioController = new AnnuncioController();
     }
 
     public boolean mainMenu() throws IOException {
@@ -36,7 +36,7 @@ public class ViewCliLocatore {
             Printer.printMsgln("\t6) Quit");
             Printer.printMsg(": ");
 
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch(action) {
                 case "1":
@@ -64,11 +64,11 @@ public class ViewCliLocatore {
         int maxOspiti;
         String oldTitolo = titolo;
 
-        boolean mod = false;
+        boolean modifica = false;
 
         if(!titolo.isEmpty()) {
-            AnnuncioBean ann = ac.getAnnuncio(new AnnuncioBean(titolo));
-            mod = true;
+            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
+            modifica = true;
             indirizzo = ann.getIndirizzo();
             descrizione = ann.getDescrizione();
             servizi = ann.getServizi();
@@ -82,7 +82,7 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            if(mod) Printer.printMsgln("Modifica Annuncio");
+            if(modifica) Printer.printMsgln("Modifica Annuncio");
             else Printer.printMsgln("Crea nuovo Annuncio ");
 
             Printer.printMsgln("\t1) Titolo: " + titolo);
@@ -91,29 +91,29 @@ public class ViewCliLocatore {
             Printer.printMsgln("\t4) Servizi: " + Arrays.toString(servizi));
             Printer.printMsgln("\t5) Massimo numero ospiti: " + maxOspiti);
 
-            if(mod) Printer.printMsgln("\t6) Appica modifiche");
+            if(modifica) Printer.printMsgln("\t6) Appica modifiche");
             else Printer.printMsgln("\t6) Crea");
 
             Printer.printMsgln("\t7) Annulla");
             Printer.printMsg(": ");
 
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch(action) {
                 case "1":
                     Printer.printMsgln("Titolo:");
                     Printer.printMsg("\t: ");
-                    titolo = br.readLine();
+                    titolo = reader.readLine();
                     break;
                 case "2":
                     Printer.printMsgln("Indirizzo:");
                     Printer.printMsg("\t: ");
-                    indirizzo = br.readLine();
+                    indirizzo = reader.readLine();
                     break;
                 case "3":
                     Printer.printMsgln("Descrizione:");
                     Printer.printMsg("\t: ");
-                    descrizione = br.readLine();
+                    descrizione = reader.readLine();
                     break;
                 case "4":
                     Printer.printMsgln("Servizi:");
@@ -122,10 +122,11 @@ public class ViewCliLocatore {
                 case "5":
                     Printer.printMsgln("Massimo numero ospiti:");
                     Printer.printMsg("\t: ");
-                    maxOspiti = Integer.parseInt(br.readLine());
+                    maxOspiti = Integer.parseInt(reader.readLine());
                     break;
                 case "6":
-                    return creaModificaAnnuncio(mod, new AnnuncioBean(oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti));
+                    return creaModificaAnnuncio(modifica,
+                            new AnnuncioBean(oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti));
                 case "7":
                     return "";
                 default:
@@ -135,9 +136,9 @@ public class ViewCliLocatore {
         return "";
     }
 
-    private String creaModificaAnnuncio(boolean mod, AnnuncioBean annuncioBean) {
-        if(mod){
-            if (ac.modifcaAnnuncio(annuncioBean)){
+    private String creaModificaAnnuncio(boolean modifica, AnnuncioBean annuncioBean) {
+        if(modifica){
+            if (annuncioController.modifcaAnnuncio(annuncioBean)){
                 Printer.printMsgln("Annuncio modificato");
                 return annuncioBean.getTitolo();
             }
@@ -145,7 +146,7 @@ public class ViewCliLocatore {
             return annuncioBean.getOldTitolo();
         }
 
-        if (ac.creaAnnuncio(annuncioBean)) {
+        if (annuncioController.creaAnnuncio(annuncioBean)) {
             Printer.printMsgln("Annuncio creato");
         } else Printer.printMsgln("Annuncio gia esistente");
 
@@ -156,7 +157,7 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            ArrayList<String> titles = (ArrayList<String>) ac.getCurrentUserAnnunci().getAnnunci();
+            ArrayList<String> titles = (ArrayList<String>) annuncioController.getCurrentUserAnnunci().getAnnunci();
             Printer.printMsgln("I tuoi Annunci: ");
 
             int action = dynamicMenu(titles);
@@ -171,34 +172,35 @@ public class ViewCliLocatore {
     }
 
     public void paginaAnnuncio(String titolo) throws IOException {
-        AnnuncioBean ann = ac.getAnnuncio(new AnnuncioBean(titolo));
+
+        AnnuncioBean annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
 
         while(!quit) {
 
             Printer.printMsgln("Pagina Annuncio");
-            Printer.printMsgln("\tTitolo: " + ann.getTitolo());
-            Printer.printMsgln("\tIndirizzo: " + ann.getIndirizzo());
-            Printer.printMsgln("\tDescrizione: " + ann.getDescrizione());
-            Printer.printMsgln("\tServizi: " + Arrays.toString(ann.getServizi()));
-            Printer.printMsgln("\tMassimo numero ospiti: " + ann.getMaxOspiti());
+            Printer.printMsgln("\tTitolo: " + annuncioBean.getTitolo());
+            Printer.printMsgln("\tIndirizzo: " + annuncioBean.getIndirizzo());
+            Printer.printMsgln("\tDescrizione: " + annuncioBean.getDescrizione());
+            Printer.printMsgln("\tServizi: " + Arrays.toString(annuncioBean.getServizi()));
+            Printer.printMsgln("\tMassimo numero ospiti: " + annuncioBean.getMaxOspiti());
             Printer.printMsgln("1) Visualizza Prenotazioni");
             Printer.printMsgln("2) Modifica annuncio");
             Printer.printMsgln("3) Elimina annuncio");
             Printer.printMsgln("4) Back");
 
             Printer.printMsg(": ");
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch (action) {
                 case "1":
-                    paginaPrenotazioni(ann.getTitolo());
+                    paginaPrenotazioni(annuncioBean.getTitolo());
                     break;
                 case "2":
-                    String newTitolo = creaModificaAnnuncioMenu(ann.getTitolo());
-                    ann = ac.getAnnuncio(new AnnuncioBean(newTitolo));
+                    String newTitolo = creaModificaAnnuncioMenu(annuncioBean.getTitolo());
+                    annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(newTitolo));
                     break;
                 case "3":
-                    ac.eliminaAnnuncio(ann);
+                    annuncioController.eliminaAnnuncio(annuncioBean);
                     return;
                 case "4":
                     return;
@@ -210,7 +212,7 @@ public class ViewCliLocatore {
 
     public void paginaPrenotazioni(String titolo) throws IOException {
 
-        ArrayList<String> prenotazioni = (ArrayList<String>) ac.getPrenotazioniAnnuncio(new AnnuncioBean(titolo)).getAnnunci();
+        ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo)).getAnnunci();
 
         while(!quit) {
 

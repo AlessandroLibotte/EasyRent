@@ -20,7 +20,5 @@ public class InMemoryPrenotazioneDao extends InMemoryDao<String, Prenotazione> i
         return prenotazione.getPrenotante();
     }
 
-    public Prenotazione create(String prenotante){
-        return new Prenotazione(prenotante);
-    }
+
 }

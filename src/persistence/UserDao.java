@@ -4,6 +4,8 @@ import model.User;
 
 public interface UserDao extends Dao<String, User>{
 
-    User create(String email);
+    default User create(String email){
+        return new User(email);
+    }
 
 }

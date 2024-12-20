@@ -4,6 +4,8 @@ import model.Immobile;
 
 public interface ImmobileDao extends Dao<String, Immobile>{
 
-    Immobile create(String indirizzo);
+    default Immobile create(String indirizzo){
+        return new Immobile(indirizzo);
+    }
 
 }

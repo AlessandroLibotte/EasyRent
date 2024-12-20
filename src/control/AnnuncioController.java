@@ -13,17 +13,6 @@ import java.util.ArrayList;
 
 public class AnnuncioController {
 
-    private static AnnuncioController instance;
-
-    private AnnuncioController() {}
-
-    public static AnnuncioController getInstance() {
-        if(instance == null) {
-            instance = new AnnuncioController();
-        }
-        return instance;
-    }
-
     public Immobile getCreateImmobile(String indirizzo) {
 
         ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();

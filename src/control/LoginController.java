@@ -7,6 +7,8 @@ import model.User;
 import persistence.DaoFactory;
 import persistence.UserDao;
 
+import java.util.ArrayList;
+
 public class LoginController {
 
     private static LoginController instance;
@@ -71,6 +73,7 @@ public class LoginController {
                 aff.setCognome(lb.getCognome());
                 aff.setPassword(lb.getPassword());
                 aff.setTelefono(lb.getTelefono());
+                aff.setPrenotazioni(new ArrayList<>());
 
                 userDao.store(aff);
                 return true;
@@ -82,6 +85,7 @@ public class LoginController {
                 loc.setCognome(lb.getCognome());
                 loc.setPassword(lb.getPassword());
                 loc.setTelefono(lb.getTelefono());
+                loc.setAnnunci(new ArrayList<>());
 
                 userDao.store(loc);
                 return true;

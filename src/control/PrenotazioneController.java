@@ -13,17 +13,6 @@ import java.util.ArrayList;
 
 public class PrenotazioneController {
 
-    private static PrenotazioneController instance;
-
-    private PrenotazioneController() {}
-
-    public static PrenotazioneController getInstance() {
-        if(instance == null) {
-            instance = new PrenotazioneController();
-        }
-        return instance;
-    }
-
     public PrenotazioneBean searchAnnunci(PrenotazioneBean bean) {
 
         AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();

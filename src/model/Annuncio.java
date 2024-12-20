@@ -10,14 +10,6 @@ public class Annuncio {
     int voto;
     List<Prenotazione> prenotazioni;
 
-    public List<Prenotazione> getPrenotazioni() {
-        return prenotazioni;
-    }
-
-    public void setPrenotazioni(List<Prenotazione> prenotazioni) {
-        this.prenotazioni = prenotazioni;
-    }
-
     public Annuncio(String titolo){
         this.titolo = titolo;
     }
@@ -49,4 +41,12 @@ public class Annuncio {
     public void setVoto(int voto) {
         this.voto = voto;
     }
+
+    public List<Prenotazione> getPrenotazioni() {
+        return prenotazioni;
+    }
+    public void setPrenotazioni(List<Prenotazione> prenotazioni) {
+        this.prenotazioni = prenotazioni;
+    }
+
 }

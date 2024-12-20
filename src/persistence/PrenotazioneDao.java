@@ -4,6 +4,8 @@ import model.Prenotazione;
 
 public interface PrenotazioneDao extends Dao<String, Prenotazione> {
 
-    Prenotazione create(String prenotante);
+    default Prenotazione create(String prenotante){
+        return new Prenotazione(prenotante);
+    }
 
 }
