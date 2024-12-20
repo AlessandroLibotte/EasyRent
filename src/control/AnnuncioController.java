@@ -1,6 +1,7 @@
 package control;
 
 import bean.AnnuncioBean;
+import bean.PrenotazioneBean;
 import model.Annuncio;
 import model.Immobile;
 import model.Locatore;
@@ -14,9 +15,11 @@ import java.util.ArrayList;
 
 public class AnnuncioController {
 
-    public Immobile getCreateImmobile(String indirizzo) {
+    AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
+    ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
+    UserDao userDao = DaoFactory.getInstance().getUserDao();
 
-        ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
+    public Immobile getCreateImmobile(String indirizzo) {
 
         Immobile imm;
         if(immobileDao.exists(indirizzo)){
@@ -30,10 +33,6 @@ public class AnnuncioController {
     }
 
     public boolean creaAnnuncio(AnnuncioBean bean){
-
-        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
-        ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         if(annuncioDao.exists(bean.getTitolo())) return false;
 
@@ -66,11 +65,6 @@ public class AnnuncioController {
     }
 
     public boolean modifcaAnnuncio(AnnuncioBean bean){
-
-        //get daos
-        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
-        ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         //load old annuncio
         if(!annuncioDao.exists(bean.getOldTitolo())) return false;
@@ -111,7 +105,6 @@ public class AnnuncioController {
 
     public AnnuncioBean getCurrentUserAnnunci(AnnuncioBean bean){
 
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
         Locatore loc = (Locatore) userDao.load(bean.getCurrentUser());
 
         ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
@@ -126,16 +119,14 @@ public class AnnuncioController {
     }
 
     public AnnuncioBean getAnnuncio(AnnuncioBean annBean){
-        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
+
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
-        return new AnnuncioBean(annBean.getCurrentUser(), ann.getTitolo(), ann.getImmobile().getIndirizzo(), ann.getDescrizione(),
-                ann.getImmobile().getServizi(), ann.getImmobile().getMaxOspiti());
+        return new AnnuncioBean(annBean.getCurrentUser(), ann.getTitolo(), ann.getImmobile().getIndirizzo(),
+                ann.getDescrizione(), ann.getImmobile().getServizi(), ann.getImmobile().getMaxOspiti());
+
     }
 
     public void eliminaAnnuncio(AnnuncioBean bean){
-
-        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         Locatore loc = (Locatore) userDao.load(bean.getTitolo());
 
@@ -152,8 +143,6 @@ public class AnnuncioController {
 
     public AnnuncioBean getPrenotazioniAnnuncio(AnnuncioBean annBean){
 
-        AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
-
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
 
         ArrayList<Prenotazione> prens = (ArrayList<Prenotazione>)ann.getPrenotazioni();
@@ -167,6 +156,17 @@ public class AnnuncioController {
 
         return new AnnuncioBean(prenotatori);
 
+    }
+
+    public PrenotazioneBean getPrenotazioneInfo(AnnuncioBean annBean){
+
+        Annuncio ann = annuncioDao.load(annBean.getTitolo());
+
+        for(Prenotazione pren : ann.getPrenotazioni()){
+            if(pren.getPrenotante().equals(annBean.getCurrentUser())) return new PrenotazioneBean(pren);
+        }
+
+        return null;
     }
 
 }

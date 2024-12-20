@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class LoginController {
 
-    public int validate(LoginBean lb) {
+    UserDao userDao = DaoFactory.getInstance().getUserDao();
 
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
+    public int validate(LoginBean lb) {
 
         if(userDao.exists(lb.getEmail())) {
 
@@ -33,8 +33,6 @@ public class LoginController {
     }
 
     public boolean register(LoginBean lb) {
-
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         if(!userDao.exists(lb.getEmail())){
 

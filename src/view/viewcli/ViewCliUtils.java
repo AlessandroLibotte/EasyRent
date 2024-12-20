@@ -7,6 +7,8 @@ import java.util.List;
 
 public class ViewCliUtils {
 
+    private ViewCliUtils() {}
+
     public static void printMsgln(String msg){ System.out.println(msg);}
     public static void printMsg(String msg){ System.out.print(msg);}
 

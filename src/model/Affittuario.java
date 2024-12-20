@@ -1,20 +1,20 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Affittuario extends User{
 
-    private ArrayList<Annuncio> prenotazioni;
+    private List<Annuncio> prenotazioni;
 
     public Affittuario(User user) {
         super(user.getEmail());
         this.password = user.getPassword();
     }
 
-    public ArrayList<Annuncio> getPrenotazioni() {
+    public List<Annuncio> getPrenotazioni() {
         return prenotazioni;
     }
-    public void setPrenotazioni(ArrayList<Annuncio> prenotazioni) {
+    public void setPrenotazioni(List<Annuncio> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
 }

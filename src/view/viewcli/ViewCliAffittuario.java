@@ -117,7 +117,6 @@ public class ViewCliAffittuario {
         String startDate = "";
         String endDate = "";
         int numOspiti = 1;
-        boolean[] servizi = new boolean[0];
 
         while(!quit) {
 
@@ -167,6 +166,8 @@ public class ViewCliAffittuario {
                     break;
                 case "7":
                     return;
+                default:
+                    break;
             }
 
         }

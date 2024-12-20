@@ -1,6 +1,7 @@
 package view.viewcli;
 
 import bean.AnnuncioBean;
+import bean.PrenotazioneBean;
 import control.AnnuncioController;
 
 import java.io.BufferedReader;
@@ -195,7 +196,7 @@ public class ViewCliLocatore {
 
             switch (action) {
                 case "1":
-                    paginaPrenotazioni(annuncioBean.getTitolo());
+                    menuPrenotazioni(annuncioBean.getTitolo());
                     break;
                 case "2":
                     String newTitolo = creaModificaAnnuncioMenu(annuncioBean.getTitolo());
@@ -212,7 +213,7 @@ public class ViewCliLocatore {
         }
     }
 
-    private void paginaPrenotazioni(String titolo) throws IOException {
+    private void menuPrenotazioni(String titolo) throws IOException {
 
         ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, currentUser)).getAnnunci();
 
@@ -226,7 +227,38 @@ public class ViewCliLocatore {
 
             if (action == prenotazioni.size()+1) return;
 
+            paginaPrenotazione(titolo, prenotazioni.get(action-1));
         }
+    }
+
+    private void paginaPrenotazione(String titolo, String prenotante) throws IOException {
+
+        PrenotazioneBean bean = annuncioController.getPrenotazioneInfo(new AnnuncioBean(titolo, prenotante));
+
+        if(bean == null) return;
+
+        while(!quit) {
+
+            ViewCliUtils.printMsgln("Dettagli della prenotazione per l'annuncio " + titolo);
+            ViewCliUtils.printMsgln("\tPrenotante: " + prenotante);
+            ViewCliUtils.printMsgln("\tData inizio soggiorno: " + bean.getStartDate());
+            ViewCliUtils.printMsgln("\tData fine soggiorno: " + bean.getEndDate());
+            ViewCliUtils.printMsgln("\tNumero ospiti: " + bean.getNumOspiti());
+            ViewCliUtils.printMsgln("1) Annulla prenotazione");
+            ViewCliUtils.printMsgln("2) Visualizza profilo del prenotante");
+            ViewCliUtils.printMsgln("3) Back");
+            ViewCliUtils.printMsg(": ");
+
+            String action = reader.readLine();
+
+            switch (action) {
+                case "3":
+                    return;
+                default:
+                    break;
+            }
+        }
+
     }
 
 }

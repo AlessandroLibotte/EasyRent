@@ -14,9 +14,11 @@ import java.util.ArrayList;
 
 public class PrenotazioneController {
 
-    public PrenotazioneBean searchAnnunci(PrenotazioneBean bean) {
+    AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
+    UserDao userDao = DaoFactory.getInstance().getUserDao();
+    PrenotazioneDao prenDao = DaoFactory.getInstance().getPrenotazioneDao();
 
-        AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
+    public PrenotazioneBean searchAnnunci(PrenotazioneBean bean) {
 
         ArrayList<Annuncio> annunci = (ArrayList<Annuncio>) annDao.loadAll();
 
@@ -41,11 +43,9 @@ public class PrenotazioneController {
 
     public PrenotazioneBean getPrenotazioni(PrenotazioneBean bean){
 
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
-
         Affittuario currentUser = (Affittuario) userDao.load(bean.getCurrentUser());
 
-        ArrayList<Annuncio> prens = currentUser.getPrenotazioni();
+        ArrayList<Annuncio> prens = (ArrayList<Annuncio>) currentUser.getPrenotazioni();
 
         ArrayList<String> results = new ArrayList<>();
 
@@ -65,9 +65,6 @@ public class PrenotazioneController {
 
     public PrenotazioneBean getPrenotazioneInfo(AnnuncioBean annBean){
 
-        AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
-
         Affittuario currentUser = (Affittuario) userDao.load(annBean.getCurrentUser());
 
         Annuncio ann = annDao.load(annBean.getTitolo());
@@ -83,11 +80,6 @@ public class PrenotazioneController {
     }
 
     public void prenota(AnnuncioBean annBean, PrenotazioneBean prenBean){
-
-        // Get Daos
-        AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
-        PrenotazioneDao prenDao = DaoFactory.getInstance().getPrenotazioneDao();
-        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         //Load target annuncio
         Annuncio ann = annDao.load(annBean.getTitolo());
@@ -110,7 +102,7 @@ public class PrenotazioneController {
 
         //update current user's reservations
         Affittuario aff = (Affittuario) userDao.load(annBean.getCurrentUser());
-        ArrayList<Annuncio> currPrens = aff.getPrenotazioni();
+        ArrayList<Annuncio> currPrens = (ArrayList<Annuncio>) aff.getPrenotazioni();
         if (currPrens == null) currPrens = new ArrayList<>();
         currPrens.add(ann);
         aff.setPrenotazioni(currPrens);
