@@ -11,30 +11,6 @@ import java.util.ArrayList;
 
 public class LoginController {
 
-    private static LoginController instance;
-
-    private User currentUser;
-
-    private LoginController() {}
-
-    public static LoginController getInstance() {
-        if (instance == null) {
-            instance = new LoginController();
-        }
-        return instance;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public LoginBean getCurrentUserInfo(){
-        return new LoginBean(LoginController.getInstance().getCurrentUser());
-    }
-
     public int validate(LoginBean lb) {
 
         UserDao userDao = DaoFactory.getInstance().getUserDao();
@@ -44,7 +20,6 @@ public class LoginController {
             User user = userDao.load(lb.getEmail());
 
             if (user != null && user.getPassword().equals(lb.getPassword())) {
-                currentUser = user;
                 if(user instanceof Affittuario) {
                     return 1;
                 } else if (user instanceof Locatore) {

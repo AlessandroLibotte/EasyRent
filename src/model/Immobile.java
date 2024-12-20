@@ -2,8 +2,8 @@ package model;
 
 public class Immobile {
 
-    String indirizzo;
-    int maxOspiti;
+    private String indirizzo;
+    private int maxOspiti;
 
     public int getMaxOspiti() {
         return maxOspiti;

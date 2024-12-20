@@ -16,30 +16,32 @@ import static view.viewcli.ViewCliUtils.dynamicMenu;
 
 public class ViewCliAffittuario {
 
-    boolean quit;
-    BufferedReader reader;
-    PrenotazioneController prenotazioneController;
-    AnnuncioController annuncioController;
+    private boolean quit;
+    private BufferedReader reader;
+    private PrenotazioneController prenotazioneController;
+    private AnnuncioController annuncioController;
+    private String currentUser;
 
-    public ViewCliAffittuario() {
+    public ViewCliAffittuario(String email) {
         quit = false;
         reader = new BufferedReader(new InputStreamReader(System.in));
         prenotazioneController = new PrenotazioneController();
         annuncioController = new AnnuncioController();
+        currentUser = email;
     }
 
     public boolean mainMenu() throws IOException {
 
         while(!quit) {
 
-            Printer.printMsgln("Welcome to EasyRent Affittuario");
-            Printer.printMsgln("\t1) Cerca annuncio");
-            Printer.printMsgln("\t2) Pagina Profilo");
-            Printer.printMsgln("\t3) Visualizza Prenotazioni");
-            Printer.printMsgln("\t4) Log off");
-            Printer.printMsgln("\t5) Quit");
+            ViewCliUtils.printMsgln("Welcome to EasyRent Affittuario");
+            ViewCliUtils.printMsgln("\t1) Cerca annuncio");
+            ViewCliUtils.printMsgln("\t2) Pagina Profilo");
+            ViewCliUtils.printMsgln("\t3) Visualizza Prenotazioni");
+            ViewCliUtils.printMsgln("\t4) Log off");
+            ViewCliUtils.printMsgln("\t5) Quit");
 
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsg(": ");
             String action = reader.readLine();
 
             switch(action) {
@@ -60,13 +62,13 @@ public class ViewCliAffittuario {
         return false;
     }
 
-    public void menuPrenotazioni() throws IOException {
+    private void menuPrenotazioni() throws IOException {
 
-        PrenotazioneBean bean = prenotazioneController.getPrenotazioni();
+        PrenotazioneBean bean = prenotazioneController.getPrenotazioni(new PrenotazioneBean(currentUser));
 
         while(!quit) {
 
-            Printer.printMsgln("Hai prenotazioni per i seguenti annunci:");
+            ViewCliUtils.printMsgln("Hai prenotazioni per i seguenti annunci:");
 
             int action = dynamicMenu(bean.getSearchResults());
 
@@ -80,19 +82,19 @@ public class ViewCliAffittuario {
 
     }
 
-    public void paginaPrenotazione(String titolo) throws IOException {
+    private void paginaPrenotazione(String titolo) throws IOException {
 
-        PrenotazioneBean bean = prenotazioneController.getPrenotazioneInfo(new AnnuncioBean(titolo));
+        PrenotazioneBean bean = prenotazioneController.getPrenotazioneInfo(new AnnuncioBean(titolo, currentUser));
 
         while(!quit) {
 
-            Printer.printMsgln("Dettagli della prenotazione per l'annuncio " + titolo);
-            Printer.printMsgln("\tData inizio soggiorno: " + bean.getStartDate());
-            Printer.printMsgln("\tData fine soggiorno: " + bean.getEndDate());
-            Printer.printMsgln("\tNumero ospiti: " + bean.getNumOspiti());
-            Printer.printMsgln("1) Pagina dell'annuncio");
-            Printer.printMsgln("2) Back");
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsgln("Dettagli della prenotazione per l'annuncio " + titolo);
+            ViewCliUtils.printMsgln("\tData inizio soggiorno: " + bean.getStartDate());
+            ViewCliUtils.printMsgln("\tData fine soggiorno: " + bean.getEndDate());
+            ViewCliUtils.printMsgln("\tNumero ospiti: " + bean.getNumOspiti());
+            ViewCliUtils.printMsgln("1) Pagina dell'annuncio");
+            ViewCliUtils.printMsgln("2) Back");
+            ViewCliUtils.printMsg(": ");
 
             String action = reader.readLine();
 
@@ -109,7 +111,7 @@ public class ViewCliAffittuario {
 
     }
 
-    public void searchMenu() throws IOException {
+    private void searchMenu() throws IOException {
 
         String localita = "";
         String startDate = "";
@@ -119,48 +121,48 @@ public class ViewCliAffittuario {
 
         while(!quit) {
 
-            Printer.printMsgln("Inserisci parametri di ricerca");
-            Printer.printMsgln("\t1) Località ["+ localita+ "]");
-            Printer.printMsgln("\t2) Data inizio soggiorno ["+startDate+"]");
-            Printer.printMsgln("\t3) Data fine soggiorno ["+ endDate+"]");
-            Printer.printMsgln("\t4) Numero ospiti ["+numOspiti+"]");
-            Printer.printMsgln("\t5) Servizi");
-            Printer.printMsgln("\t6) Cerca");
-            Printer.printMsgln("\t7) Back");
+            ViewCliUtils.printMsgln("Inserisci parametri di ricerca");
+            ViewCliUtils.printMsgln("\t1) Località ["+ localita+ "]");
+            ViewCliUtils.printMsgln("\t2) Data inizio soggiorno ["+startDate+"]");
+            ViewCliUtils.printMsgln("\t3) Data fine soggiorno ["+ endDate+"]");
+            ViewCliUtils.printMsgln("\t4) Numero ospiti ["+numOspiti+"]");
+            ViewCliUtils.printMsgln("\t5) Servizi");
+            ViewCliUtils.printMsgln("\t6) Cerca");
+            ViewCliUtils.printMsgln("\t7) Back");
 
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsg(": ");
             String action = reader.readLine();
 
             switch(action) {
                 case "1":
-                    Printer.printMsgln("Inserisci Località (Città o Stato)");
-                    Printer.printMsg("\t: ");
+                    ViewCliUtils.printMsgln("Inserisci Località (Città o Stato)");
+                    ViewCliUtils.printMsg("\t: ");
                     localita = reader.readLine();
                     break;
                 case "2":
-                    Printer.printMsgln("Inserisci Data inizio soggiorno (Formato: gg/MM/aaaa)");
-                    Printer.printMsg("\t: ");
+                    ViewCliUtils.printMsgln("Inserisci Data inizio soggiorno (Formato: gg/MM/aaaa)");
+                    ViewCliUtils.printMsg("\t: ");
                     startDate = reader.readLine();
                     break;
                 case "3":
-                    Printer.printMsgln("Inserisci Data fine soggiorno (Formato: gg/MM/aaaa)");
-                    Printer.printMsg("\t: ");
+                    ViewCliUtils.printMsgln("Inserisci Data fine soggiorno (Formato: gg/MM/aaaa)");
+                    ViewCliUtils.printMsg("\t: ");
                     endDate = reader.readLine();
                     break;
                 case "4":
-                    Printer.printMsgln("Inserisci Numero ospiti");
-                    Printer.printMsg("\t: ");
+                    ViewCliUtils.printMsgln("Inserisci Numero ospiti");
+                    ViewCliUtils.printMsg("\t: ");
                     numOspiti = Integer.parseInt(reader.readLine());
                     break;
                 case "5":
-                    Printer.printMsgln("Inserisci Servizi");
-                    Printer.printMsg("\t: ");
+                    ViewCliUtils.printMsgln("Inserisci Servizi");
+                    ViewCliUtils.printMsg("\t: ");
                     break;
                 case "6":
                     try {
                         searchResultsPage(prenotazioneController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti)));
                     } catch (DateTimeParseException e){
-                        Printer.printMsgln("Data inserita non valida");
+                        ViewCliUtils.printMsgln("Data inserita non valida");
                     }
                     break;
                 case "7":
@@ -171,11 +173,11 @@ public class ViewCliAffittuario {
 
     }
 
-    public void searchResultsPage(PrenotazioneBean bean) throws IOException {
+    private void searchResultsPage(PrenotazioneBean bean) throws IOException {
 
         while (!quit) {
 
-            Printer.printMsgln("Risultati ricerca");
+            ViewCliUtils.printMsgln("Risultati ricerca");
 
             int action = dynamicMenu(bean.getSearchResults());
 
@@ -187,28 +189,28 @@ public class ViewCliAffittuario {
         }
     }
 
-    public void paginaAnnuncio(PrenotazioneBean prenBean, String titolo) throws IOException {
+    private void paginaAnnuncio(PrenotazioneBean prenBean, String titolo) throws IOException {
 
-        AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
+        AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo, currentUser));
 
         while(!quit) {
 
-            Printer.printMsgln("Pagina Annuncio");
-            Printer.printMsgln("\tTitolo: " + annBean.getTitolo());
-            Printer.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
-            Printer.printMsgln("\tDescrizione: " + annBean.getDescrizione());
-            Printer.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
-            if(prenBean != null) Printer.printMsgln("1) Prenota");
-            Printer.printMsgln("2) Back");
+            ViewCliUtils.printMsgln("Pagina Annuncio");
+            ViewCliUtils.printMsgln("\tTitolo: " + annBean.getTitolo());
+            ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
+            ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
+            ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
+            if(prenBean != null) ViewCliUtils.printMsgln("1) Prenota");
+            ViewCliUtils.printMsgln("2) Back");
 
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsg(": ");
             String action = reader.readLine();
 
             switch (action) {
                 case "1":
                     if(prenBean != null) {
                         prenotazioneController.prenota(annBean, prenBean);
-                        Printer.printMsgln("Prenotazione riuscita");
+                        ViewCliUtils.printMsgln("Prenotazione riuscita");
                         return;
                     } else break;
                 case "2":

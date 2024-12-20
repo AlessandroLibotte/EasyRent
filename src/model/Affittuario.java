@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Affittuario extends User{
 
-    ArrayList<Annuncio> prenotazioni;
+    private ArrayList<Annuncio> prenotazioni;
 
     public Affittuario(User user) {
         super(user.getEmail());

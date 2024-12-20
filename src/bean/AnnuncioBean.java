@@ -5,18 +5,19 @@ import java.util.List;
 
 public class AnnuncioBean {
 
-    String titolo;
-    String oldTitolo;
-    String indirizzo;
-    String descrizione;
-    boolean[] servizi;
+    private String currentUser;
+    private String titolo;
+    private String oldTitolo;
+    private String indirizzo;
+    private String descrizione;
+    private boolean[] servizi;
+    private int maxOspiti;
 
-    int maxOspiti;
-
-    List<String> annunci;
+    private List<String> annunci;
 
 
-    public AnnuncioBean(String titolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
+    public AnnuncioBean(String currentUser, String titolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
+        this.currentUser = currentUser;
         this.titolo = titolo;
         this.indirizzo = indirizzo;
         this.descrizione = descrizione;
@@ -28,17 +29,26 @@ public class AnnuncioBean {
         this.annunci = annunci;
     }
 
-    public AnnuncioBean(String titolo) {
+    public AnnuncioBean(String titolo, String currentUser) {
         this.titolo = titolo;
+        this.currentUser = currentUser;
     }
 
-    public AnnuncioBean(String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
+    public AnnuncioBean(String currentUser, String oldTitolo, String newTitolo, String indirizzo, String descrizione, boolean[] servizi, int maxOspiti) {
+        this.currentUser = currentUser;
         this.oldTitolo = oldTitolo;
         this.titolo = newTitolo;
         this.indirizzo = indirizzo;
         this.descrizione = descrizione;
         this.servizi = servizi;
         this.maxOspiti = maxOspiti;
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
     }
 
     public String getTitolo() {
@@ -83,7 +93,6 @@ public class AnnuncioBean {
     public void setAnnunci(List<String> annunci) {
         this.annunci = annunci;
     }
-
 
     public int getMaxOspiti() {
         return maxOspiti;

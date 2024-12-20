@@ -4,8 +4,7 @@ import java.util.List;
 
 public class Locatore extends User{
 
-
-    List<Annuncio> annunci;
+    private List<Annuncio> annunci;
 
     public Locatore(User user) {
         super(user.getEmail());

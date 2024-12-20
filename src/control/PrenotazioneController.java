@@ -8,6 +8,7 @@ import model.Prenotazione;
 import persistence.AnnuncioDao;
 import persistence.DaoFactory;
 import persistence.PrenotazioneDao;
+import persistence.UserDao;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,11 @@ public class PrenotazioneController {
         return bean;
     }
 
-    public PrenotazioneBean getPrenotazioni(){
+    public PrenotazioneBean getPrenotazioni(PrenotazioneBean bean){
 
-        Affittuario currentUser = (Affittuario)LoginController.getInstance().getCurrentUser();
+        UserDao userDao = DaoFactory.getInstance().getUserDao();
+
+        Affittuario currentUser = (Affittuario) userDao.load(bean.getCurrentUser());
 
         ArrayList<Annuncio> prens = currentUser.getPrenotazioni();
 
@@ -63,7 +66,9 @@ public class PrenotazioneController {
     public PrenotazioneBean getPrenotazioneInfo(AnnuncioBean annBean){
 
         AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
-        Affittuario currentUser = (Affittuario)LoginController.getInstance().getCurrentUser();
+        UserDao userDao = DaoFactory.getInstance().getUserDao();
+
+        Affittuario currentUser = (Affittuario) userDao.load(annBean.getCurrentUser());
 
         Annuncio ann = annDao.load(annBean.getTitolo());
 
@@ -82,6 +87,7 @@ public class PrenotazioneController {
         // Get Daos
         AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
         PrenotazioneDao prenDao = DaoFactory.getInstance().getPrenotazioneDao();
+        UserDao userDao = DaoFactory.getInstance().getUserDao();
 
         //Load target annuncio
         Annuncio ann = annDao.load(annBean.getTitolo());
@@ -90,7 +96,7 @@ public class PrenotazioneController {
         ArrayList<Prenotazione> prens = (ArrayList<Prenotazione>) ann.getPrenotazioni();
 
         //create new reservation
-        Prenotazione newPren = prenDao.create(LoginController.getInstance().getCurrentUser().getEmail());
+        Prenotazione newPren = prenDao.create(annBean.getCurrentUser());
         newPren.setStartDate(prenBean.getStartDate());
         newPren.setEndDate(prenBean.getEndDate());
         newPren.setNumOspiti(prenBean.getNumOspiti());
@@ -103,14 +109,16 @@ public class PrenotazioneController {
         ann.setPrenotazioni(prens);
 
         //update current user's reservations
-        Affittuario aff = (Affittuario) LoginController.getInstance().getCurrentUser();
+        Affittuario aff = (Affittuario) userDao.load(annBean.getCurrentUser());
         ArrayList<Annuncio> currPrens = aff.getPrenotazioni();
         if (currPrens == null) currPrens = new ArrayList<>();
         currPrens.add(ann);
         aff.setPrenotazioni(currPrens);
 
+        //store entities
         annDao.delete(ann.getTitolo());
         annDao.store(ann);
+        userDao.store(aff);
     }
 
 }

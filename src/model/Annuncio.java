@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Annuncio {
 
-    String titolo;
-    String descrizione;
-    Immobile immobile;
-    int voto;
-    List<Prenotazione> prenotazioni;
+    private String titolo;
+    private String descrizione;
+    private Immobile immobile;
+    private int voto;
+    private List<Prenotazione> prenotazioni;
 
     public Annuncio(String titolo){
         this.titolo = titolo;

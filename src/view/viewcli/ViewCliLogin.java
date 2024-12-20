@@ -10,57 +10,57 @@ import control.LoginController;
 
 public class ViewCliLogin {
 
-    boolean quit;
-    BufferedReader br;
-    LoginController lc;
+    private boolean quit;
+    private BufferedReader reader;
+    private LoginController loginController;
 
     public ViewCliLogin() {
         quit = false;
-        br = new BufferedReader(new InputStreamReader(System.in));
-        lc = LoginController.getInstance();
+        reader = new BufferedReader(new InputStreamReader(System.in));
+        loginController = new LoginController();
     }
 
     public void loginMenu() throws IOException {
 
-        String username = "";
+        String email = "";
         String password = "";
 
         while(!quit) {
 
-            Printer.printMsgln("EasyRent Login");
-            Printer.printMsgln("\t1) Enter Username [" + username + "]");
-            Printer.printMsgln("\t2) Enter Password [" + password + "]");
-            Printer.printMsgln("\t3) Login");
-            Printer.printMsgln("\t4) Register");
-            Printer.printMsgln("\t5) Quit");
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsgln("EasyRent Login");
+            ViewCliUtils.printMsgln("\t1) Enter Username [" + email + "]");
+            ViewCliUtils.printMsgln("\t2) Enter Password [" + password + "]");
+            ViewCliUtils.printMsgln("\t3) Login");
+            ViewCliUtils.printMsgln("\t4) Register");
+            ViewCliUtils.printMsgln("\t5) Quit");
+            ViewCliUtils.printMsg(": ");
 
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch(action) {
                 case "1":
-                    Printer.printMsgln("Enter Username");
-                    Printer.printMsg("\t: ");
-                    username = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Username");
+                    ViewCliUtils.printMsg("\t: ");
+                    email = reader.readLine();
                     break;
                 case "2":
-                    Printer.printMsgln("Enter Password");
-                    Printer.printMsg("\t: ");
-                    password = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Password");
+                    ViewCliUtils.printMsg("\t: ");
+                    password = reader.readLine();
                     break;
                 case "3":
-                    int val = lc.validate(new LoginBean(username, password));
+                    int val = loginController.validate(new LoginBean(email, password));
                     if (val == 1){
-                        Printer.printMsgln("Login Successful Affittuario");
-                        ViewCliAffittuario view = new ViewCliAffittuario();
+                        ViewCliUtils.printMsgln("Login Successful Affittuario");
+                        ViewCliAffittuario view = new ViewCliAffittuario(email);
                         quit = view.mainMenu();
                     }
                     else if (val == 2){
-                        Printer.printMsgln("Login Successful Locatore");
-                        ViewCliLocatore view = new ViewCliLocatore();
+                        ViewCliUtils.printMsgln("Login Successful Locatore");
+                        ViewCliLocatore view = new ViewCliLocatore(email);
                         quit = view.mainMenu();
                     }
-                    else Printer.printMsgln("Invalid Username or Password");
+                    else ViewCliUtils.printMsgln("Invalid Username or Password");
                     break;
                 case "4":
                     registerMenu();
@@ -76,7 +76,7 @@ public class ViewCliLogin {
 
     }
 
-    void registerMenu() throws IOException {
+    private void registerMenu() throws IOException {
 
         String nome = "";
         String cognome = "";
@@ -87,34 +87,34 @@ public class ViewCliLogin {
 
         while(!quit) {
 
-            Printer.printMsgln("Register");
-            Printer.printMsgln("\t1) Enter Email [" + email + "]");
-            Printer.printMsgln("\t2) Enter Password [" + password + "]");
-            Printer.printMsg("\t3) Select Role [");
-            Printer.printMsg(getCurrentRole(role));
-            Printer.printMsgln("]");
-            Printer.printMsgln("\t4) Personal info (optional)");
-            Printer.printMsgln("\t5) Register");
-            Printer.printMsgln("\t6) Back");
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsgln("Register");
+            ViewCliUtils.printMsgln("\t1) Enter Email [" + email + "]");
+            ViewCliUtils.printMsgln("\t2) Enter Password [" + password + "]");
+            ViewCliUtils.printMsg("\t3) Select Role [");
+            ViewCliUtils.printMsg(getCurrentRole(role));
+            ViewCliUtils.printMsgln("]");
+            ViewCliUtils.printMsgln("\t4) Personal info (optional)");
+            ViewCliUtils.printMsgln("\t5) Register");
+            ViewCliUtils.printMsgln("\t6) Back");
+            ViewCliUtils.printMsg(": ");
 
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch(action) {
                 case "1":
-                    Printer.printMsgln("Enter Email");
-                    Printer.printMsg("\t: ");
-                    email = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Email");
+                    ViewCliUtils.printMsg("\t: ");
+                    email = reader.readLine();
                     break;
                 case "2":
-                    Printer.printMsgln("Enter Password");
-                    Printer.printMsg("\t: ");
-                    password = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Password");
+                    ViewCliUtils.printMsg("\t: ");
+                    password = reader.readLine();
                     break;
                 case "3":
-                    Printer.printMsgln("Select Role [0: affittuario, 1: locatore]");
-                    Printer.printMsg("\t: ");
-                    role = Integer.parseInt(br.readLine());
+                    ViewCliUtils.printMsgln("Select Role [0: affittuario, 1: locatore]");
+                    ViewCliUtils.printMsg("\t: ");
+                    role = Integer.parseInt(reader.readLine());
                     if (role != 0 && role != 1) role = 0;
                     break;
                 case "4":
@@ -125,11 +125,11 @@ public class ViewCliLogin {
                     telefono = personalInfo[2];
                     break;
                 case "5":
-                    if (lc.register(new LoginBean(nome, cognome, email, password, telefono, role))) {
-                        Printer.printMsgln("Registration Successful");
+                    if (loginController.register(new LoginBean(nome, cognome, email, password, telefono, role))) {
+                        ViewCliUtils.printMsgln("Registration Successful");
                         return;
                     }
-                    else Printer.printMsgln("Registration unsuccessful");
+                    else ViewCliUtils.printMsgln("Registration unsuccessful");
                     break;
                 case "6":
                     return;
@@ -139,35 +139,35 @@ public class ViewCliLogin {
         }
     }
 
-    String[] registerPersonalDataMenu(String nome, String cognome, String telefono) throws IOException {
+    private String[] registerPersonalDataMenu(String nome, String cognome, String telefono) throws IOException {
 
         while(!quit) {
 
-            Printer.printMsgln("Personal Data");
-            Printer.printMsgln("\t1) Enter Name [" + nome + "]");
-            Printer.printMsgln("\t2) Enter Surname [" + cognome + "]");
-            Printer.printMsgln("\t3) Enter Phone Number [" + telefono + "]");
-            Printer.printMsgln("\t4) Confirm");
-            Printer.printMsgln("\t5) Back");
-            Printer.printMsg(": ");
+            ViewCliUtils.printMsgln("Personal Data");
+            ViewCliUtils.printMsgln("\t1) Enter Name [" + nome + "]");
+            ViewCliUtils.printMsgln("\t2) Enter Surname [" + cognome + "]");
+            ViewCliUtils.printMsgln("\t3) Enter Phone Number [" + telefono + "]");
+            ViewCliUtils.printMsgln("\t4) Confirm");
+            ViewCliUtils.printMsgln("\t5) Back");
+            ViewCliUtils.printMsg(": ");
 
-            String action = br.readLine();
+            String action = reader.readLine();
 
             switch (action) {
                 case "1":
-                    Printer.printMsgln("Enter Name");
-                    Printer.printMsg("\t: ");
-                    nome = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Name");
+                    ViewCliUtils.printMsg("\t: ");
+                    nome = reader.readLine();
                     break;
                 case "2":
-                    Printer.printMsgln("Enter Surname");
-                    Printer.printMsg("\t: ");
-                    cognome = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Surname");
+                    ViewCliUtils.printMsg("\t: ");
+                    cognome = reader.readLine();
                     break;
                 case "3":
-                    Printer.printMsgln("Enter Phone Number");
-                    Printer.printMsg("\t: ");
-                    telefono = br.readLine();
+                    ViewCliUtils.printMsgln("Enter Phone Number");
+                    ViewCliUtils.printMsg("\t: ");
+                    telefono = reader.readLine();
                     break;
                 case "4":
                     return new String[]{nome, cognome, telefono};
@@ -180,7 +180,7 @@ public class ViewCliLogin {
         return new String[0];
     }
 
-    String getCurrentRole(int role){
+    private String getCurrentRole(int role){
         return switch (role) {
             case 0 -> "Affittuario";
             case 1 -> "Locatore";

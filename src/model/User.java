@@ -2,11 +2,11 @@ package model;
 
 public class User {
 
-    String email;
-    String password;
-    String nome;
-    String cognome;
-    String telefono;
+    private String email;
+    protected String password;
+    private String nome;
+    private String cognome;
+    private String telefono;
 
     public User(String email) {
         this.email = email;
