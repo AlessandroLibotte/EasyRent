@@ -37,6 +37,8 @@ public class ViewCliLogin {
 
             String action = reader.readLine();
 
+            if (action == null) return;
+
             switch(action) {
                 case "1":
                     ViewCliUtils.printMsgln("Enter Username");
