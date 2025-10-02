@@ -2,14 +2,18 @@ package main.model;
 
 public class User {
 
-    private String email;
+    protected String email;
     protected String password;
-    private String nome;
-    private String cognome;
-    private String telefono;
+    protected String nome;
+    protected String cognome;
+    protected String telefono;
 
     public User(String email) {
         this.email = email;
+    }
+
+    public boolean checkPassword(String input) {
+        return this.password.equals(input);
     }
 
     public String getEmail() {

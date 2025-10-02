@@ -7,8 +7,6 @@ public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implement
 
         private static InMemoryAnnuncioDao instance;
 
-        private InMemoryAnnuncioDao() {}
-
         public static InMemoryAnnuncioDao getInstance() {
             if(instance == null) {
                 instance = new InMemoryAnnuncioDao();
@@ -19,7 +17,5 @@ public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implement
         public String getKey(Annuncio annuncio) {
             return annuncio.getTitolo();
         }
-
-
 
 }

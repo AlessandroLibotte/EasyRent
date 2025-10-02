@@ -6,13 +6,16 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 import main.bean.LoginBean;
+import main.bean.RegistrationBean;
 import main.control.LoginController;
+import main.model.RegisterResult;
+import main.model.Role;
 
 public class ViewCliLogin {
 
     private boolean quit;
-    private BufferedReader reader;
-    private LoginController loginController;
+    private final BufferedReader reader;
+    private final LoginController loginController;
 
     public ViewCliLogin() {
         quit = false;
@@ -51,18 +54,22 @@ public class ViewCliLogin {
                     password = reader.readLine();
                     break;
                 case "3":
-                    int val = loginController.validate(new LoginBean(email, password));
-                    if (val == 1){
-                        ViewCliUtils.printMsgln("Login Successful Affittuario");
-                        ViewCliAffittuario view = new ViewCliAffittuario(email);
-                        quit = view.mainMenu();
+                    Role result = loginController.validate(new LoginBean(email, password));
+                    switch(result) {
+                        case AFFITTUARIO:
+                            ViewCliUtils.printMsgln("Login Successful Affittuario");
+                            ViewCliAffittuario viewAff = new ViewCliAffittuario(email);
+                            quit = viewAff.mainMenu();
+                            break;
+                        case LOCATORE:
+                            ViewCliUtils.printMsgln("Login Successful Locatore");
+                            ViewCliLocatore viewLoc = new ViewCliLocatore(email);
+                            quit = viewLoc.mainMenu();
+                            break;
+                        case INVALID:
+                            ViewCliUtils.printMsgln("Invalid Username or Password");
+                            break;
                     }
-                    else if (val == 2){
-                        ViewCliUtils.printMsgln("Login Successful Locatore");
-                        ViewCliLocatore view = new ViewCliLocatore(email);
-                        quit = view.mainMenu();
-                    }
-                    else ViewCliUtils.printMsgln("Invalid Username or Password");
                     break;
                 case "4":
                     registerMenu();
@@ -85,7 +92,7 @@ public class ViewCliLogin {
         String email = "";
         String password = "";
         String telefono = "";
-        int role = 0;
+        Role role = Role.INVALID;
 
         while(!quit) {
 
@@ -93,7 +100,7 @@ public class ViewCliLogin {
             ViewCliUtils.printMsgln("\t1) Enter Email [" + email + "]");
             ViewCliUtils.printMsgln("\t2) Enter Password [" + password + "]");
             ViewCliUtils.printMsg("\t3) Select Role [");
-            ViewCliUtils.printMsg(getCurrentRole(role));
+            ViewCliUtils.printMsg(role.toString());
             ViewCliUtils.printMsgln("]");
             ViewCliUtils.printMsgln("\t4) Personal info (optional)");
             ViewCliUtils.printMsgln("\t5) Register");
@@ -114,10 +121,9 @@ public class ViewCliLogin {
                     password = reader.readLine();
                     break;
                 case "3":
-                    ViewCliUtils.printMsgln("Select Role [0: affittuario, 1: locatore]");
+                    ViewCliUtils.printMsgln("Select Role [affittuario, locatore]");
                     ViewCliUtils.printMsg("\t: ");
-                    role = Integer.parseInt(reader.readLine());
-                    if (role != 0 && role != 1) role = 0;
+                    role = Role.fromString(reader.readLine());
                     break;
                 case "4":
                     String[] personalInfo = registerPersonalDataMenu(nome, cognome, telefono);
@@ -127,11 +133,18 @@ public class ViewCliLogin {
                     telefono = personalInfo[2];
                     break;
                 case "5":
-                    if (loginController.register(new LoginBean(nome, cognome, email, password, telefono, role))) {
-                        ViewCliUtils.printMsgln("Registration Successful");
-                        return;
+                    RegisterResult result = loginController.register(new RegistrationBean(nome, cognome, email, password, telefono, role));
+                    switch (result) {
+                        case SUCCESS:
+                            ViewCliUtils.printMsgln("Registration Successful");
+                            return;
+                        case INVALID:
+                            ViewCliUtils.printMsgln("Registration unsuccessful");
+                            break;
+                        case EXISTS:
+                            ViewCliUtils.printMsgln("User already exists");
+                            break;
                     }
-                    else ViewCliUtils.printMsgln("Registration unsuccessful");
                     break;
                 case "6":
                     return;
@@ -180,14 +193,6 @@ public class ViewCliLogin {
             }
         }
         return new String[0];
-    }
-
-    private String getCurrentRole(int role){
-        return switch (role) {
-            case 0 -> "Affittuario";
-            case 1 -> "Locatore";
-            default -> "Invalid Role";
-        };
     }
 
 }

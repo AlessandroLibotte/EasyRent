@@ -1,9 +1,8 @@
 package main.control;
 
 import main.bean.LoginBean;
-import main.model.Affittuario;
-import main.model.Locatore;
-import main.model.User;
+import main.bean.RegistrationBean;
+import main.model.*;
 import main.persistence.DaoFactory;
 import main.persistence.UserDao;
 
@@ -13,59 +12,52 @@ public class LoginController {
 
     UserDao userDao = DaoFactory.getInstance().getUserDao();
 
-    public int validate(LoginBean lb) {
+    public Role validate(LoginBean lb) {
+        if(!userDao.exists(lb.getEmail())) return Role.INVALID;
 
-        if(userDao.exists(lb.getEmail())) {
+        User user = userDao.load(lb.getEmail());
+        if(user == null || !user.checkPassword(lb.getPassword())) return Role.INVALID;
 
-            User user = userDao.load(lb.getEmail());
-
-            if (user != null && user.getPassword().equals(lb.getPassword())) {
-                if(user instanceof Affittuario) {
-                    return 1;
-                } else if (user instanceof Locatore) {
-                    return 2;
-                }
-            }
-
-        }
-
-        return 0;
+        if(user instanceof Affittuario) return Role.AFFITTUARIO;
+        else return Role.LOCATORE;
     }
 
-    public boolean register(LoginBean lb) {
+    public RegisterResult register(RegistrationBean rb) {
 
-        if(!userDao.exists(lb.getEmail())){
+        if(!rb.isValid()) return RegisterResult.INVALID;
 
-            User user = userDao.create(lb.getEmail());
+        if(userDao.exists(rb.getEmail())) return RegisterResult.EXISTS;
 
-            if(lb.getRole() == 0){ // affittuario
+        User user = userDao.create(rb.getEmail());
 
-                Affittuario aff = new Affittuario(user);
+        if(rb.getRole() == Role.AFFITTUARIO){
 
-                aff.setNome(lb.getNome());
-                aff.setCognome(lb.getCognome());
-                aff.setPassword(lb.getPassword());
-                aff.setTelefono(lb.getTelefono());
-                aff.setPrenotazioni(new ArrayList<>());
+            Affittuario aff = new Affittuario(user);
 
-                userDao.store(aff);
-                return true;
-            } else if(lb.getRole() == 1) { // locatore
+            aff.setNome(rb.getNome());
+            aff.setCognome(rb.getCognome());
+            aff.setPassword(rb.getPassword());
+            aff.setTelefono(rb.getTelefono());
+            aff.setPrenotazioni(new ArrayList<>());
 
-                Locatore loc = new Locatore(user);
+            userDao.store(aff);
+            return RegisterResult.SUCCESS;
 
-                loc.setNome(lb.getNome());
-                loc.setCognome(lb.getCognome());
-                loc.setPassword(lb.getPassword());
-                loc.setTelefono(lb.getTelefono());
-                loc.setAnnunci(new ArrayList<>());
+        } else if(rb.getRole() == Role.LOCATORE) {
 
-                userDao.store(loc);
-                return true;
-            }
+            Locatore loc = new Locatore(user);
 
-        }
-        return false;
+            loc.setNome(rb.getNome());
+            loc.setCognome(rb.getCognome());
+            loc.setPassword(rb.getPassword());
+            loc.setTelefono(rb.getTelefono());
+            loc.setAnnunci(new ArrayList<>());
+
+            userDao.store(loc);
+            return RegisterResult.SUCCESS;
+
+        } else return RegisterResult.INVALID;
+
     }
 
 }

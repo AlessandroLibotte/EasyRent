@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="JFX" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="JFX runtime" level="project" />
+    <orderEntry type="library" name="h2-2.4.240" level="project" />
   </component>
 </module>

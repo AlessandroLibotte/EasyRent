@@ -11,9 +11,11 @@ import javafx.scene.layout.VBox;
 import main.bean.AnnuncioBean;
 import main.bean.LoginBean;
 import main.bean.PrenotazioneBean;
+import main.bean.RegistrationBean;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
 import main.control.UserController;
+import main.model.Role;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -27,28 +29,30 @@ public class ProfiloViewController {
     private TextField emailField, nomeField, cognomeField, telefonoField;
 
     private boolean inModifica = false;
-    private String email;
+    private final String email;
+    private final Role role;
 
-    private UserController userController;
-    private ViewControllerUtils viewControllerUtils;
-    private PrenotazioneController  prenotazioneController;
-    private AnnuncioController annuncioController;
+    private final UserController userController;
+    private final ViewControllerUtils viewControllerUtils;
+    private final PrenotazioneController  prenotazioneController;
+    private final AnnuncioController annuncioController;
 
     public ProfiloViewController(String email) {
-
-        this.email = email;
 
         this.userController = new UserController();
         this.viewControllerUtils = new ViewControllerUtils();
         this.prenotazioneController = new PrenotazioneController();
         this.annuncioController = new AnnuncioController();
 
+        this.email = email;
+        this.role = userController.assertUser(new LoginBean(email, ""));
+
     }
 
     @FXML
     public void initialize() {
 
-        LoginBean user = userController.getUserInfo(new LoginBean(email, ""));
+        RegistrationBean user = userController.getUserInfo(new LoginBean(email));
 
         String nome = Objects.equals(user.getNome(), "") ? "N.D." :  user.getNome();
         String cognome = Objects.equals(user.getCognome(), "") ? "N.D." : user.getCognome();
@@ -59,42 +63,50 @@ public class ProfiloViewController {
         cognomeLabel.setText(cognome);
         telefonoLabel.setText(telefono);
 
-        if (userController.assertUser(new LoginBean(email, "")) == 1) {
-
-            PrenotazioneBean prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
-
-            for (String title : prens.getTitoli()) {
-
-                AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title, ""));
-
-                String periodo = prens.getDateInizio().get(prens.getTitoli().indexOf(title)).toString() + " - " +
-                        prens.getDateFine().get(prens.getTitoli().indexOf(title)).toString();
-
-                int ospiti = prens.getNumeriOspiti().get(prens.getTitoli().indexOf(title));
-
-                storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(title, "", ann.getIndirizzo(), periodo, ospiti));
-            }
+        switch(role) {
+            case Role.AFFITTUARIO -> loadStoricoPrenotazioniAffittuario();
+            case Role.LOCATORE -> loadStoricoPrenotazioniLocatore();
+            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
         }
-        else {
 
-            AnnuncioBean anns = annuncioController.getAllAnnunci(new AnnuncioBean("", email));
+    }
 
-            for(String titolo: anns.getTitoliAnnunci()){
+    private void loadStoricoPrenotazioniAffittuario(){
 
-                PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, ""));
+        PrenotazioneBean prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
 
-                String indirizzo = anns.getIndirizziAnnunci().get(anns.getTitoliAnnunci().indexOf(titolo));
+        for (String title : prens.getTitoli()) {
 
-                for(String prenotante: prens.getPrenotanti()){
+            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title, ""));
 
-                    String periodo = prens.getDateInizio().get(prens.getPrenotanti().indexOf(prenotante)).toString() + " - " +
-                            prens.getDateFine().get(prens.getPrenotanti().indexOf(prenotante)).toString();
+            String periodo = prens.getDateInizio().get(prens.getTitoli().indexOf(title)).toString() + " - " +
+                    prens.getDateFine().get(prens.getTitoli().indexOf(title)).toString();
 
-                    int ospiti = prens.getNumeriOspiti().get(prens.getPrenotanti().indexOf(prenotante));
+            int ospiti = prens.getNumeriOspiti().get(prens.getTitoli().indexOf(title));
 
-                    storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(titolo, prenotante, indirizzo, periodo, ospiti));
+            storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(title, "", ann.getIndirizzo(), periodo, ospiti));
+        }
 
-                }
+    }
+
+    private void loadStoricoPrenotazioniLocatore(){
+
+        AnnuncioBean anns = annuncioController.getAllAnnunci(new AnnuncioBean("", email));
+
+        for(String titolo: anns.getTitoliAnnunci()){
+
+            PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, ""));
+
+            String indirizzo = anns.getIndirizziAnnunci().get(anns.getTitoliAnnunci().indexOf(titolo));
+
+            for(String prenotante: prens.getPrenotanti()){
+
+                String periodo = prens.getDateInizio().get(prens.getPrenotanti().indexOf(prenotante)).toString() + " - " +
+                        prens.getDateFine().get(prens.getPrenotanti().indexOf(prenotante)).toString();
+
+                int ospiti = prens.getNumeriOspiti().get(prens.getPrenotanti().indexOf(prenotante));
+
+                storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(titolo, prenotante, indirizzo, periodo, ospiti));
 
             }
 
@@ -102,8 +114,8 @@ public class ProfiloViewController {
 
     }
 
-    @FXML
-    private void handleModifica(ActionEvent event) {
+    public void handleModifica(ActionEvent event) {
+
         if (!inModifica) {
 
             inModifica = true;
@@ -121,28 +133,35 @@ public class ProfiloViewController {
 
         } else {
 
-            inModifica = false;
-            modificaButton.setText("Modifica Dati");
+            RegistrationBean rb = new RegistrationBean(nomeField.getText(), cognomeField.getText(), email, "", telefonoField.getText(), Role.INVALID);
 
-            emailLabel.setText(emailField.getText());
-            nomeLabel.setText(nomeField.getText());
-            cognomeLabel.setText(cognomeField.getText());
-            telefonoLabel.setText(telefonoField.getText());
+            if (userController.editUserInfo(rb)) {
 
-            userController.editUserInfo(new LoginBean(nomeField.getText(), cognomeField.getText(), email, "", telefonoField.getText(), 0));
+                inModifica = false;
+                modificaButton.setText("Modifica Dati");
 
-            viewControllerUtils.replaceNode(emailField, emailLabel);
-            viewControllerUtils.replaceNode(nomeField, nomeLabel);
-            viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
-            viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
+                emailLabel.setText(emailField.getText());
+                nomeLabel.setText(nomeField.getText());
+                cognomeLabel.setText(cognomeField.getText());
+                telefonoLabel.setText(telefonoField.getText());
+
+                viewControllerUtils.replaceNode(emailField, emailLabel);
+                viewControllerUtils.replaceNode(nomeField, nomeLabel);
+                viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
+                viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
+
+            } else {
+                viewControllerUtils.mostraErrore("Errore", "Campi non validi", "");
+            }
         }
     }
 
     public void handleIndietro(ActionEvent event) throws IOException {
-
-        if (userController.assertUser(new LoginBean(email, "")) == 1)
-            viewControllerUtils.goToAffittuario(event, email);
-        else viewControllerUtils.goToLocatore(event, email);
+        switch (role) {
+            case Role.AFFITTUARIO -> viewControllerUtils.goToAffittuario(event, email);
+            case Role.LOCATORE -> viewControllerUtils.goToLocatore(event, email);
+            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+        }
     }
 
     @FXML
@@ -165,8 +184,7 @@ public class ProfiloViewController {
 
         Label titoloLabel = new Label();
 
-        if (userController.assertUser(new LoginBean(email, "")) == 1)
-            titoloLabel.setText(titolo);
+        if (userController.assertUser(new LoginBean(email)) == Role.AFFITTUARIO) titoloLabel.setText(titolo);
         else titoloLabel.setText(titolo + " - A carico di: " + prenotante);
 
         titoloLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");

@@ -7,8 +7,6 @@ public class InMemoryPrenotazioneDao extends InMemoryDao<String, Prenotazione> i
 
     private static InMemoryPrenotazioneDao instance;
 
-    private InMemoryPrenotazioneDao() {}
-
     public static InMemoryPrenotazioneDao getInstance() {
         if (instance == null) {
             instance = new InMemoryPrenotazioneDao();

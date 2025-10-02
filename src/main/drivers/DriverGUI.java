@@ -11,7 +11,7 @@ public class DriverGUI extends Application {
 
     public static void main(String[] args) {
 
-        PersistenceProvider.setPersistenceProvider("in memory");
+        PersistenceProvider.setPersistenceProvider("database");
 
         launch(args);
     }
