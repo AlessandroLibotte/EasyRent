@@ -31,12 +31,7 @@ public class ViewControllerUtils {
             }
         });
 
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        stage.setScene(new Scene(root));
-        stage.show();
+        loadSetStage(loader, event);
 
     }
 
@@ -55,6 +50,32 @@ public class ViewControllerUtils {
                 }
             }
         });
+
+        loadSetStage(loader, event);
+
+    }
+
+    public void goToProfilo(ActionEvent event, String email) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloScene.fxml"));
+
+        loader.setControllerFactory(param -> {
+            if (param == ProfiloViewController.class) {
+                return new ProfiloViewController(email);
+            } else {
+                try {
+                    return param.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        loadSetStage(loader, event);
+
+    }
+
+    public void loadSetStage(FXMLLoader loader,ActionEvent event) throws IOException {
 
         Parent root = loader.load();
 
@@ -126,31 +147,6 @@ public class ViewControllerUtils {
         Pane parent = (Pane) oldNode.getParent();
         int index = parent.getChildren().indexOf(oldNode);
         parent.getChildren().set(index, newNode);
-    }
-
-    public void goToProfilo(ActionEvent event, String email) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ProfiloScene.fxml"));
-
-        loader.setControllerFactory(param -> {
-            if (param == ProfiloViewController.class) {
-                return new ProfiloViewController(email);
-            } else {
-                try {
-                    return param.getDeclaredConstructor().newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        stage.setScene(new Scene(root));
-        stage.show();
-
     }
 
 }
