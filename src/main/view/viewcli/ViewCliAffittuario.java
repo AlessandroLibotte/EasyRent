@@ -70,13 +70,13 @@ public class ViewCliAffittuario {
 
             ViewCliUtils.printMsgln("Hai prenotazioni per i seguenti annunci:");
 
-            int action = dynamicMenu(bean.getSearchResults());
+            int action = dynamicMenu(bean.getPrenotanti());
 
-            if (action < 0 || action > bean.getSearchResults().size()+1) continue;
+            if (action < 0 || action > bean.getPrenotanti().size()+1) continue;
 
-            if (action == bean.getSearchResults().size()+1) return;
+            if (action == bean.getPrenotanti().size()+1) return;
 
-            paginaPrenotazione(bean.getSearchResults().get(action-1));
+            paginaPrenotazione(bean.getPrenotanti().get(action-1));
 
         }
 
@@ -100,7 +100,7 @@ public class ViewCliAffittuario {
 
             switch (action) {
                 case "1":
-                    paginaAnnuncio(null, titolo);
+                    paginaAnnuncio(null, titolo, null);
                     break;
                 case "2":
                     return;
@@ -159,7 +159,8 @@ public class ViewCliAffittuario {
                     break;
                 case "6":
                     try {
-                        searchResultsPage(prenotazioneController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti)));
+                        PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
+                        searchResultsPage(prenotazioneController.searchAnnunci(prenBean), prenBean);
                     } catch (DateTimeParseException e){
                         ViewCliUtils.printMsgln("Data inserita non valida");
                     }
@@ -174,23 +175,23 @@ public class ViewCliAffittuario {
 
     }
 
-    private void searchResultsPage(PrenotazioneBean bean) throws IOException {
+    private void searchResultsPage(AnnuncioBean bean, PrenotazioneBean prenBean) throws IOException {
 
         while (!quit) {
 
             ViewCliUtils.printMsgln("Risultati ricerca");
 
-            int action = dynamicMenu(bean.getSearchResults());
+            int action = dynamicMenu(bean.getTitoliAnnunci());
 
-            if (action < 0 || action > bean.getSearchResults().size()+1) continue;
+            if (action < 0 || action > bean.getTitoliAnnunci().size()+1) continue;
 
-            if (action == bean.getSearchResults().size()+1) return;
+            if (action == bean.getTitoliAnnunci().size()+1) return;
 
-            paginaAnnuncio(bean, bean.getSearchResults().get(action-1));
+            paginaAnnuncio(bean, bean.getTitoliAnnunci().get(action-1), prenBean);
         }
     }
 
-    private void paginaAnnuncio(PrenotazioneBean prenBean, String titolo) throws IOException {
+    private void paginaAnnuncio(AnnuncioBean bean, String titolo, PrenotazioneBean prenBean) throws IOException {
 
         AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo, currentUser));
 
@@ -201,7 +202,7 @@ public class ViewCliAffittuario {
             ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
             ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
             ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
-            if(prenBean != null) ViewCliUtils.printMsgln("1) Prenota");
+            if(bean != null) ViewCliUtils.printMsgln("1) Prenota");
             ViewCliUtils.printMsgln("2) Back");
 
             ViewCliUtils.printMsg(": ");
@@ -209,7 +210,7 @@ public class ViewCliAffittuario {
 
             switch (action) {
                 case "1":
-                    if(prenBean != null) {
+                    if(bean != null) {
                         prenotazioneController.prenota(annBean, prenBean);
                         ViewCliUtils.printMsgln("Prenotazione riuscita");
                         return;

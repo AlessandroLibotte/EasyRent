@@ -4,15 +4,20 @@ import java.util.List;
 
 public class Annuncio {
 
+    private String owner;
     private String titolo;
     private String descrizione;
     private Immobile immobile;
     private int voto;
+    private double prezzoPerNotte;
     private List<Prenotazione> prenotazioni;
 
     public Annuncio(String titolo){
         this.titolo = titolo;
     }
+
+    public String getOwner() { return owner; }
+    public void setOwner(String owner) { this.owner = owner; }
 
     public String getTitolo() {
         return titolo;
@@ -41,6 +46,9 @@ public class Annuncio {
     public void setVoto(int voto) {
         this.voto = voto;
     }
+
+    public double getPrezzoPerNotte() { return prezzoPerNotte; }
+    public void setPrezzoPerNotte(double prezzoPerNotte) { this.prezzoPerNotte = prezzoPerNotte; }
 
     public List<Prenotazione> getPrenotazioni() {
         return prenotazioni;

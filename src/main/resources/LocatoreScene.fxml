@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.view.viewgui.controllers.LocatoreViewController"
+            prefWidth="900.0" prefHeight="600.0"
+            style="-fx-background-color: #f4f7fb;">
+    <children>
+
+        <!-- Barra superiore con pulsanti -->
+        <HBox layoutX="0.0" layoutY="0.0" prefHeight="60.0" prefWidth="900.0" spacing="12.0"
+              alignment="CENTER_LEFT"
+              style="-fx-background-color: #d7e8f9; -fx-padding: 10;">
+            <children>
+                <Label text="Area Locatore" style="-fx-text-fill: #2b5797;">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18.0" />
+                    </font>
+                </Label>
+
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- Pulsante View Profile -->
+                <Button fx:id="viewProfileButton" text="👤 Profilo"
+                        onAction="#handleViewProfile"
+                        style="-fx-background-color: #cce6ff; -fx-text-fill: #2b5797; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-pref-width: 100;"/>
+
+                <!-- Pulsante Log Off -->
+                <Button fx:id="logoffButton" text="⎋ Log Off"
+                        onAction="#handleLogOff"
+                        style="-fx-background-color: #ff6666; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-pref-width: 90;"/>
+            </children>
+        </HBox>
+
+        <!-- Contenuto principale diviso in due sezioni -->
+        <HBox layoutX="0.0" layoutY="60.0" prefWidth="900.0" prefHeight="540.0"
+              spacing="15.0" style="-fx-padding: 10;">
+
+            <!-- Colonna sinistra: Ricerca Compagnie -->
+            <VBox prefWidth="300.0" prefHeight="540.0" spacing="10.0"
+                  style="-fx-background-color: #e8f1fc; -fx-background-radius: 10; -fx-padding: 10;">
+                <children>
+
+                    <!-- Barra di ricerca compagnie -->
+                    <HBox spacing="8.0">
+                        <children>
+                            <TextField fx:id="searchCompagniaField" promptText="Cerca compagnia..."
+                                       prefWidth="200.0"
+                                       style="-fx-background-radius: 8; -fx-background-color: white;"/>
+                            <Button text="🔍" onAction="#handleSearchCompagnia"
+                                    style="-fx-background-color: #4da6ff; -fx-text-fill: white;
+                                           -fx-font-weight: bold; -fx-background-radius: 8;
+                                           -fx-pref-width: 40;"/>
+                        </children>
+                    </HBox>
+
+                    <!-- Lista risultati compagnie -->
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                        <content>
+                            <VBox spacing="8.0" style="-fx-padding: 5;">
+                                <children>
+                                    <Label text="Compagnia 1" style="-fx-background-color: white; -fx-background-radius: 10;
+                                    -fx-border-radius: 10; -fx-border-color: #c6d9f1;
+                                    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2); -fx-padding: 5"/>
+                                    <Label text="Compagnia 2" style="-fx-background-color: white; -fx-background-radius: 10;
+                                    -fx-border-radius: 10; -fx-border-color: #c6d9f1;
+                                    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2); -fx-padding: 5"/>
+                                    <Label text="Compagnia 3" style="-fx-background-color: white; -fx-background-radius: 10;
+                                    -fx-border-radius: 10; -fx-border-color: #c6d9f1;
+                                    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 6, 0, 0, 2); -fx-padding: 5"/>
+                                </children>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+
+                </children>
+            </VBox>
+
+            <!-- Colonna destra: I tuoi annunci -->
+            <VBox prefWidth="570.0" prefHeight="540.0" spacing="10.0"
+                  style="-fx-background-color: #ffffff; -fx-background-radius: 10; -fx-padding: 10;
+                         -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 8, 0, 0, 3);">
+                <children>
+
+                    <!-- Titolo + pulsante crea annuncio -->
+                    <HBox alignment="CENTER_LEFT" spacing="15.0">
+                        <children>
+                            <Label text="I tuoi annunci" style="-fx-text-fill: #2b5797;">
+                                <font>
+                                    <Font name="Segoe UI Bold" size="20.0" />
+                                </font>
+                            </Label>
+                            <Button fx:id="createAnnuncioButton" text="+ Crea Nuovo Annuncio"
+                                    onAction="#handleCreateAnnuncio"
+                                    style="-fx-background-color: #4da6ff; -fx-text-fill: white; -fx-font-weight: bold;
+                                           -fx-background-radius: 8; -fx-pref-height: 32;"/>
+                        </children>
+                    </HBox>
+
+                    <!-- ScrollPane con lista annunci -->
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                        <content>
+                            <TilePane fx:id="annunciTilePane" hgap="15.0" vgap="15.0" prefColumns="2" prefWidth="550.0"
+                                      style="-fx-padding: 10;">
+
+                            </TilePane>
+                        </content>
+                    </ScrollPane>
+
+                </children>
+            </VBox>
+
+        </HBox>
+
+    </children>
+</AnchorPane>

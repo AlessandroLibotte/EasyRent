@@ -16,7 +16,20 @@ public class PrenotazioneBean {
     private LocalDate startDate;
     private LocalDate endDate;
     private int numOspiti;
-    private List<String> searchResults;
+
+    private List<String> prenotanti;
+    private List<String> titoli;
+    private List<LocalDate> dateInizio;
+    private List<LocalDate> dateFine;
+    private List<Integer> numeriOspiti;
+
+    public PrenotazioneBean(List<String> prenotanti, List<String> titoli, List<LocalDate> dateInizio, List<LocalDate> dateFine, List<Integer> numeriOspiti) {
+        this.prenotanti = prenotanti;
+        this.titoli = titoli;
+        this.dateInizio = dateInizio;
+        this.dateFine = dateFine;
+        this.numeriOspiti = numeriOspiti;
+    }
 
     public PrenotazioneBean(String localita, String startDate, String endDate, int numOspiti) throws DateTimeParseException{
         this.localita = localita;
@@ -25,8 +38,11 @@ public class PrenotazioneBean {
         this.numOspiti = numOspiti;
     }
 
-    public PrenotazioneBean(List<String> searchResults) {
-        this.searchResults = searchResults;
+    public PrenotazioneBean(String localita, LocalDate startDate, LocalDate endDate, int numOspiti) {
+        this.localita = localita;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.numOspiti = numOspiti;
     }
 
     public PrenotazioneBean(Prenotazione p){
@@ -48,13 +64,6 @@ public class PrenotazioneBean {
     }
     public void setCurrentUser(String currentUser) {
         this.currentUser = currentUser;
-    }
-
-    public List<String> getSearchResults() {
-        return searchResults;
-    }
-    public void setSearchResults(List<String> searchResults) {
-        this.searchResults = searchResults;
     }
 
     public String getLocalita() {
@@ -83,5 +92,45 @@ public class PrenotazioneBean {
     }
     public void setNumOspiti(int numOspiti) {
         this.numOspiti = numOspiti;
+    }
+
+    public List<String> getPrenotanti() {
+        return prenotanti;
+    }
+
+    public void setPrenotanti(List<String> prenotanti) {
+        this.prenotanti = prenotanti;
+    }
+
+    public List<LocalDate> getDateInizio() {
+        return dateInizio;
+    }
+
+    public void setDateInizio(List<LocalDate> dateInizio) {
+        this.dateInizio = dateInizio;
+    }
+
+    public List<LocalDate> getDateFine() {
+        return dateFine;
+    }
+
+    public void setDateFine(List<LocalDate> dateFine) {
+        this.dateFine = dateFine;
+    }
+
+    public List<Integer> getNumeriOspiti() {
+        return numeriOspiti;
+    }
+
+    public void setNumeriOspiti(List<Integer> numeriOspiti) {
+        this.numeriOspiti = numeriOspiti;
+    }
+
+    public List<String> getTitoli() {
+        return titoli;
+    }
+
+    public void setTitoli(List<String> titoli) {
+        this.titoli = titoli;
     }
 }

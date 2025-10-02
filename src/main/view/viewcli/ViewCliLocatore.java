@@ -63,9 +63,10 @@ public class ViewCliLocatore {
 
         String indirizzo;
         String descrizione;
-        boolean[] servizi;
+        String servizi;
         int maxOspiti;
         String oldTitolo = titolo;
+        double prezzo;
 
         boolean modifica = false;
 
@@ -74,13 +75,15 @@ public class ViewCliLocatore {
             modifica = true;
             indirizzo = ann.getIndirizzo();
             descrizione = ann.getDescrizione();
-            servizi = ann.getServizi();
+            servizi = String.join(", ", ann.getServizi());
             maxOspiti = ann.getMaxOspiti();
+            prezzo = ann.getPrice();
         } else {
             indirizzo = "";
             descrizione = "";
-            servizi = new boolean[0];
+            servizi = "";
             maxOspiti = 1;
+            prezzo = 0;
         }
 
         while(!quit) {
@@ -91,13 +94,14 @@ public class ViewCliLocatore {
             ViewCliUtils.printMsgln("\t1) Titolo: " + titolo);
             ViewCliUtils.printMsgln("\t2) Indirizzo: " + indirizzo);
             ViewCliUtils.printMsgln("\t3) Descrizione: " + descrizione);
-            ViewCliUtils.printMsgln("\t4) Servizi: " + Arrays.toString(servizi));
+            ViewCliUtils.printMsgln("\t4) Servizi: " + servizi);
             ViewCliUtils.printMsgln("\t5) Massimo numero ospiti: " + maxOspiti);
+            ViewCliUtils.printMsgln("\t6) Prezzo per notte: " + prezzo);
 
-            if(modifica) ViewCliUtils.printMsgln("\t6) Appica modifiche");
-            else ViewCliUtils.printMsgln("\t6) Crea");
+            if(modifica) ViewCliUtils.printMsgln("\t7) Appica modifiche");
+            else ViewCliUtils.printMsgln("\t7) Crea");
 
-            ViewCliUtils.printMsgln("\t7) Annulla");
+            ViewCliUtils.printMsgln("\t8) Annulla");
             ViewCliUtils.printMsg(": ");
 
             String action = reader.readLine();
@@ -128,9 +132,14 @@ public class ViewCliLocatore {
                     maxOspiti = Integer.parseInt(reader.readLine());
                     break;
                 case "6":
-                    return creaModificaAnnuncio(modifica,
-                            new AnnuncioBean(currentUser, oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti));
+                    ViewCliUtils.printMsgln("Prezzo per notte:");
+                    ViewCliUtils.printMsg("\t: ");
+                    prezzo = Double.parseDouble(reader.readLine());
+                    break;
                 case "7":
+                    return creaModificaAnnuncio(modifica,
+                            new AnnuncioBean(currentUser, oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti, prezzo, 0));
+                case "8":
                     return "";
                 default:
                     break;
@@ -160,7 +169,7 @@ public class ViewCliLocatore {
 
         while(!quit) {
 
-            ArrayList<String> titles = (ArrayList<String>) annuncioController.getCurrentUserAnnunci(new AnnuncioBean(null, currentUser)).getAnnunci();
+            ArrayList<String> titles = (ArrayList<String>) annuncioController.getAllAnnunci(new AnnuncioBean(currentUser)).getTitoliAnnunci();
             ViewCliUtils.printMsgln("I tuoi Annunci: ");
 
             int action = dynamicMenu(titles);
@@ -215,7 +224,7 @@ public class ViewCliLocatore {
 
     private void menuPrenotazioni(String titolo) throws IOException {
 
-        ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, currentUser)).getAnnunci();
+        ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, currentUser)).getPrenotanti();
 
         while(!quit) {
 
