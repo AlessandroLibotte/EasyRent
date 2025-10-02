@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.layout.Priority?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="900.0" prefHeight="600.0"
+            fx:controller="main.view.viewgui.controllers.AffittuarioViewController"
+            style="-fx-background-color: #f4f7fb;">
+    <children>
+
+        <!-- Barra di ricerca moderna -->
+        <HBox layoutX="0.0" layoutY="0.0" prefHeight="60.0" prefWidth="900.0" spacing="12.0"
+              alignment="CENTER_LEFT"
+              style="-fx-background-color: #d7e8f9; -fx-padding: 10;">
+            <children>
+                <TextField fx:id="localitaField" promptText="Inserisci località" prefWidth="220.0"
+                           style="-fx-background-radius: 8; -fx-background-color: white;"/>
+                <DatePicker fx:id="dataInizioField" promptText="Data inizio" />
+                <DatePicker fx:id="dataFineField" promptText="Data fine" />
+                <TextField fx:id="numeroOspitiField" promptText="Numero ospiti" prefWidth="50.0"
+                           style="-fx-background-radius: 8; -fx-background-color: white;"/>
+                <Button text="🔍" onAction="#handleSearchAnnuncio"
+                        style="-fx-background-color: #4da6ff; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-pref-width: 40;"/>
+
+                <!-- Spacer per spingere i pulsanti a destra -->
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- Pulsante View Profile -->
+                <Button fx:id="viewProfileButton" text="👤 Profilo"
+                        onAction="#handleViewProfile"
+                        style="-fx-background-color: #cce6ff; -fx-text-fill: #2b5797; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-pref-width: 100;"/>
+
+                <!-- Pulsante Log Off -->
+                <Button fx:id="logoffButton" text="⎋ Log Off"
+                        onAction="#handleLogOff"
+                        style="-fx-background-color: #ff6666; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 8; -fx-pref-width: 90;"/>
+            </children>
+        </HBox>
+
+        <!-- Barra laterale filtri -->
+        <VBox layoutX="0.0" layoutY="60.0" prefWidth="160.0" prefHeight="540.0" spacing="8.0"
+              style="-fx-background-color: #e8f1fc; -fx-padding: 15;">
+            <children>
+                <Label text="Filtri">
+                    <font>
+                        <Font name="Segoe UI Semibold" size="16.0" />
+                    </font>
+                </Label>
+                <CheckBox text="Filter1"/>
+                <CheckBox text="Filter2"/>
+                <CheckBox text="Filter3"/>
+                <CheckBox text="Filter4"/>
+                <CheckBox text="Filter5"/>
+                <CheckBox text="Filter6"/>
+                <CheckBox text="Filter7"/>
+                <CheckBox text="Filter8"/>
+                <CheckBox text="Filter9"/>
+                <CheckBox text="Filter10"/>
+            </children>
+        </VBox>
+
+        <!-- Area risultati -->
+        <ScrollPane layoutX="160.0" layoutY="60.0" prefWidth="740.0" prefHeight="540.0" fitToWidth="true"
+                    style="-fx-background-color:transparent;">
+            <content>
+                <TilePane fx:id = "annunciTilePane" hgap="15.0" vgap="15.0" prefColumns="2" prefWidth="700.0" style="-fx-padding: 15;">
+                    <children>
+
+                    </children>
+                </TilePane>
+            </content>
+        </ScrollPane>
+
+    </children>
+</AnchorPane>

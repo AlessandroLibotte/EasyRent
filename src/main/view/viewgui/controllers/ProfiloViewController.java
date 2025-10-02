@@ -1,0 +1,190 @@
+package main.view.viewgui.controllers;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import main.bean.AnnuncioBean;
+import main.bean.LoginBean;
+import main.bean.PrenotazioneBean;
+import main.control.AnnuncioController;
+import main.control.PrenotazioneController;
+import main.control.UserController;
+
+import java.io.IOException;
+import java.util.Objects;
+
+public class ProfiloViewController {
+
+    public Label emailLabel, nomeLabel, cognomeLabel, telefonoLabel;
+    public VBox storicoPrenotazioniBox;
+    @FXML
+    private Button modificaButton;
+    private TextField emailField, nomeField, cognomeField, telefonoField;
+
+    private boolean inModifica = false;
+    private String email;
+
+    private UserController userController;
+    private ViewControllerUtils viewControllerUtils;
+    private PrenotazioneController  prenotazioneController;
+    private AnnuncioController annuncioController;
+
+    public ProfiloViewController(String email) {
+
+        this.email = email;
+
+        this.userController = new UserController();
+        this.viewControllerUtils = new ViewControllerUtils();
+        this.prenotazioneController = new PrenotazioneController();
+        this.annuncioController = new AnnuncioController();
+
+    }
+
+    @FXML
+    public void initialize() {
+
+        LoginBean user = userController.getUserInfo(new LoginBean(email, ""));
+
+        String nome = Objects.equals(user.getNome(), "") ? "N.D." :  user.getNome();
+        String cognome = Objects.equals(user.getCognome(), "") ? "N.D." : user.getCognome();
+        String telefono =  Objects.equals(user.getTelefono(), "") ? "N.D." : user.getTelefono();
+
+        emailLabel.setText(user.getEmail());
+        nomeLabel.setText(nome);
+        cognomeLabel.setText(cognome);
+        telefonoLabel.setText(telefono);
+
+        if (userController.assertUser(new LoginBean(email, "")) == 1) {
+
+            PrenotazioneBean prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
+
+            for (String title : prens.getTitoli()) {
+
+                AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title, ""));
+
+                String periodo = prens.getDateInizio().get(prens.getTitoli().indexOf(title)).toString() + " - " +
+                        prens.getDateFine().get(prens.getTitoli().indexOf(title)).toString();
+
+                int ospiti = prens.getNumeriOspiti().get(prens.getTitoli().indexOf(title));
+
+                storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(title, "", ann.getIndirizzo(), periodo, ospiti));
+            }
+        }
+        else {
+
+            AnnuncioBean anns = annuncioController.getAllAnnunci(new AnnuncioBean("", email));
+
+            for(String titolo: anns.getTitoliAnnunci()){
+
+                PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, ""));
+
+                String indirizzo = anns.getIndirizziAnnunci().get(anns.getTitoliAnnunci().indexOf(titolo));
+
+                for(String prenotante: prens.getPrenotanti()){
+
+                    String periodo = prens.getDateInizio().get(prens.getPrenotanti().indexOf(prenotante)).toString() + " - " +
+                            prens.getDateFine().get(prens.getPrenotanti().indexOf(prenotante)).toString();
+
+                    int ospiti = prens.getNumeriOspiti().get(prens.getPrenotanti().indexOf(prenotante));
+
+                    storicoPrenotazioniBox.getChildren().add(creaCardPrenotazione(titolo, prenotante, indirizzo, periodo, ospiti));
+
+                }
+
+            }
+
+        }
+
+    }
+
+    @FXML
+    private void handleModifica(ActionEvent event) {
+        if (!inModifica) {
+
+            inModifica = true;
+            modificaButton.setText("Salva");
+
+            emailField = new TextField(emailLabel.getText());
+            nomeField = new TextField(nomeLabel.getText());
+            cognomeField = new TextField(cognomeLabel.getText());
+            telefonoField = new TextField(telefonoLabel.getText());
+
+            viewControllerUtils.replaceNode(emailLabel, emailField);
+            viewControllerUtils.replaceNode(nomeLabel, nomeField);
+            viewControllerUtils.replaceNode(cognomeLabel, cognomeField);
+            viewControllerUtils.replaceNode(telefonoLabel, telefonoField);
+
+        } else {
+
+            inModifica = false;
+            modificaButton.setText("Modifica Dati");
+
+            emailLabel.setText(emailField.getText());
+            nomeLabel.setText(nomeField.getText());
+            cognomeLabel.setText(cognomeField.getText());
+            telefonoLabel.setText(telefonoField.getText());
+
+            userController.editUserInfo(new LoginBean(nomeField.getText(), cognomeField.getText(), email, "", telefonoField.getText(), 0));
+
+            viewControllerUtils.replaceNode(emailField, emailLabel);
+            viewControllerUtils.replaceNode(nomeField, nomeLabel);
+            viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
+            viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
+        }
+    }
+
+    public void handleIndietro(ActionEvent event) throws IOException {
+
+        if (userController.assertUser(new LoginBean(email, "")) == 1)
+            viewControllerUtils.goToAffittuario(event, email);
+        else viewControllerUtils.goToLocatore(event, email);
+    }
+
+    @FXML
+    private HBox creaCardPrenotazione(String titolo, String prenotante, String indirizzo, String periodo, int ospiti) {
+        // Contenitore principale della card
+        HBox card = new HBox(15);
+        card.setStyle("-fx-background-color: #f9f9f9; -fx-background-radius: 10;" +
+                "-fx-border-color: #c6d9f1; -fx-border-radius: 10;" +
+                "-fx-padding: 10;");
+        card.setPrefHeight(100);
+
+        // Placeholder immagine
+        Region immaginePlaceholder = new Region();
+        immaginePlaceholder.setPrefWidth(100);
+        immaginePlaceholder.setPrefHeight(80);
+        immaginePlaceholder.setStyle("-fx-background-color: #b3d9ff; -fx-background-radius: 8;");
+
+        // Box contenente i dettagli
+        VBox dettagliBox = new VBox(5);
+
+        Label titoloLabel = new Label();
+
+        if (userController.assertUser(new LoginBean(email, "")) == 1)
+            titoloLabel.setText(titolo);
+        else titoloLabel.setText(titolo + " - A carico di: " + prenotante);
+
+        titoloLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+        Label indirizzoLabel = new Label(indirizzo);
+        indirizzoLabel.setStyle("-fx-text-fill: #555;");
+
+        Label periodoLabel = new Label("Periodo: " + periodo);
+        periodoLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12;");
+
+        Label ospitiLabel = new Label("Ospiti: " + ospiti);
+        ospitiLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12;");
+
+        dettagliBox.getChildren().addAll(titoloLabel, indirizzoLabel, periodoLabel, ospitiLabel);
+
+        card.getChildren().addAll(immaginePlaceholder, dettagliBox);
+
+        return card;
+    }
+
+}

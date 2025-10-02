@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.view.viewgui.controllers.RegisterViewController"
+            fx:id="rootPane"
+            prefWidth="900.0" prefHeight="600.0"
+            style="-fx-background-color: #f4f7fb;">
+    <children>
+
+        <!-- Card centrale -->
+        <VBox layoutX="250.0" layoutY="50.0" prefWidth="400.0" spacing="20.0"
+              style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12;
+                     -fx-border-color: #c6d9f1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 3);
+                     -fx-padding: 30;">
+            <children>
+
+                <!-- Titolo -->
+                <Label text="Registrazione" style="-fx-text-fill: #2b5797; -fx-alignment: center;">
+                    <font>
+                        <Font name="Segoe UI Bold" size="28.0"/>
+                    </font>
+                </Label>
+
+                <!-- Campo Email -->
+                <TextField fx:id="emailField" promptText="Email"
+                           style="-fx-background-color: #f4f7fb; -fx-background-radius: 8; -fx-padding: 10;"/>
+
+                <!-- Campo Password -->
+                <PasswordField fx:id="passwordField" promptText="Password"
+                               style="-fx-background-color: #f4f7fb; -fx-background-radius: 8; -fx-padding: 10;"/>
+
+                <!-- Selettore ruolo -->
+                <VBox spacing="5.0">
+                    <Label text="Ruolo" style="-fx-font-weight: bold;"/>
+                    <HBox spacing="15.0">
+                        <children>
+                            <RadioButton text="Affittuario" fx:id="affittuarioRadio"/>
+                            <RadioButton text="Locatore" fx:id="locatoreRadio"/>
+                            <RadioButton text="Compagnia" fx:id="compagniaRadio"/>
+                        </children>
+                    </HBox>
+                </VBox>
+
+                <!-- Campi opzionali -->
+                <TextField fx:id="nomeField" promptText="Nome (opzionale)"
+                           style="-fx-background-color: #f4f7fb; -fx-background-radius: 8; -fx-padding: 10;"/>
+                <TextField fx:id="cognomeField" promptText="Cognome (opzionale)"
+                           style="-fx-background-color: #f4f7fb; -fx-background-radius: 8; -fx-padding: 10;"/>
+                <TextField fx:id="telefonoField" promptText="Telefono (opzionale)"
+                           style="-fx-background-color: #f4f7fb; -fx-background-radius: 8; -fx-padding: 10;"/>
+
+                <!-- Pulsanti -->
+                <HBox spacing="20.0" alignment="CENTER">
+                    <children>
+                        <Button fx:id="backButton" text="Indietro"
+                                onAction="#back"
+                                style="-fx-background-color: #cce6ff; -fx-text-fill: #2b5797; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-width: 120;"/>
+                        <Button fx:id="registerButton" text="Registrati"
+                                onAction="#register"
+                                style="-fx-background-color: #4da6ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-width: 120;"/>
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>
