@@ -20,6 +20,8 @@ public class PrenotazioneController {
 
     public AnnuncioBean searchAnnunci(PrenotazioneBean bean) {
 
+        if(!bean.isValid()) return null;
+
         List<Annuncio> annunci = annDao.loadAll();
 
         List<String> resultsTitolo = new ArrayList<>();
@@ -28,25 +30,26 @@ public class PrenotazioneController {
         List<Integer> resultsVoto = new ArrayList<>();
 
         for (Annuncio ann : annunci) {
-            if (ann.getImmobile().getIndirizzo().contains(bean.getLocalita())) {
-                if (bean.getNumOspiti() <= ann.getImmobile().getMaxOspiti()) {
-                    if (!ann.getPrenotazioni().isEmpty() && bean.getStartDate() != null && bean.getEndDate() != null) {
-                        for (Prenotazione p : ann.getPrenotazioni()) {
-                            if (p.getEndDate().isBefore(bean.getStartDate())) {
-                                resultsTitolo.add(ann.getTitolo());
-                                resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
-                                resultsPrezzo.add(ann.getPrezzoPerNotte());
-                                resultsVoto.add(ann.getVoto());
-                            }
-                        }
-                    } else {
+
+            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())
+                    || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
+
+            if (!ann.getPrenotazioni().isEmpty()) {
+                for (Prenotazione p : ann.getPrenotazioni()) {
+                    if (p.getEndDate().isBefore(bean.getStartDate())) {
                         resultsTitolo.add(ann.getTitolo());
                         resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
                         resultsPrezzo.add(ann.getPrezzoPerNotte());
                         resultsVoto.add(ann.getVoto());
                     }
                 }
+            } else {
+                resultsTitolo.add(ann.getTitolo());
+                resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
+                resultsPrezzo.add(ann.getPrezzoPerNotte());
+                resultsVoto.add(ann.getVoto());
             }
+
         }
 
         return new AnnuncioBean(resultsTitolo, resultsIndirizzo, resultsVoto, resultsPrezzo);
@@ -56,13 +59,13 @@ public class PrenotazioneController {
 
         User user = userDao.load(bean.getCurrentUser());
 
-        List<Annuncio> prens = null;
+        List<Prenotazione> prens = new ArrayList<>();
 
         if (user instanceof  Affittuario) {
             prens = ((Affittuario)user).getPrenotazioni();
         }
         else if (user instanceof Locatore) {
-            prens = ((Locatore)user).getAnnunci();
+            for (Annuncio ann : ((Locatore)user).getAnnunci()) prens.addAll(ann.getPrenotazioni());
         }
 
         List<String> resultPrenotanti = new ArrayList<>();
@@ -71,24 +74,21 @@ public class PrenotazioneController {
         List<LocalDate> resultEndDates = new ArrayList<>();
         List<Integer> resultNumOspiti = new ArrayList<>();
 
-        if(prens == null || prens.isEmpty()) return new PrenotazioneBean(resultPrenotanti, resultTitles, resultStartDates, resultEndDates, resultNumOspiti);
+        if(prens.isEmpty()) return new PrenotazioneBean(resultPrenotanti, resultTitles, resultStartDates, resultEndDates, resultNumOspiti);
 
-        for (Annuncio ann : prens) {
-            for (Prenotazione p : ann.getPrenotazioni()) {
-                if(user instanceof Affittuario && p.getPrenotante().equals(user.getEmail())) {
-                    resultTitles.add(ann.getTitolo());
-                    resultStartDates.add(p.getStartDate());
-                    resultEndDates.add(p.getEndDate());
-                    resultNumOspiti.add(p.getNumOspiti());
-                }
-                else if (user instanceof Locatore){
-                    System.out.println(p.getPrenotante());
-                    resultPrenotanti.add(p.getPrenotante());
-                    resultTitles.add(ann.getTitolo());
-                    resultStartDates.add(p.getStartDate());
-                    resultEndDates.add(p.getEndDate());
-                    resultNumOspiti.add(p.getNumOspiti());
-                }
+        for (Prenotazione p : prens) {
+            if(user instanceof Affittuario && p.getPrenotante().equals(user.getEmail())) {
+                resultTitles.add(p.getTitoloAnnuncio());
+                resultStartDates.add(p.getStartDate());
+                resultEndDates.add(p.getEndDate());
+                resultNumOspiti.add(p.getNumOspiti());
+            }
+            else if (user instanceof Locatore){
+                resultPrenotanti.add(p.getPrenotante());
+                resultTitles.add(p.getTitoloAnnuncio());
+                resultStartDates.add(p.getStartDate());
+                resultEndDates.add(p.getEndDate());
+                resultNumOspiti.add(p.getNumOspiti());
             }
         }
 
@@ -118,15 +118,14 @@ public class PrenotazioneController {
         Annuncio ann = annDao.load(annBean.getTitolo());
 
         //get the already present reservations
-        ArrayList<Prenotazione> prens = (ArrayList<Prenotazione>) ann.getPrenotazioni();
+        List<Prenotazione> prens = ann.getPrenotazioni();
 
         //create new reservation
-        Prenotazione newPren = prenDao.create(prenBean.getCurrentUser());
+        Prenotazione newPren = prenDao.create(ann.getTitolo());
         newPren.setStartDate(prenBean.getStartDate());
         newPren.setEndDate(prenBean.getEndDate());
         newPren.setNumOspiti(prenBean.getNumOspiti());
-
-        prenDao.store(newPren);
+        newPren.setPrenotante(prenBean.getCurrentUser());
 
         // add reservation to reservation list
         prens.add(newPren);
@@ -135,13 +134,13 @@ public class PrenotazioneController {
 
         //update current user's reservations
         Affittuario aff = (Affittuario) userDao.load(prenBean.getCurrentUser());
-        ArrayList<Annuncio> currPrens = (ArrayList<Annuncio>) aff.getPrenotazioni();
+        List<Prenotazione> currPrens = aff.getPrenotazioni();
         if (currPrens == null) currPrens = new ArrayList<>();
-        currPrens.add(ann);
+        currPrens.add(newPren);
         aff.setPrenotazioni(currPrens);
 
         //store entities
-        annDao.delete(ann.getTitolo());
+        prenDao.store(newPren);
         annDao.store(ann);
         userDao.store(aff);
 

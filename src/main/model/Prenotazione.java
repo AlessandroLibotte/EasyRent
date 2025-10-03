@@ -4,13 +4,19 @@ import java.time.LocalDate;
 
 public class Prenotazione {
 
+    private int id;
     private LocalDate startDate;
     private LocalDate endDate;
     private int numOspiti;
     private String prenotante;
+    private String titoloAnnuncio;
 
-    public Prenotazione(String prenotante) {
-        this.prenotante = prenotante;
+    public Prenotazione(int id) {
+        this.id = id;
+    }
+
+    public Prenotazione(String titoloAnnuncio){
+        this.titoloAnnuncio = titoloAnnuncio;
     }
 
     public String getPrenotante() {
@@ -41,4 +47,17 @@ public class Prenotazione {
         this.numOspiti = numOspiti;
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitoloAnnuncio() {
+        return titoloAnnuncio;
+    }
+    public void setTitoloAnnuncio(String titoloAnnuncio) {
+        this.titoloAnnuncio = titoloAnnuncio;
+    }
 }

@@ -9,6 +9,9 @@ public class Locatore extends User{
     public Locatore(User user) {
         super(user.getEmail());
         this.password = user.getPassword();
+        this.nome = user.getNome();
+        this.cognome = user.getCognome();
+        this.telefono = user.getTelefono();
     }
 
     public List<Annuncio> getAnnunci() {

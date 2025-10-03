@@ -2,14 +2,15 @@ package main.persistence;
 
 import java.util.List;
 
-public interface Dao<K, E> {
+public interface Dao<K, V> {
 
-    E create(K id);
+    V create(K id);
 
-    E load(K id);
-    void store(E entity);
+    V load(K id);
+    void store(V entity);
     void delete(K id);
     boolean exists(K id);
-    List<E> loadAll();
+    List<V> loadAll();
+    List<V> loadAllWhere(String column, String value);
 
 }

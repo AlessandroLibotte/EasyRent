@@ -1,12 +1,14 @@
 package main.persistence;
 
+import main.persistence.database.DatabaseDaoFactory;
 import main.persistence.memory.InMemoryDaoFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
 public enum PersistenceProvider {
 
-    IN_MEMORY("in memory", InMemoryDaoFactory.class);
+    IN_MEMORY("in memory", InMemoryDaoFactory.class),
+    DATABASE("database", DatabaseDaoFactory.class);
 
     private final String name;
     private final Class<? extends DaoFactory> daoFactoryClass;

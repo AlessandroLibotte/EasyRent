@@ -7,8 +7,6 @@ public class InMemoryImmobileDao extends InMemoryDao<String, Immobile> implement
 
     private static InMemoryImmobileDao instance;
 
-    private InMemoryImmobileDao() {}
-
     public static InMemoryImmobileDao getInstance() {
         if (instance == null) {
             instance = new InMemoryImmobileDao();
