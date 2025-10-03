@@ -7,11 +7,14 @@ import java.util.List;
 
 public abstract class DatabaseDao<K, V> implements Dao<K, V> {
 
+    private static final String WHERE = " WHERE ";
+    private static final String SELECTALLFROM = "SELECT * FROM ";
+
     protected final Connection conn;
     protected String tableName;
     protected String primaryKeyColumn;
 
-    public DatabaseDao(String tableName, String primaryKeyColumn) throws SQLException {
+    protected DatabaseDao(String tableName, String primaryKeyColumn) throws SQLException {
         conn = DriverManager.getConnection("jdbc:h2:~/easyrent", "", "");
         this.tableName = tableName;
         this.primaryKeyColumn = primaryKeyColumn;
@@ -23,7 +26,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
 
     @Override
     public V load(K id) {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + primaryKeyColumn + " = ?";
+        String sql = SELECTALLFROM + tableName + WHERE + primaryKeyColumn + " = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -50,7 +53,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
     protected abstract void insert(V entity) throws SQLException;
 
     public void delete(K id) {
-        String sql = "DELETE FROM " + tableName + " WHERE " + primaryKeyColumn + " = ?";
+        String sql = "DELETE FROM " + tableName + WHERE + primaryKeyColumn + " = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, id);
             ps.executeUpdate();
@@ -61,7 +64,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
 
     @Override
     public boolean exists(K id) {
-        String sql = "SELECT COUNT(*) FROM " + tableName + " WHERE " + primaryKeyColumn + " = ?";
+        String sql = "SELECT COUNT(*) FROM " + tableName + WHERE + primaryKeyColumn + " = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -76,7 +79,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
     @Override
     public List<V> loadAll() {
         List<V> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + tableName;
+        String sql = SELECTALLFROM + tableName;
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while(rs.next()) {
@@ -90,7 +93,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
 
     public List<V> loadAllWhere(String column, String value) {
         List<V> list = new ArrayList<>();
-        String sql = "SELECT * FROM " + tableName + " WHERE "+ column +"=?";
+        String sql = SELECTALLFROM + tableName + WHERE + column +"=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, value);
             try (ResultSet rs = ps.executeQuery()) {

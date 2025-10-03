@@ -4,7 +4,7 @@ import main.model.Affittuario;
 import main.model.Locatore;
 import main.model.Role;
 import main.model.User;
-import main.persistence.UserDao;
+import main.persistence.*;
 
 import java.sql.*;
 
@@ -40,13 +40,13 @@ public class DatabaseUserDao extends DatabaseDao<String, User> implements UserDa
         switch(Role.fromString(rs.getString("ruolo"))) {
             case Role.AFFITTUARIO -> {
                 Affittuario aff = new Affittuario(user);
-                DatabasePrenotazioneDao prenDao = (DatabasePrenotazioneDao) DatabaseDaoFactory.getInstance().getPrenotazioneDao();
+                PrenotazioneDao prenDao =  DaoFactory.getInstance().getPrenotazioneDao();
                 aff.setPrenotazioni(prenDao.loadAllWhere("prenotante", aff.getEmail()));
                 return aff;
             }
             case Role.LOCATORE -> {
                 Locatore loc = new Locatore(user);
-                DatabaseAnnuncioDao annDao = (DatabaseAnnuncioDao) DatabaseDaoFactory.getInstance().getAnnuncioDao();
+                AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
                 loc.setAnnunci(annDao.loadAllWhere("owner", loc.getEmail()));
                 return loc;
             }

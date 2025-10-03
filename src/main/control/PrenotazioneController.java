@@ -31,9 +31,8 @@ public class PrenotazioneController {
 
         for (Annuncio ann : annunci) {
 
-            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())) continue;
-
-            if (bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
+            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())
+                    || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
 
             if (!ann.getPrenotazioni().isEmpty()) {
                 for (Prenotazione p : ann.getPrenotazioni()) {

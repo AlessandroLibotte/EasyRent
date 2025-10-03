@@ -11,5 +11,6 @@ public interface Dao<K, V> {
     void delete(K id);
     boolean exists(K id);
     List<V> loadAll();
+    List<V> loadAllWhere(String column, String value);
 
 }

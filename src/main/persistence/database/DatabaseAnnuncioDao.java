@@ -2,7 +2,9 @@ package main.persistence.database;
 
 import main.model.Annuncio;
 import main.persistence.AnnuncioDao;
+import main.persistence.DaoFactory;
 import main.persistence.ImmobileDao;
+import main.persistence.PrenotazioneDao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,11 +39,10 @@ public class DatabaseAnnuncioDao extends DatabaseDao<String, Annuncio> implement
         ann.setVoto(rs.getInt("voto"));
         ann.setPrezzoPerNotte(rs.getDouble("prezzo"));
 
-        ImmobileDao immDao = DatabaseDaoFactory.getInstance().getImmobileDao();
+        ImmobileDao immDao = DaoFactory.getInstance().getImmobileDao();
         ann.setImmobile(immDao.load(rs.getString("indirizzo_immobile")));
 
-        DatabasePrenotazioneDao prenDao = (DatabasePrenotazioneDao) DatabaseDaoFactory.getInstance().getPrenotazioneDao();
-
+        PrenotazioneDao prenDao =  DaoFactory.getInstance().getPrenotazioneDao();
         ann.setPrenotazioni(prenDao.loadAllWhere("titolo_annuncio", ann.getTitolo()));
 
         return ann;
