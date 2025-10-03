@@ -39,10 +39,16 @@ public class DatabaseUserDao extends DatabaseDao<String, User> implements UserDa
 
         switch(Role.fromString(rs.getString("ruolo"))) {
             case Role.AFFITTUARIO -> {
-                return new Affittuario(user);
+                Affittuario aff = new Affittuario(user);
+                DatabasePrenotazioneDao prenDao = (DatabasePrenotazioneDao) DatabaseDaoFactory.getInstance().getPrenotazioneDao();
+                aff.setPrenotazioni(prenDao.loadAllWhere("prenotante", aff.getEmail()));
+                return aff;
             }
             case Role.LOCATORE -> {
-                return new Locatore(user);
+                Locatore loc = new Locatore(user);
+                DatabaseAnnuncioDao annDao = (DatabaseAnnuncioDao) DatabaseDaoFactory.getInstance().getAnnuncioDao();
+                loc.setAnnunci(annDao.loadAllWhere("owner", loc.getEmail()));
+                return loc;
             }
             case Role.INVALID ->  throw new RuntimeException();
         }

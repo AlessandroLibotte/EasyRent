@@ -3,7 +3,7 @@ package main.persistence.memory;
 import main.model.Prenotazione;
 import main.persistence.PrenotazioneDao;
 
-public class InMemoryPrenotazioneDao extends InMemoryDao<String, Prenotazione> implements PrenotazioneDao {
+public class InMemoryPrenotazioneDao extends InMemoryDao<Integer, Prenotazione> implements PrenotazioneDao {
 
     private static InMemoryPrenotazioneDao instance;
 
@@ -14,8 +14,8 @@ public class InMemoryPrenotazioneDao extends InMemoryDao<String, Prenotazione> i
         return instance;
     }
 
-    public String getKey(Prenotazione prenotazione){
-        return prenotazione.getPrenotante();
+    public Integer getKey(Prenotazione prenotazione){
+        return prenotazione.getId();
     }
 
 

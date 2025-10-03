@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class DatabasePrenotazioneDao extends DatabaseDao<String, Prenotazione> implements PrenotazioneDao {
+public class DatabasePrenotazioneDao extends DatabaseDao<Integer, Prenotazione> implements PrenotazioneDao {
 
     private static DatabasePrenotazioneDao instance;
 
@@ -24,16 +24,18 @@ public class DatabasePrenotazioneDao extends DatabaseDao<String, Prenotazione> i
     }
 
     @Override
-    public String getKey(Prenotazione prenotazione){
-        return prenotazione.getPrenotante();
+    public Integer getKey(Prenotazione prenotazione){
+        return prenotazione.getId();
     }
 
     @Override
     protected Prenotazione mapResultSet(ResultSet rs) throws SQLException {
-        Prenotazione pren = create(rs.getString("prenotnte"));
+        Prenotazione pren = create(rs.getInt("id"));
+        pren.setPrenotante(rs.getString("prenotante"));
         pren.setStartDate(LocalDate.parse(rs.getString("startdate")));
         pren.setEndDate(LocalDate.parse(rs.getString("enddate")));
-        pren.setNumOspiti(Integer.parseInt(rs.getString("numospiti")));
+        pren.setNumOspiti(rs.getInt("numeroospiti"));
+        pren.setTitoloAnnuncio(rs.getString("titolo_annuncio"));
         return pren;
     }
 
@@ -43,11 +45,12 @@ public class DatabasePrenotazioneDao extends DatabaseDao<String, Prenotazione> i
         ps.setString(2, entity.getStartDate().toString());
         ps.setString(3, entity.getEndDate().toString());
         ps.setInt(4, entity.getNumOspiti());
+        ps.setString(5, entity.getTitoloAnnuncio());
     }
 
     @Override
     protected void insert(Prenotazione entity) throws SQLException {
-        String sql = "MERGE INTO PRENOTAZIONI KEY(PRENOTANTE) VALUES (?, ?, ?, ?)";
+        String sql = "MERGE INTO PRENOTAZIONI (PRENOTANTE, STARTDATE, ENDDATE, NUMEROOSPITI, TITOLO_ANNUNCIO)  KEY(PRENOTANTE) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             setPreparedStatementForStore(ps, entity);
             ps.executeUpdate();

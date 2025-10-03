@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Affittuario extends User{
 
-    private List<Annuncio> prenotazioni;
+    private List<Prenotazione> prenotazioni;
 
     public Affittuario(User user) {
         super(user.getEmail());
@@ -14,10 +14,10 @@ public class Affittuario extends User{
         this.telefono = user.getTelefono();
     }
 
-    public List<Annuncio> getPrenotazioni() {
+    public List<Prenotazione> getPrenotazioni() {
         return prenotazioni;
     }
-    public void setPrenotazioni(List<Annuncio> prenotazioni) {
+    public void setPrenotazioni(List<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
 }

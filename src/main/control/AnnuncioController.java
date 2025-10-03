@@ -112,8 +112,8 @@ public class AnnuncioController {
 
         Locatore loc = (Locatore) userDao.load(bean.getOwner());
 
-        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
-        if (anns == null) {return new AnnuncioBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());}
+        List<Annuncio> anns = loc.getAnnunci();
+        if (anns == null || anns.isEmpty()) {return new AnnuncioBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());}
 
         List<String> annTitles = new ArrayList<>();
         List<String> annIndirizzi = new ArrayList<>();

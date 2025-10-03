@@ -88,4 +88,20 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
         return list;
     }
 
+    public List<V> loadAllWhere(String column, String value) {
+        List<V> list = new ArrayList<>();
+        String sql = "SELECT * FROM " + tableName + " WHERE "+ column +"=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setObject(1, value);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSet(rs));
+                }
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
 }

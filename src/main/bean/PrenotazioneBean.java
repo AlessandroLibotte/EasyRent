@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PrenotazioneBean {
 
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private String currentUser;
     private String localita;
@@ -22,6 +22,22 @@ public class PrenotazioneBean {
     private List<LocalDate> dateInizio;
     private List<LocalDate> dateFine;
     private List<Integer> numeriOspiti;
+
+    public boolean isValid(){
+        return isLocalitaValid() && isStartDateValid() && isEndDateValid();
+    }
+
+    private boolean isLocalitaValid(){
+        return localita != null && !localita.isEmpty();
+    }
+
+    private boolean isStartDateValid(){
+        return startDate != null && startDate.isAfter(LocalDate.now());
+    }
+
+    private boolean isEndDateValid(){
+        return endDate != null && endDate.isAfter(startDate);
+    }
 
     public PrenotazioneBean(List<String> prenotanti, List<String> titoli, List<LocalDate> dateInizio, List<LocalDate> dateFine, List<Integer> numeriOspiti) {
         this.prenotanti = prenotanti;
