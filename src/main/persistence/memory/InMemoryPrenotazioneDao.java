@@ -3,6 +3,8 @@ package main.persistence.memory;
 import main.model.Prenotazione;
 import main.persistence.PrenotazioneDao;
 
+import java.util.List;
+
 public class InMemoryPrenotazioneDao extends InMemoryDao<Integer, Prenotazione> implements PrenotazioneDao {
 
     private static InMemoryPrenotazioneDao instance;
@@ -18,5 +20,8 @@ public class InMemoryPrenotazioneDao extends InMemoryDao<Integer, Prenotazione> 
         return prenotazione.getId();
     }
 
-
+    @Override
+    public List<Prenotazione> loadAllWhere(String column, String value) {
+        return null;
+    }
 }
