@@ -3,6 +3,7 @@ package main.persistence.memory;
 import main.model.Annuncio;
 import main.persistence.AnnuncioDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implements AnnuncioDao {
@@ -22,6 +23,6 @@ public class InMemoryAnnuncioDao extends InMemoryDao<String, Annuncio> implement
 
     @Override
     public List<Annuncio> loadAllWhere(String column, String value) {
-        return null;
+        return new ArrayList<>();
     }
 }

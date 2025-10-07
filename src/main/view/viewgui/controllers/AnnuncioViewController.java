@@ -16,7 +16,13 @@ import java.io.IOException;
 
 public class AnnuncioViewController {
 
-    public Label titoloLabel, locatoreLabel, indirizzoLabel, prezzoLabel, stelleLabel, serviziLabel, descrizioneLabel;
+    public Label titoloLabel;
+    public Label locatoreLabel;
+    public Label indirizzoLabel;
+    public Label prezzoLabel;
+    public Label stelleLabel;
+    public Label serviziLabel;
+    public Label descrizioneLabel;
     @FXML
     private Button  prenotaButton;
 
@@ -61,6 +67,7 @@ public class AnnuncioViewController {
         switch(role){
             case Role.AFFITTUARIO -> prenotaButton.setText("Prenota");
             case Role.LOCATORE -> prenotaButton.setText("Elimina");
+            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
         }
 
     }
@@ -79,6 +86,7 @@ public class AnnuncioViewController {
                 annuncioController.eliminaAnnuncio(new AnnuncioBean(titoloLabel.getText(), email));
                 viewControllerUtils.goToLocatore(event, email);
             }
+            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
         }
 
     }

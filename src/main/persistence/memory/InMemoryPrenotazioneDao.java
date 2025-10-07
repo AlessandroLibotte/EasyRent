@@ -3,6 +3,7 @@ package main.persistence.memory;
 import main.model.Prenotazione;
 import main.persistence.PrenotazioneDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryPrenotazioneDao extends InMemoryDao<Integer, Prenotazione> implements PrenotazioneDao {
@@ -22,6 +23,6 @@ public class InMemoryPrenotazioneDao extends InMemoryDao<Integer, Prenotazione> 
 
     @Override
     public List<Prenotazione> loadAllWhere(String column, String value) {
-        return null;
+        return new ArrayList<>();
     }
 }

@@ -19,11 +19,16 @@ import java.util.Objects;
 
 public class ProfiloViewController {
 
-    public Label emailLabel, nomeLabel, cognomeLabel, telefonoLabel;
+    public Label emailLabel;
+    public Label nomeLabel;
+    public Label cognomeLabel;
+    public Label telefonoLabel;
     public VBox storicoPrenotazioniBox;
     @FXML
     private Button modificaButton;
-    private TextField nomeField, cognomeField, telefonoField;
+    private TextField nomeField;
+    private TextField cognomeField;
+    private TextField telefonoField;
 
     private boolean inModifica = false;
     private final String email;

@@ -3,6 +3,7 @@ package main.persistence.memory;
 import main.model.Immobile;
 import main.persistence.ImmobileDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryImmobileDao extends InMemoryDao<String, Immobile> implements ImmobileDao {
@@ -22,6 +23,6 @@ public class InMemoryImmobileDao extends InMemoryDao<String, Immobile> implement
 
     @Override
     public List<Immobile> loadAllWhere(String column, String value) {
-        return null;
+        return new ArrayList<>();
     }
 }
