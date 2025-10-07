@@ -11,9 +11,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.bean.AnnuncioBean;
+import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
-import main.control.PrenotazioneController;
+import main.control.AnnuncioController;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,9 +27,9 @@ public class AffittuarioViewController {
     public DatePicker dataFineField;
     public TextField numeroOspitiField;
     public TilePane annunciTilePane;
-    private String email;
-    private PrenotazioneController prenotazioneController;
-    private ViewControllerUtils viewControllerUtils;
+    private final String email;
+    private final AnnuncioController  annuncioController;
+    private final ViewControllerUtils viewControllerUtils;
 
     private String localita;
     private LocalDate startDate;
@@ -38,7 +38,7 @@ public class AffittuarioViewController {
 
     public AffittuarioViewController(String email) {
         this.email = email;
-        prenotazioneController = new PrenotazioneController();
+        annuncioController = new AnnuncioController();
         viewControllerUtils = new ViewControllerUtils();
     }
 
@@ -64,13 +64,16 @@ public class AffittuarioViewController {
 
         localita = localitaField.getText();
 
-        if (localita.isEmpty()) return;
+        if (localita.isEmpty()) {
+            viewControllerUtils.mostraErrore("Erroe di ricerca", "Errore", "Località non valida");
+            return;
+        }
 
         startDate = dataInizioField.getValue();
         endDate = dataFineField.getValue();
         numOspiti = Integer.parseInt(Objects.equals(numeroOspitiField.getText(), "") ? "1" : numeroOspitiField.getText());
 
-        AnnuncioBean anns = prenotazioneController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
+        AnnuncioResultBean anns = annuncioController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
 
         List<String> titles = anns.getTitoliAnnunci();
         List<String> indirizzi = anns.getIndirizziAnnunci();
@@ -103,26 +106,7 @@ public class AffittuarioViewController {
         PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
         prenBean.setCurrentUser(email);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AnnuncioScene.fxml"));
-
-        loader.setControllerFactory(param -> {
-            if (param == AnnuncioViewController.class) {
-                return new AnnuncioViewController(titolo, email, prenBean);
-            } else {
-                try {
-                    return param.getDeclaredConstructor().newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        stage.setScene(new Scene(root));
-        stage.show();
+        viewControllerUtils.goToAnnuncio(event, email, titolo, prenBean);
 
     }
 }

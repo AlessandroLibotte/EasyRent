@@ -14,10 +14,10 @@ import static main.view.viewcli.ViewCliUtils.dynamicMenu;
 
 public class ViewCliLocatore {
 
-    private boolean quit;
-    private BufferedReader reader;
-    private AnnuncioController annuncioController;
-    private String currentUser;
+    private final boolean quit;
+    private final BufferedReader reader;
+    private final AnnuncioController annuncioController;
+    private final String currentUser;
 
     public ViewCliLocatore(String email) {
         quit = false;
@@ -46,7 +46,7 @@ public class ViewCliLocatore {
                     menuAnnunci();
                     break;
                 case "2":
-                    creaModificaAnnuncioMenu("");
+                    creaAnnuncioMenu();
                     break;
                 case "5":
                     return false;
@@ -59,37 +59,19 @@ public class ViewCliLocatore {
         return false;
     }
 
-    private String creaModificaAnnuncioMenu(String titolo) throws IOException {
+    private void creaAnnuncioMenu() throws IOException {
 
-        String indirizzo;
-        String descrizione;
-        String servizi;
-        int maxOspiti;
-        String oldTitolo = titolo;
-        double prezzo;
+        String titolo = "";
+        String indirizzo = "";
+        String descrizione = "";
+        String servizi = "";
+        int maxOspiti = 1;
+        double prezzo = 0;
 
-        boolean modifica = false;
-
-        if(!titolo.isEmpty()) {
-            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(titolo, currentUser));
-            modifica = true;
-            indirizzo = ann.getIndirizzo();
-            descrizione = ann.getDescrizione();
-            servizi = String.join(", ", ann.getServizi());
-            maxOspiti = ann.getMaxOspiti();
-            prezzo = ann.getPrice();
-        } else {
-            indirizzo = "";
-            descrizione = "";
-            servizi = "";
-            maxOspiti = 1;
-            prezzo = 0;
-        }
 
         while(!quit) {
 
-            if(modifica) ViewCliUtils.printMsgln("Modifica Annuncio");
-            else ViewCliUtils.printMsgln("Crea nuovo Annuncio ");
+            ViewCliUtils.printMsgln("Crea nuovo Annuncio ");
 
             ViewCliUtils.printMsgln("\t1) Titolo: " + titolo);
             ViewCliUtils.printMsgln("\t2) Indirizzo: " + indirizzo);
@@ -98,8 +80,7 @@ public class ViewCliLocatore {
             ViewCliUtils.printMsgln("\t5) Massimo numero ospiti: " + maxOspiti);
             ViewCliUtils.printMsgln("\t6) Prezzo per notte: " + prezzo);
 
-            if(modifica) ViewCliUtils.printMsgln("\t7) Appica modifiche");
-            else ViewCliUtils.printMsgln("\t7) Crea");
+            ViewCliUtils.printMsgln("\t7) Crea");
 
             ViewCliUtils.printMsgln("\t8) Annulla");
             ViewCliUtils.printMsg(": ");
@@ -137,39 +118,42 @@ public class ViewCliLocatore {
                     prezzo = Double.parseDouble(reader.readLine());
                     break;
                 case "7":
-                    return creaModificaAnnuncio(modifica,
-                            new AnnuncioBean(currentUser, oldTitolo, titolo, indirizzo, descrizione, servizi, maxOspiti, prezzo, 0));
+
+                    AnnuncioBean newAnnuncio = new AnnuncioBean(titolo);
+
+                    newAnnuncio.setOwner(currentUser);
+                    newAnnuncio.setIndirizzo(indirizzo);
+                    newAnnuncio.setDescrizione(descrizione);
+                    newAnnuncio.setServiziString(servizi);
+                    newAnnuncio.setMaxOspiti(maxOspiti);
+                    newAnnuncio.setPrice(prezzo);
+
+                    creaAnnuncio(newAnnuncio);
+                    return;
                 case "8":
-                    return "";
+                    return;
                 default:
                     break;
             }
         }
-        return "";
     }
 
-    private String creaModificaAnnuncio(boolean modifica, AnnuncioBean annuncioBean) {
-        if(modifica){
-            if (annuncioController.modifcaAnnuncio(annuncioBean)){
-                ViewCliUtils.printMsgln("Annuncio modificato");
-                return annuncioBean.getTitolo();
-            }
-            else ViewCliUtils.printMsgln("Errore durante la modifica");
-            return annuncioBean.getOldTitolo();
-        }
+    private void creaAnnuncio(AnnuncioBean annuncioBean) {
 
         if (annuncioController.creaAnnuncio(annuncioBean)) {
             ViewCliUtils.printMsgln("Annuncio creato");
         } else ViewCliUtils.printMsgln("Annuncio gia esistente");
 
-        return "";
     }
 
     private void menuAnnunci() throws IOException {
 
         while(!quit) {
 
-            ArrayList<String> titles = (ArrayList<String>) annuncioController.getAllAnnunci(new AnnuncioBean(currentUser)).getTitoliAnnunci();
+            AnnuncioBean bean  = new AnnuncioBean();
+            bean.setOwner(currentUser);
+
+            ArrayList<String> titles = (ArrayList<String>) annuncioController.getAllAnnunci(bean).getTitoliAnnunci();
             ViewCliUtils.printMsgln("I tuoi Annunci: ");
 
             int action = dynamicMenu(titles);
@@ -185,7 +169,7 @@ public class ViewCliLocatore {
 
     private void paginaAnnuncio(String titolo) throws IOException {
 
-        AnnuncioBean annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo, currentUser));
+        AnnuncioBean annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
 
         while(!quit) {
 
@@ -196,9 +180,8 @@ public class ViewCliLocatore {
             ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annuncioBean.getServizi()));
             ViewCliUtils.printMsgln("\tMassimo numero ospiti: " + annuncioBean.getMaxOspiti());
             ViewCliUtils.printMsgln("1) Visualizza Prenotazioni");
-            ViewCliUtils.printMsgln("2) Modifica annuncio");
-            ViewCliUtils.printMsgln("3) Elimina annuncio");
-            ViewCliUtils.printMsgln("4) Back");
+            ViewCliUtils.printMsgln("2) Elimina annuncio");
+            ViewCliUtils.printMsgln("3) Back");
 
             ViewCliUtils.printMsg(": ");
             String action = reader.readLine();
@@ -208,13 +191,9 @@ public class ViewCliLocatore {
                     menuPrenotazioni(annuncioBean.getTitolo());
                     break;
                 case "2":
-                    String newTitolo = creaModificaAnnuncioMenu(annuncioBean.getTitolo());
-                    annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(newTitolo, currentUser));
-                    break;
-                case "3":
                     annuncioController.eliminaAnnuncio(annuncioBean);
                     return;
-                case "4":
+                case "3":
                     return;
                 default:
                     break;
@@ -224,7 +203,7 @@ public class ViewCliLocatore {
 
     private void menuPrenotazioni(String titolo) throws IOException {
 
-        ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, currentUser)).getPrenotanti();
+        ArrayList<String> prenotazioni = (ArrayList<String>) annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo)).getPrenotanti();
 
         while(!quit) {
 
@@ -253,18 +232,13 @@ public class ViewCliLocatore {
             ViewCliUtils.printMsgln("\tData inizio soggiorno: " + bean.getStartDate());
             ViewCliUtils.printMsgln("\tData fine soggiorno: " + bean.getEndDate());
             ViewCliUtils.printMsgln("\tNumero ospiti: " + bean.getNumOspiti());
-            ViewCliUtils.printMsgln("1) Annulla prenotazione");
-            ViewCliUtils.printMsgln("2) Visualizza profilo del prenotante");
-            ViewCliUtils.printMsgln("3) Back");
+            ViewCliUtils.printMsgln("1) Back");
             ViewCliUtils.printMsg(": ");
 
             String action = reader.readLine();
 
-            switch (action) {
-                case "3":
-                    return;
-                default:
-                    break;
+            if (action.equals("1")) {
+                return;
             }
         }
 

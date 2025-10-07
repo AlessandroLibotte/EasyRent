@@ -18,43 +18,6 @@ public class PrenotazioneController {
     UserDao userDao = DaoFactory.getInstance().getUserDao();
     PrenotazioneDao prenDao = DaoFactory.getInstance().getPrenotazioneDao();
 
-    public AnnuncioBean searchAnnunci(PrenotazioneBean bean) {
-
-        if(!bean.isValid()) return null;
-
-        List<Annuncio> annunci = annDao.loadAll();
-
-        List<String> resultsTitolo = new ArrayList<>();
-        List<String> resultsIndirizzo = new ArrayList<>();
-        List<Double> resultsPrezzo = new ArrayList<>();
-        List<Integer> resultsVoto = new ArrayList<>();
-
-        for (Annuncio ann : annunci) {
-
-            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())
-                    || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
-
-            if (!ann.getPrenotazioni().isEmpty()) {
-                for (Prenotazione p : ann.getPrenotazioni()) {
-                    if (p.getEndDate().isBefore(bean.getStartDate())) {
-                        resultsTitolo.add(ann.getTitolo());
-                        resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
-                        resultsPrezzo.add(ann.getPrezzoPerNotte());
-                        resultsVoto.add(ann.getVoto());
-                    }
-                }
-            } else {
-                resultsTitolo.add(ann.getTitolo());
-                resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
-                resultsPrezzo.add(ann.getPrezzoPerNotte());
-                resultsVoto.add(ann.getVoto());
-            }
-
-        }
-
-        return new AnnuncioBean(resultsTitolo, resultsIndirizzo, resultsVoto, resultsPrezzo);
-    }
-
     public PrenotazioneBean getPrenotazioni(PrenotazioneBean bean){
 
         User user = userDao.load(bean.getCurrentUser());

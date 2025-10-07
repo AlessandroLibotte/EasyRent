@@ -8,8 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import main.bean.PrenotazioneBean;
+import main.model.Role;
 
 import java.io.IOException;
 
@@ -31,7 +34,7 @@ public class ViewControllerUtils {
             }
         });
 
-        loadSetStage(loader, event);
+        loadSetStage(loader, event.getSource());
 
     }
 
@@ -51,7 +54,7 @@ public class ViewControllerUtils {
             }
         });
 
-        loadSetStage(loader, event);
+        loadSetStage(loader, event.getSource());
 
     }
 
@@ -71,15 +74,35 @@ public class ViewControllerUtils {
             }
         });
 
-        loadSetStage(loader, event);
+        loadSetStage(loader, event.getSource());
 
     }
 
-    public void loadSetStage(FXMLLoader loader,ActionEvent event) throws IOException {
+    public void goToAnnuncio(MouseEvent event, String email, String titolo, PrenotazioneBean prenBean) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AnnuncioScene.fxml"));
+
+        loader.setControllerFactory(param -> {
+            if (param == AnnuncioViewController.class) {
+                return new AnnuncioViewController(titolo, email, prenBean);
+            } else {
+                try {
+                    return param.getDeclaredConstructor().newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        loadSetStage(loader, event.getSource());
+
+    }
+
+    public void loadSetStage(FXMLLoader loader,Object event) throws IOException {
 
         Parent root = loader.load();
 
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event).getScene().getWindow();
 
         stage.setScene(new Scene(root));
         stage.show();
@@ -147,6 +170,14 @@ public class ViewControllerUtils {
         Pane parent = (Pane) oldNode.getParent();
         int index = parent.getChildren().indexOf(oldNode);
         parent.getChildren().set(index, newNode);
+    }
+
+    public void handleIndietro(ActionEvent event, Role role, String email) throws IOException {
+        switch (role) {
+            case Role.AFFITTUARIO -> goToAffittuario(event, email);
+            case Role.LOCATORE -> goToLocatore(event, email);
+            case Role.INVALID -> mostraErrore("Errore", "Ruolo non valido", "");
+        }
     }
 
 }

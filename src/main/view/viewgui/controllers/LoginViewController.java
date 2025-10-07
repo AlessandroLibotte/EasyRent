@@ -54,7 +54,7 @@ public class LoginViewController {
             }
         });
 
-        viewControllerUtils.loadSetStage(loader, event);
+        viewControllerUtils.loadSetStage(loader, event.getSource());
 
     }
 

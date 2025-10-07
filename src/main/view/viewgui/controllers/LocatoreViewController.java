@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import main.bean.AnnuncioBean;
+import main.bean.AnnuncioResultBean;
 import main.control.AnnuncioController;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 public class LocatoreViewController {
 
-    private String email;
+    private final String email;
     AnnuncioController annuncioController;
     ViewControllerUtils viewControllerUtils;
     List<String> titles;
@@ -39,7 +40,10 @@ public class LocatoreViewController {
     @FXML
     public void initialize() {
 
-        AnnuncioBean anns = annuncioController.getAllAnnunci(new AnnuncioBean(email));
+        AnnuncioBean bean  = new AnnuncioBean();
+        bean.setOwner(email);
+
+        AnnuncioResultBean anns = annuncioController.getAllAnnunci(bean);
         titles = anns.getTitoliAnnunci();
         indirizzi = anns.getIndirizziAnnunci();
         voti = anns.getVotiAnnunci();
@@ -91,6 +95,13 @@ public class LocatoreViewController {
 
     public void aggiungiNuovoAnnuncio(String titolo, String indirizzo, double prezzo, int valutazione) {
         VBox nuovaCard = viewControllerUtils.creaCardAnnuncio(titolo, indirizzo, prezzo, valutazione);
+        nuovaCard.setOnMouseClicked(event -> {
+            try {
+                viewControllerUtils.goToAnnuncio(event, email, titolo, null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         annunciTilePane.getChildren().add(nuovaCard);
     }
 }

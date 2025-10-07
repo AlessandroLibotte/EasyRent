@@ -1,6 +1,7 @@
 package main.view.viewcli;
 
 import main.bean.AnnuncioBean;
+import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
@@ -16,11 +17,11 @@ import static main.view.viewcli.ViewCliUtils.dynamicMenu;
 
 public class ViewCliAffittuario {
 
-    private boolean quit;
-    private BufferedReader reader;
-    private PrenotazioneController prenotazioneController;
-    private AnnuncioController annuncioController;
-    private String currentUser;
+    private final boolean quit;
+    private final BufferedReader reader;
+    private final PrenotazioneController prenotazioneController;
+    private final AnnuncioController annuncioController;
+    private final String currentUser;
 
     public ViewCliAffittuario(String email) {
         quit = false;
@@ -160,7 +161,7 @@ public class ViewCliAffittuario {
                 case "6":
                     try {
                         PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
-                        searchResultsPage(prenotazioneController.searchAnnunci(prenBean), prenBean);
+                        searchResultsPage(annuncioController.searchAnnunci(prenBean), prenBean);
                     } catch (DateTimeParseException e){
                         ViewCliUtils.printMsgln("Data inserita non valida");
                     }
@@ -175,7 +176,7 @@ public class ViewCliAffittuario {
 
     }
 
-    private void searchResultsPage(AnnuncioBean bean, PrenotazioneBean prenBean) throws IOException {
+    private void searchResultsPage(AnnuncioResultBean bean, PrenotazioneBean prenBean) throws IOException {
 
         while (!quit) {
 
@@ -191,9 +192,9 @@ public class ViewCliAffittuario {
         }
     }
 
-    private void paginaAnnuncio(AnnuncioBean bean, String titolo, PrenotazioneBean prenBean) throws IOException {
+    private void paginaAnnuncio(AnnuncioResultBean bean, String titolo, PrenotazioneBean prenBean) throws IOException {
 
-        AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo, currentUser));
+        AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
 
         while(!quit) {
 

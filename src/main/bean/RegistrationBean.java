@@ -3,6 +3,7 @@ package main.bean;
 import main.model.Role;
 
 public class RegistrationBean {
+
     private String nome;
     private String cognome;
     private String email;
@@ -19,8 +20,12 @@ public class RegistrationBean {
         this.role = role;
     }
 
-    public boolean isValid() {
+    public boolean isValidPwd() {
         return isNomeValid() && isCognomeValid() && isEmailValid() && isPasswordValid() && isRoleValid();
+    }
+
+    public boolean isValid() {
+        return isNomeValid() && isCognomeValid() && isEmailValid();
     }
 
     private boolean isNomeValid() {
