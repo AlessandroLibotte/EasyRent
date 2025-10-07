@@ -35,8 +35,6 @@ public class UserController {
 
         User user = userDao.load(rb.getEmail());
 
-        userDao.delete(rb.getEmail());
-
         user.setNome(rb.getNome());
         user.setCognome(rb.getCognome());
         user.setTelefono(rb.getTelefono());

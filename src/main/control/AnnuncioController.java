@@ -1,15 +1,13 @@
 package main.control;
 
 import main.bean.AnnuncioBean;
+import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
 import main.model.Annuncio;
 import main.model.Immobile;
 import main.model.Locatore;
 import main.model.Prenotazione;
-import main.persistence.AnnuncioDao;
-import main.persistence.DaoFactory;
-import main.persistence.ImmobileDao;
-import main.persistence.UserDao;
+import main.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,9 +15,11 @@ import java.util.List;
 
 public class AnnuncioController {
 
-    AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
-    ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
-    UserDao userDao = DaoFactory.getInstance().getUserDao();
+    private final AnnuncioDao annuncioDao = DaoFactory.getInstance().getAnnuncioDao();
+    private final ImmobileDao immobileDao = DaoFactory.getInstance().getImmobileDao();
+    private final UserDao userDao = DaoFactory.getInstance().getUserDao();
+    private final PrenotazioneDao prenotazioneDao = DaoFactory.getInstance().getPrenotazioneDao();
+
 
     private Immobile getCreateImmobile(String indirizzo) {
 
@@ -69,51 +69,49 @@ public class AnnuncioController {
 
     }
 
-    public boolean modifcaAnnuncio(AnnuncioBean bean){
+    public AnnuncioResultBean searchAnnunci(PrenotazioneBean bean) {
 
-        //load old annuncio
-        if(!annuncioDao.exists(bean.getOldTitolo())) return false;
-        Annuncio ann = annuncioDao.load(bean.getOldTitolo());
+        if(!bean.isValid()) return null;
 
-        //remove old annuncio from memory
-        annuncioDao.delete(bean.getOldTitolo());
+        List<Annuncio> annunci = annuncioDao.loadAll();
 
-        //get current user's annunci
-        Locatore loc = (Locatore) userDao.load(bean.getOwner());
-        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
+        List<String> resultsTitolo = new ArrayList<>();
+        List<String> resultsIndirizzo = new ArrayList<>();
+        List<Double> resultsPrezzo = new ArrayList<>();
+        List<Integer> resultsVoto = new ArrayList<>();
 
-        //remove old annuncio from current user's annunci
-        anns.remove(ann);
+        for (Annuncio ann : annunci) {
 
-        //set new annuncio's parameters
-        ann.setTitolo(bean.getTitolo());
-        ann.setDescrizione(bean.getDescrizione());
+            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())
+                    || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
 
-        Immobile imm = getCreateImmobile(bean.getIndirizzo());
-        imm.setServizi(bean.getServizi());
-        imm.setMaxOspiti(bean.getMaxOspiti());
+            if (!ann.getPrenotazioni().isEmpty()) {
+                for (Prenotazione p : ann.getPrenotazioni()) {
+                    if (p.getEndDate().isBefore(bean.getStartDate())) {
+                        resultsTitolo.add(ann.getTitolo());
+                        resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
+                        resultsPrezzo.add(ann.getPrezzoPerNotte());
+                        resultsVoto.add(ann.getVoto());
+                    }
+                }
+            } else {
+                resultsTitolo.add(ann.getTitolo());
+                resultsIndirizzo.add(ann.getImmobile().getIndirizzo());
+                resultsPrezzo.add(ann.getPrezzoPerNotte());
+                resultsVoto.add(ann.getVoto());
+            }
 
-        ann.setImmobile(imm);
+        }
 
-        //add new annuncio to the user's annunci
-        anns.add(ann);
-        loc.setAnnunci(anns);
-
-        // store modified annuncio and immobile
-        userDao.store(loc);
-        immobileDao.store(imm);
-        annuncioDao.store(ann);
-
-        return true;
-
+        return new AnnuncioResultBean(resultsTitolo, resultsIndirizzo, resultsVoto, resultsPrezzo);
     }
 
-    public AnnuncioBean getAllAnnunci(AnnuncioBean bean){
+    public AnnuncioResultBean getAllAnnunci(AnnuncioBean bean){
 
         Locatore loc = (Locatore) userDao.load(bean.getOwner());
 
         List<Annuncio> anns = loc.getAnnunci();
-        if (anns == null || anns.isEmpty()) {return new AnnuncioBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());}
+        if (anns == null || anns.isEmpty()) {return new AnnuncioResultBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());}
 
         List<String> annTitles = new ArrayList<>();
         List<String> annIndirizzi = new ArrayList<>();
@@ -127,7 +125,7 @@ public class AnnuncioController {
             annPrezzi.add(ann.getPrezzoPerNotte());
         }
 
-        return new AnnuncioBean(annTitles, annIndirizzi, annVoti, annPrezzi);
+        return new AnnuncioResultBean(annTitles, annIndirizzi, annVoti, annPrezzi);
     }
 
     public AnnuncioBean getAnnuncio(AnnuncioBean annBean){
@@ -140,23 +138,35 @@ public class AnnuncioController {
             prenotanti.add(p.getPrenotante());
         }
 
-        return new AnnuncioBean(ann.getOwner(), ann.getTitolo(), ann.getImmobile().getIndirizzo(),
-                ann.getDescrizione(), ann.getImmobile().getServizi(), ann.getImmobile().getMaxOspiti(), ann.getPrezzoPerNotte(), ann.getVoto(), prenotanti);
+        AnnuncioBean result = new AnnuncioBean(ann.getTitolo());
 
+        result.setOwner(ann.getOwner());
+        result.setIndirizzo(ann.getImmobile().getIndirizzo());
+        result.setDescrizione(ann.getDescrizione());
+        result.setServizi(ann.getImmobile().getServizi());
+        result.setMaxOspiti(ann.getImmobile().getMaxOspiti());
+        result.setPrice(ann.getPrezzoPerNotte());
+        result.setVoto(ann.getVoto());
+        result.setPrenotanti(prenotanti);
+
+        return result;
     }
 
     public void eliminaAnnuncio(AnnuncioBean bean){
 
-        Locatore loc = (Locatore) userDao.load(bean.getTitolo());
+        Locatore loc = (Locatore) userDao.load(bean.getOwner());
+        Annuncio ann = annuncioDao.load(bean.getTitolo());
 
-        ArrayList<Annuncio> anns = (ArrayList<Annuncio>)loc.getAnnunci();
+        List<Annuncio> anns = loc.getAnnunci();
 
-        anns.remove(annuncioDao.load(bean.getTitolo()));
+        anns.remove(ann);
 
         loc.setAnnunci(anns);
         userDao.store(loc);
 
+        for(Prenotazione p: ann.getPrenotazioni()) prenotazioneDao.delete(p.getId());
         annuncioDao.delete(bean.getTitolo());
+        immobileDao.delete(ann.getImmobile().getIndirizzo());
 
     }
 

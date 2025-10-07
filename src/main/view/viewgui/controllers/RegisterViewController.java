@@ -54,7 +54,7 @@ public class RegisterViewController {
 
             case SUCCESS:
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
-                viewControllerUtils.loadSetStage(loader, event);
+                viewControllerUtils.loadSetStage(loader, event.getSource());
                 break;
             case INVALID:
                 viewControllerUtils.mostraErrore("Errore di Registrazione", "Errore", "Campi invalidi");
@@ -68,6 +68,6 @@ public class RegisterViewController {
 
     public void back(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginScene.fxml"));
-        viewControllerUtils.loadSetStage(loader, event);
+        viewControllerUtils.loadSetStage(loader, event.getSource());
     }
 }

@@ -8,10 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import main.bean.AnnuncioBean;
-import main.bean.LoginBean;
-import main.bean.PrenotazioneBean;
-import main.bean.RegistrationBean;
+import main.bean.*;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
 import main.control.UserController;
@@ -22,11 +19,16 @@ import java.util.Objects;
 
 public class ProfiloViewController {
 
-    public Label emailLabel, nomeLabel, cognomeLabel, telefonoLabel;
+    public Label emailLabel;
+    public Label nomeLabel;
+    public Label cognomeLabel;
+    public Label telefonoLabel;
     public VBox storicoPrenotazioniBox;
     @FXML
     private Button modificaButton;
-    private TextField emailField, nomeField, cognomeField, telefonoField;
+    private TextField nomeField;
+    private TextField cognomeField;
+    private TextField telefonoField;
 
     private boolean inModifica = false;
     private final String email;
@@ -77,7 +79,7 @@ public class ProfiloViewController {
 
         for (String title : prens.getTitoli()) {
 
-            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title, ""));
+            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title));
 
             String periodo = prens.getDateInizio().get(prens.getTitoli().indexOf(title)).toString() + " - " +
                     prens.getDateFine().get(prens.getTitoli().indexOf(title)).toString();
@@ -91,11 +93,14 @@ public class ProfiloViewController {
 
     private void loadStoricoPrenotazioniLocatore(){
 
-        AnnuncioBean anns = annuncioController.getAllAnnunci(new AnnuncioBean("", email));
+        AnnuncioBean bean = new AnnuncioBean();
+        bean.setOwner(email);
+
+        AnnuncioResultBean anns = annuncioController.getAllAnnunci(bean);
 
         for(String titolo: anns.getTitoliAnnunci()){
 
-            PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo, ""));
+            PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo));
 
             String indirizzo = anns.getIndirizziAnnunci().get(anns.getTitoliAnnunci().indexOf(titolo));
 
@@ -121,12 +126,10 @@ public class ProfiloViewController {
             inModifica = true;
             modificaButton.setText("Salva");
 
-            emailField = new TextField(emailLabel.getText());
             nomeField = new TextField(nomeLabel.getText());
             cognomeField = new TextField(cognomeLabel.getText());
             telefonoField = new TextField(telefonoLabel.getText());
 
-            viewControllerUtils.replaceNode(emailLabel, emailField);
             viewControllerUtils.replaceNode(nomeLabel, nomeField);
             viewControllerUtils.replaceNode(cognomeLabel, cognomeField);
             viewControllerUtils.replaceNode(telefonoLabel, telefonoField);
@@ -140,12 +143,10 @@ public class ProfiloViewController {
                 inModifica = false;
                 modificaButton.setText("Modifica Dati");
 
-                emailLabel.setText(emailField.getText());
                 nomeLabel.setText(nomeField.getText());
                 cognomeLabel.setText(cognomeField.getText());
                 telefonoLabel.setText(telefonoField.getText());
 
-                viewControllerUtils.replaceNode(emailField, emailLabel);
                 viewControllerUtils.replaceNode(nomeField, nomeLabel);
                 viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
                 viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
@@ -157,11 +158,7 @@ public class ProfiloViewController {
     }
 
     public void handleIndietro(ActionEvent event) throws IOException {
-        switch (role) {
-            case Role.AFFITTUARIO -> viewControllerUtils.goToAffittuario(event, email);
-            case Role.LOCATORE -> viewControllerUtils.goToLocatore(event, email);
-            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
-        }
+        viewControllerUtils.handleIndietro(event, role, email);
     }
 
     @FXML

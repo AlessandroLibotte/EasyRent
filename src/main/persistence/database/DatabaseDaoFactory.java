@@ -32,7 +32,7 @@ public class DatabaseDaoFactory extends DaoFactory {
 
     public DatabasePrenotazioneDao getPrenotazioneDao() {
         try {
-            return DatabasePrenotazioneDao.getInstance("PRENOTAZIONI", "PRENOTANTE");
+            return DatabasePrenotazioneDao.getInstance("PRENOTAZIONI", "ID");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -24,8 +24,8 @@ public class CreaAnnuncioViewController {
         );
     }
 
-    private ViewControllerUtils viewControllerUtils;
-    private AnnuncioController annuncioController;
+    private final ViewControllerUtils viewControllerUtils;
+    private final AnnuncioController annuncioController;
 
     public CreaAnnuncioViewController() {
         annuncioController = new AnnuncioController();
@@ -52,11 +52,17 @@ public class CreaAnnuncioViewController {
         int maxOspiti = (int) ospitiSpinner.getValue();
         double prezzo = Double.parseDouble(prezzoField.getText());
 
+        AnnuncioBean newAnnuncio = new AnnuncioBean(titolo);
 
-        if (annuncioController.creaAnnuncio(new AnnuncioBean(email, titolo, indirizzo, descrizione, servizi, maxOspiti, prezzo, 0))) {
+        newAnnuncio.setOwner(email);
+        newAnnuncio.setIndirizzo(indirizzo);
+        newAnnuncio.setDescrizione(descrizione);
+        newAnnuncio.setServiziString(servizi);
+        newAnnuncio.setMaxOspiti(maxOspiti);
+        newAnnuncio.setPrice(prezzo);
 
+        if (annuncioController.creaAnnuncio(newAnnuncio)) {
             viewControllerUtils.goToLocatore(event, email);
-
         } else {
             viewControllerUtils.mostraErrore("Errore Creazione Annuncio", "Errore", "Impossibile creare annuncio");
         }

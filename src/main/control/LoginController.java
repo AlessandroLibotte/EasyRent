@@ -24,7 +24,7 @@ public class LoginController {
 
     public RegisterResult register(RegistrationBean rb) {
 
-        if(!rb.isValid()) return RegisterResult.INVALID;
+        if(!rb.isValidPwd()) return RegisterResult.INVALID;
 
         if(userDao.exists(rb.getEmail())) return RegisterResult.EXISTS;
 
