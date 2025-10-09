@@ -8,7 +8,6 @@ import main.control.exceptions.AnnuncioExistsException;
 import main.control.exceptions.InputException;
 import main.control.exceptions.NoAvailableAnnunciException;
 import main.control.exceptions.UserDoesNotExistException;
-import main.view.viewgui.controllers.ViewControllerUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

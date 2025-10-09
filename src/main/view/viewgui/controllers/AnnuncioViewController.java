@@ -14,8 +14,6 @@ import main.control.UserController;
 import main.control.exceptions.NoAvailableAnnunciException;
 import main.control.exceptions.UserDoesNotExistException;
 import main.model.Role;
-import main.model.User;
-import main.view.viewcli.ViewCliUtils;
 
 import java.io.IOException;
 

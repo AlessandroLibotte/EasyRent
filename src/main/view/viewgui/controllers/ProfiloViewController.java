@@ -16,7 +16,6 @@ import main.control.exceptions.InputException;
 import main.control.exceptions.NoAvailableAnnunciException;
 import main.control.exceptions.UserDoesNotExistException;
 import main.model.Role;
-import main.model.User;
 
 import java.io.IOException;
 import java.util.Objects;

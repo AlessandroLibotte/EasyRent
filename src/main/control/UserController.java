@@ -31,7 +31,7 @@ public class UserController {
 
     }
 
-    public boolean editUserInfo(RegistrationBean rb) {
+    public void editUserInfo(RegistrationBean rb) {
 
         if(!rb.isValid())  throw new InputException();
         if(!userDao.exists(rb.getEmail())) throw new UserDoesNotExistException(rb.getEmail());
@@ -44,7 +44,6 @@ public class UserController {
 
         userDao.store(user);
 
-        return true;
     }
 
     public Role assertUser(LoginBean lb) {
