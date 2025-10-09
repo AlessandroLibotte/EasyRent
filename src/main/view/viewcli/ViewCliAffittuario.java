@@ -175,20 +175,7 @@ public class ViewCliAffittuario {
                     break;
                 case "6":
                     try {
-                        PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
-
-                        AnnuncioResultBean result;
-                        try {
-                            result = annuncioController.searchAnnunci(prenBean);
-                        } catch (InputException e){
-                            e.showMessageCLI();
-                            return;
-                        } catch (NoAvailableAnnunciException e){
-                            e.showMessageCLI();
-                            return;
-                        }
-
-                        searchResultsPage(result , prenBean);
+                        search(localita, startDate, endDate, numOspiti);
                     } catch (DateTimeParseException e){
                         ViewCliUtils.printMsgln("Data inserita non valida");
                     }
@@ -203,7 +190,25 @@ public class ViewCliAffittuario {
 
     }
 
-    private void searchResultsPage(AnnuncioResultBean bean, PrenotazioneBean prenBean) throws IOException {
+    private void search(String localita, String startDate, String endDate, int numOspiti) {
+
+        PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
+
+        AnnuncioResultBean result;
+        try {
+            result = annuncioController.searchAnnunci(prenBean);
+        } catch (InputException e){
+            e.showMessageCLI();
+            return;
+        } catch (NoAvailableAnnunciException e){
+            e.showMessageCLI();
+            return;
+        }
+
+        searchResultsPage(result , prenBean);
+    }
+
+    private void searchResultsPage(AnnuncioResultBean bean, PrenotazioneBean prenBean) {
 
         while (!quit) {
 
@@ -219,7 +224,7 @@ public class ViewCliAffittuario {
         }
     }
 
-    private void paginaAnnuncio(AnnuncioResultBean bean, String titolo, PrenotazioneBean prenBean) throws IOException {
+    private void paginaAnnuncio(AnnuncioResultBean bean, String titolo, PrenotazioneBean prenBean) {
 
         AnnuncioBean annBean;
         try {
@@ -231,16 +236,7 @@ public class ViewCliAffittuario {
 
         while(!quit) {
 
-            ViewCliUtils.printMsgln("Pagina Annuncio");
-            ViewCliUtils.printMsgln("\tTitolo: " + annBean.getTitolo());
-            ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
-            ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
-            ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
-            if(bean != null) ViewCliUtils.printMsgln("1) Prenota");
-            ViewCliUtils.printMsgln("2) Back");
-
-            ViewCliUtils.printMsg(": ");
-            String action = reader.readLine();
+            String action = printAnnuncioMenu(annBean, bean);
 
             switch (action) {
                 case "1":
@@ -260,6 +256,27 @@ public class ViewCliAffittuario {
                     break;
             }
         }
+    }
+
+    private String printAnnuncioMenu(AnnuncioBean annBean, AnnuncioResultBean bean) {
+        ViewCliUtils.printMsgln("Pagina Annuncio");
+        ViewCliUtils.printMsgln("\tTitolo: " + annBean.getTitolo());
+        ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
+        ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
+        ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
+        if(bean != null) ViewCliUtils.printMsgln("1) Prenota");
+        ViewCliUtils.printMsgln("2) Back");
+
+        ViewCliUtils.printMsg(": ");
+        String action;
+        try{
+            action = reader.readLine();
+        } catch (IOException e) {
+            ViewCliUtils.printMsgln("Errore durante l' operazione");
+            return "-1";
+        }
+
+        return action;
     }
 
 }

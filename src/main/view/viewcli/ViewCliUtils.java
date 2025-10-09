@@ -12,7 +12,7 @@ public class ViewCliUtils {
     public static void printMsgln(String msg){ System.out.println(msg);}
     public static void printMsg(String msg){ System.out.print(msg);}
 
-    public static int dynamicMenu(List<String> list) throws IOException {
+    public static int dynamicMenu(List<String> list) {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int i = 1;
         for (String s: list) {
@@ -22,16 +22,14 @@ public class ViewCliUtils {
         printMsgln("\t"+ i+ ") Back");
 
         printMsg(": ");
-        return Integer.parseInt(br.readLine());
 
-    }
+        try{
+            return Integer.parseInt(br.readLine());
+        } catch(IOException e){
+            ViewCliUtils.printMsgln("Errore durante l' operazione");
+            return -1;
+        }
 
-    public static void printErrorAnnuncio(){
-        printMsgln("!ERRORE! L'annuncio non esiste");
-    }
-
-    public static void printInputException(){
-        printMsgln("!ERRORE! Uno o piu campi non sono stati compilati correttamente");
     }
 
 }

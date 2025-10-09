@@ -8,6 +8,8 @@ import main.bean.LoginBean;
 import main.control.LoginController;
 import main.model.Role;
 
+import java.io.IOException;
+
 public class LoginViewController {
 
     @FXML
@@ -38,7 +40,7 @@ public class LoginViewController {
 
     }
 
-    public void goToRegister(ActionEvent event) throws Exception {
+    public void goToRegister(ActionEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/RegisterScene.fxml"));
 
@@ -49,7 +51,8 @@ public class LoginViewController {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    viewControllerUtils.mostraErrore("Constructor Instancing", e.getMessage());
+                    return null;
                 }
             }
         });

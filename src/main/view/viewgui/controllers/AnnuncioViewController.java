@@ -63,7 +63,7 @@ public class AnnuncioViewController {
                     viewControllerUtils.setShowScene(root, titoloLabel.getScene());
                 }
                 case Role.INVALID -> {
-                    viewControllerUtils.mostraErrore("Ruolo non valido", "");
+                    viewControllerUtils.mostraErroreRuolo();
                     viewControllerUtils.gotoLogin(titoloLabel.getScene());
                 }
             }
@@ -90,7 +90,7 @@ public class AnnuncioViewController {
             case Role.AFFITTUARIO -> prenotaButton.setText("Prenota");
             case Role.LOCATORE -> prenotaButton.setText("Elimina");
             case Role.INVALID -> {
-                viewControllerUtils.mostraErrore("Ruolo non valido", "");
+                viewControllerUtils.mostraErroreRuolo();
                 viewControllerUtils.gotoLogin(titoloLabel.getScene());
             }
         }
@@ -127,7 +127,7 @@ public class AnnuncioViewController {
                 viewControllerUtils.goToLocatore(event, email);
             }
             case Role.INVALID -> {
-                viewControllerUtils.mostraErrore("Ruolo non valido", "");
+                viewControllerUtils.mostraErroreRuolo();
                 viewControllerUtils.gotoLogin(titoloLabel.getScene());
             }
         }
