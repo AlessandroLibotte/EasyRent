@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import main.bean.RegistrationBean;
 import main.control.LoginController;
-import main.model.RegisterResult;
+import main.control.RegisterResult;
 import main.model.Role;
 
 import java.io.IOException;
@@ -57,10 +57,10 @@ public class RegisterViewController {
                 viewControllerUtils.loadSetStage(loader, event.getSource());
                 break;
             case INVALID:
-                viewControllerUtils.mostraErrore("Errore di Registrazione", "Errore", "Campi invalidi");
+                viewControllerUtils.mostraErrore("Errore", "Campi invalidi");
                 break;
             case EXISTS:
-                viewControllerUtils.mostraErrore("Errore di Registrazione", "Errore", "Utente gia esistente");
+                viewControllerUtils.mostraErrore("Errore", "Utente gia esistente");
 
         }
 

@@ -51,10 +51,11 @@ public class LocatoreViewController {
         try {
             anns = annuncioController.getAllAnnunci(bean);
         } catch (UserDoesNotExistException e){
-            viewControllerUtils.mostraErrore("Errore", "Utente inesistente", "L'utente " + e.email + " non esiste");
+            e.showMessageGUI();
             viewControllerUtils.gotoLogin(rootContainer.getScene());
             return;
         } catch (NoAvailableAnnunciException e){
+            e.showMessageGUI();
             return;
         }
 

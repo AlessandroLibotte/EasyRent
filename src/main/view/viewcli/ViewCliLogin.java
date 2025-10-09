@@ -8,7 +8,7 @@ import java.util.Arrays;
 import main.bean.LoginBean;
 import main.bean.RegistrationBean;
 import main.control.LoginController;
-import main.model.RegisterResult;
+import main.control.RegisterResult;
 import main.model.Role;
 
 public class ViewCliLogin {

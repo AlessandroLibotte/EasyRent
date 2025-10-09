@@ -74,10 +74,10 @@ public class AffittuarioViewController {
         try {
             result = annuncioController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
         } catch (InputException e) {
-            viewControllerUtils.mostraErrore("Errore", "Errore di ricerca", e.message);
+            e.showMessageGUI();
             return;
         }catch (NoAvailableAnnunciException e){
-            viewControllerUtils.mostraErrore("Errore", "Errore di Caricamento", "Impossibile caricare gli annunci");
+            e.showMessageGUI();
             return;
         }
 

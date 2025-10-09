@@ -149,11 +149,11 @@ public class ViewCliLocatore {
         try {
             annuncioController.creaAnnuncio(annuncioBean);
         } catch (AnnuncioExistsException e) {
-            ViewCliUtils.printMsgln("!ERRORE! Annuncio " + e.titolo + " gia esistente");
+            e.showMessageCLI();
             return false;
         }
         catch (InputException e) {
-            ViewCliUtils.printMsgln("!ERRORE! " + e.message);
+            e.showMessageCLI();
             return false;
         }
 
@@ -173,10 +173,10 @@ public class ViewCliLocatore {
             try{
                 result = annuncioController.getAllAnnunci(bean);
             } catch (UserDoesNotExistException e){
-                ViewCliUtils.printMsgln("!ERRORE! L'utente " + e.email + " non esiste");
+                e.showMessageCLI();
                 return;
             } catch (NoAvailableAnnunciException e){
-                ViewCliUtils.printMsgln("Nessun annuncio disponibile");
+                e.showMessageCLI();
                 return;
             }
 
@@ -200,7 +200,7 @@ public class ViewCliLocatore {
         try {
             annuncioBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
         } catch (NoAvailableAnnunciException e){
-            ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+            e.showMessageCLI();
             return;
         }
 
@@ -227,9 +227,9 @@ public class ViewCliLocatore {
                     try {
                         annuncioController.eliminaAnnuncio(annuncioBean);
                     } catch (UserDoesNotExistException e){
-                        ViewCliUtils.printMsgln("!ERRORE! L'utente " + e.email + " non esiste");
+                        e.showMessageCLI();
                     } catch (NoAvailableAnnunciException e){
-                        ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+                        e.showMessageCLI();
                     }
                     return;
                 case "3":
@@ -246,7 +246,7 @@ public class ViewCliLocatore {
         try {
             prenotazioneBean = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo));
         } catch (NoAvailableAnnunciException e){
-            ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+            e.showMessageCLI();
             return;
         }
 
@@ -272,7 +272,7 @@ public class ViewCliLocatore {
         try{
             bean = annuncioController.getPrenotazioneInfo(new AnnuncioBean(titolo, prenotante));
         } catch (NoAvailableAnnunciException e){
-            ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+            e.showMessageCLI();
             return;
         }
 

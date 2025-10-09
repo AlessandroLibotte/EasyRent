@@ -113,7 +113,7 @@ public class ViewControllerUtils {
                 try {
                     return new AnnuncioViewController(titolo, email, prenBean);
                 } catch (IOException e) {
-                    mostraErrore("Errore", "IO Exception","Errore durante il reindirzzamento di paginaa");
+                    mostraErrore("IO Exception","Errore durante il reindirzzamento di paginaa");
                     throw new RuntimeException(e);
                 }
             } else {
@@ -140,12 +140,17 @@ public class ViewControllerUtils {
 
     }
 
-    public void mostraErrore(String title, String header, String messaggio) {
+    public void showMessage(String title, String header, String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(messaggio);
         alert.showAndWait();
+    }
+
+    public void mostraErrore(String header, String messaggio) {
+
+        showMessage("Errore", header, messaggio);
     }
 
     public VBox creaCardAnnuncio(String titolo, String indirizzo, double prezzo, int valutazione) {
@@ -207,7 +212,7 @@ public class ViewControllerUtils {
         switch (role) {
             case Role.AFFITTUARIO -> goToAffittuario(event, email);
             case Role.LOCATORE -> goToLocatore(event, email);
-            case Role.INVALID -> mostraErrore("Errore", "Ruolo non valido", "");
+            case Role.INVALID -> mostraErrore("Ruolo non valido", "");
         }
     }
 

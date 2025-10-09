@@ -33,7 +33,7 @@ public class LoginViewController {
         switch(result) {
             case AFFITTUARIO -> viewControllerUtils.goToAffittuario(event, email);
             case LOCATORE -> viewControllerUtils.goToLocatore(event, email);
-            case INVALID -> viewControllerUtils.mostraErrore("Errore Login", "Errore", "Impossibile eseguire il login");
+            case INVALID -> viewControllerUtils.mostraErrore("Errore", "Impossibile eseguire il login");
         }
 
     }

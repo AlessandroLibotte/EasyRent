@@ -66,10 +66,10 @@ public class CreaAnnuncioViewController {
         try {
             annuncioController.creaAnnuncio(newAnnuncio);
         } catch (AnnuncioExistsException e){
-            viewControllerUtils.mostraErrore("Errore Creazione Annuncio", "Errore", "Annuncio gia esistente");
+            e.showMessageGUI();
             return;
         } catch (InputException e){
-            viewControllerUtils.mostraErrore("Errore Creazione Annuncio", "Errore", "Campi non validi");
+            e.showMessageGUI();
             return;
         }
 

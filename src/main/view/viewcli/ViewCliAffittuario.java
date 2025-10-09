@@ -72,7 +72,7 @@ public class ViewCliAffittuario {
         try {
             bean = prenotazioneController.getPrenotazioni(new PrenotazioneBean(currentUser));
         } catch (UserDoesNotExistException e) {
-            ViewCliUtils.printMsgln("!ERROR! L'utente " + e.email + "non esiste");
+            e.showMessageCLI();
             return;
         }
 
@@ -98,7 +98,7 @@ public class ViewCliAffittuario {
         try{
             bean = prenotazioneController.getPrenotazioneInfo(new AnnuncioBean(titolo, currentUser));
         } catch (UserDoesNotExistException e) {
-            ViewCliUtils.printMsgln("!ERROR! L'utente " + e.email + "non esiste");
+            e.showMessageCLI();
             return;
         }
 
@@ -137,7 +137,7 @@ public class ViewCliAffittuario {
         while(!quit) {
 
             ViewCliUtils.printMsgln("Inserisci parametri di ricerca");
-            ViewCliUtils.printMsgln("\t1) Località ["+ localita+ "]");
+            ViewCliUtils.printMsgln("\t1) Localita ["+ localita+ "]");
             ViewCliUtils.printMsgln("\t2) Data inizio soggiorno ["+startDate+"]");
             ViewCliUtils.printMsgln("\t3) Data fine soggiorno ["+ endDate+"]");
             ViewCliUtils.printMsgln("\t4) Numero ospiti ["+numOspiti+"]");
@@ -150,7 +150,7 @@ public class ViewCliAffittuario {
 
             switch(action) {
                 case "1":
-                    ViewCliUtils.printMsgln("Inserisci Località (Città o Stato)");
+                    ViewCliUtils.printMsgln("Inserisci Localita (Citta o Stato)");
                     ViewCliUtils.printMsg("\t: ");
                     localita = reader.readLine();
                     break;
@@ -181,10 +181,10 @@ public class ViewCliAffittuario {
                         try {
                             result = annuncioController.searchAnnunci(prenBean);
                         } catch (InputException e){
-                            ViewCliUtils.printMsgln("!ERRORE! " + e.message);
+                            e.showMessageCLI();
                             return;
                         } catch (NoAvailableAnnunciException e){
-                            ViewCliUtils.printMsgln("!ERRORE! Non è stato possibile caricare gli annunci");
+                            e.showMessageCLI();
                             return;
                         }
 
@@ -225,7 +225,7 @@ public class ViewCliAffittuario {
         try {
             annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
         } catch (NoAvailableAnnunciException e){
-            ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+            e.showMessageCLI();
             return;
         }
 
@@ -248,7 +248,7 @@ public class ViewCliAffittuario {
                         try{
                             prenotazioneController.prenota(annBean, prenBean);
                         } catch (NoAvailableAnnunciException e){
-                            ViewCliUtils.printMsgln("!ERROR! L'Annuncio non esiste");
+                            e.showMessageCLI();
                             return;
                         }
                         ViewCliUtils.printMsgln("Prenotazione riuscita");

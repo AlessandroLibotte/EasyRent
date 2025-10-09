@@ -1,4 +1,4 @@
-package main.model;
+package main.control;
 
 public enum RegisterResult {
     SUCCESS, EXISTS, INVALID

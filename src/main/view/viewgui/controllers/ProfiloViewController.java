@@ -61,7 +61,7 @@ public class ProfiloViewController {
         try {
             user = userController.getUserInfo(new LoginBean(email));
         } catch(UserDoesNotExistException e) {
-            viewControllerUtils.mostraErrore("Errore", "Utente inesistente", "L'utente " + e.email + " non esiste");
+            e.showMessageGUI();
             viewControllerUtils.gotoLogin(emailLabel.getScene());
             return;
         }
@@ -79,7 +79,7 @@ public class ProfiloViewController {
             case Role.AFFITTUARIO -> loadStoricoPrenotazioniAffittuario();
             case Role.LOCATORE -> loadStoricoPrenotazioniLocatore();
             case Role.INVALID -> {
-                viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                viewControllerUtils.mostraErrore("Ruolo non valido", "");
                 viewControllerUtils.gotoLogin(emailLabel.getScene());
             }
         }
@@ -92,7 +92,7 @@ public class ProfiloViewController {
         try{
             prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
         } catch (UserDoesNotExistException e){
-            viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+            e.showMessageGUI();
             viewControllerUtils.gotoLogin(emailLabel.getScene());
             return;
         }
@@ -103,7 +103,7 @@ public class ProfiloViewController {
             try{
                 ann = annuncioController.getAnnuncio(new AnnuncioBean(title));
             } catch (NoAvailableAnnunciException e){
-                viewControllerUtils.mostraErrore("Errore", "Errore di caricamento", "L'annuncio non esiste");
+                e.showMessageGUI();
                 continue;
             }
 
@@ -130,7 +130,7 @@ public class ProfiloViewController {
             try {
                 prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo));
             } catch (NoAvailableAnnunciException e){
-                viewControllerUtils.mostraErrore("Errore", "Errore di caricamento", "L'annuncio non esiste");
+                e.showMessageGUI();
                 continue;
             }
 
@@ -173,10 +173,10 @@ public class ProfiloViewController {
             try {
                 userController.editUserInfo(rb);
             } catch (InputException e) {
-                viewControllerUtils.mostraErrore("Errore", "Campi non validi", "");
+                e.showMessageGUI();
                 return;
             } catch (UserDoesNotExistException e) {
-                viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+                e.showMessageGUI();
                 return;
             }
 

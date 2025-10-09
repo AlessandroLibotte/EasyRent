@@ -52,7 +52,7 @@ public class AnnuncioViewController {
         try {
             annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
         } catch (NoAvailableAnnunciException e){
-            viewControllerUtils.mostraErrore("Errore", "Errore di caricmaneto","L'annuncio non esiste");
+            e.showMessageGUI();
             switch (role){
                 case Role.AFFITTUARIO -> {
                     Parent root = viewControllerUtils.loadAffittuarioScene(email).load();
@@ -63,7 +63,7 @@ public class AnnuncioViewController {
                     viewControllerUtils.setShowScene(root, titoloLabel.getScene());
                 }
                 case Role.INVALID -> {
-                    viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                    viewControllerUtils.mostraErrore("Ruolo non valido", "");
                     viewControllerUtils.gotoLogin(titoloLabel.getScene());
                 }
             }
@@ -90,7 +90,7 @@ public class AnnuncioViewController {
             case Role.AFFITTUARIO -> prenotaButton.setText("Prenota");
             case Role.LOCATORE -> prenotaButton.setText("Elimina");
             case Role.INVALID -> {
-                viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                viewControllerUtils.mostraErrore("Ruolo non valido", "");
                 viewControllerUtils.gotoLogin(titoloLabel.getScene());
             }
         }
@@ -107,10 +107,10 @@ public class AnnuncioViewController {
                 try{
                     prenotazioneController.prenota(annBean, prenBean);
                 } catch(NoAvailableAnnunciException e){
-                    viewControllerUtils.mostraErrore("Errore", "Errore di caricamento", "L'annuncio non esiste");
+                    e.showMessageGUI();
                     viewControllerUtils.goToAffittuario(event, email);
                 } catch (UserDoesNotExistException e){
-                    viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+                    e.showMessageGUI();
                     viewControllerUtils.gotoLogin(titoloLabel.getScene());
                 }
                 viewControllerUtils.goToAffittuario(event, email);
@@ -119,15 +119,15 @@ public class AnnuncioViewController {
                 try {
                     annuncioController.eliminaAnnuncio(new AnnuncioBean(titoloLabel.getText(), email));
                 } catch (UserDoesNotExistException e){
-                    viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+                    e.showMessageGUI();
                     viewControllerUtils.gotoLogin(titoloLabel.getScene());
                 } catch(NoAvailableAnnunciException e){
-                    viewControllerUtils.mostraErrore("Errore", "Errore di caricmaneto", "L'annuncio non esiste");
+                    e.showMessageGUI();
                 }
                 viewControllerUtils.goToLocatore(event, email);
             }
             case Role.INVALID -> {
-                viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                viewControllerUtils.mostraErrore("Ruolo non valido", "");
                 viewControllerUtils.gotoLogin(titoloLabel.getScene());
             }
         }
