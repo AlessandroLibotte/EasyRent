@@ -77,6 +77,12 @@ public class AnnuncioController {
 
         if (annunci.isEmpty()) throw new NoAvailableAnnunciException();
 
+        return getSearchResults(annunci, bean);
+
+    }
+
+    private AnnuncioResultBean getSearchResults(List<Annuncio> annunci, PrenotazioneBean bean) {
+
         List<String> resultsTitolo = new ArrayList<>();
         List<String> resultsIndirizzo = new ArrayList<>();
         List<Double> resultsPrezzo = new ArrayList<>();
@@ -105,6 +111,7 @@ public class AnnuncioController {
         }
 
         return new AnnuncioResultBean(resultsTitolo, resultsIndirizzo, resultsVoto, resultsPrezzo);
+
     }
 
     public AnnuncioResultBean getAllAnnunci(AnnuncioBean bean){
