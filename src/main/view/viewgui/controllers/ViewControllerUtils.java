@@ -15,10 +15,19 @@ import main.bean.PrenotazioneBean;
 import main.model.Role;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ViewControllerUtils {
 
     public void goToLocatore(ActionEvent event, String email) throws IOException {
+
+        FXMLLoader loader = loadLocatoreScene(email);
+
+        loadSetStage(loader, event.getSource());
+
+    }
+
+    public FXMLLoader loadLocatoreScene(String email) {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LocatoreScene.fxml"));
 
@@ -34,11 +43,18 @@ public class ViewControllerUtils {
             }
         });
 
+        return loader;
+    }
+
+    public void goToAffittuario(ActionEvent event, String email) throws IOException {
+
+        FXMLLoader loader = loadAffittuarioScene(email);
+
         loadSetStage(loader, event.getSource());
 
     }
 
-    public void goToAffittuario(ActionEvent event, String email) throws IOException {
+    public FXMLLoader loadAffittuarioScene(String email){
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AffittuarioScene.fxml"));
 
@@ -54,8 +70,18 @@ public class ViewControllerUtils {
             }
         });
 
-        loadSetStage(loader, event.getSource());
+        return loader;
+    }
 
+    public void gotoLogin(Scene scene) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/LoginScene.fxml")));
+        setShowScene(root, scene);
+    }
+
+    public void setShowScene(Parent root, Scene scene) {
+        Stage stage = (Stage) scene.getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     public void goToProfilo(ActionEvent event, String email) throws IOException {
@@ -84,7 +110,12 @@ public class ViewControllerUtils {
 
         loader.setControllerFactory(param -> {
             if (param == AnnuncioViewController.class) {
-                return new AnnuncioViewController(titolo, email, prenBean);
+                try {
+                    return new AnnuncioViewController(titolo, email, prenBean);
+                } catch (IOException e) {
+                    mostraErrore("IO Exception","Errore durante il reindirzzamento di paginaa");
+                    throw new RuntimeException(e);
+                }
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();
@@ -109,12 +140,17 @@ public class ViewControllerUtils {
 
     }
 
-    public void mostraErrore(String title, String header, String messaggio) {
+    public void showMessage(String title, String header, String messaggio) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(messaggio);
         alert.showAndWait();
+    }
+
+    public void mostraErrore(String header, String messaggio) {
+
+        showMessage("Errore", header, messaggio);
     }
 
     public VBox creaCardAnnuncio(String titolo, String indirizzo, double prezzo, int valutazione) {
@@ -176,7 +212,7 @@ public class ViewControllerUtils {
         switch (role) {
             case Role.AFFITTUARIO -> goToAffittuario(event, email);
             case Role.LOCATORE -> goToLocatore(event, email);
-            case Role.INVALID -> mostraErrore("Errore", "Ruolo non valido", "");
+            case Role.INVALID -> mostraErrore("Ruolo non valido", "");
         }
     }
 

@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import main.bean.AnnuncioBean;
 import main.control.AnnuncioController;
+import main.control.exceptions.AnnuncioExistsException;
+import main.control.exceptions.InputException;
 
 import java.io.IOException;
 
@@ -61,13 +63,19 @@ public class CreaAnnuncioViewController {
         newAnnuncio.setMaxOspiti(maxOspiti);
         newAnnuncio.setPrice(prezzo);
 
-        if (annuncioController.creaAnnuncio(newAnnuncio)) {
-            viewControllerUtils.goToLocatore(event, email);
-        } else {
-            viewControllerUtils.mostraErrore("Errore Creazione Annuncio", "Errore", "Impossibile creare annuncio");
+        try {
+            annuncioController.creaAnnuncio(newAnnuncio);
+        } catch (AnnuncioExistsException e){
+            e.showMessageGUI();
+            return;
+        } catch (InputException e){
+            e.showMessageGUI();
+            return;
         }
 
-    }
+        viewControllerUtils.goToLocatore(event, email);
+
+}
 
 
 }

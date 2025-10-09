@@ -26,5 +26,12 @@ public class ViewCliUtils {
 
     }
 
+    public static void printErrorAnnuncio(){
+        printMsgln("!ERRORE! L'annuncio non esiste");
+    }
+
+    public static void printInputException(){
+        printMsgln("!ERRORE! Uno o piu campi non sono stati compilati correttamente");
+    }
 
 }

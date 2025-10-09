@@ -2,6 +2,8 @@ package main.control;
 
 import main.bean.LoginBean;
 import main.bean.RegistrationBean;
+import main.control.exceptions.InputException;
+import main.control.exceptions.UserDoesNotExistException;
 import main.model.Affittuario;
 import main.model.Locatore;
 import main.model.Role;
@@ -15,7 +17,7 @@ public class UserController {
 
     public RegistrationBean getUserInfo (LoginBean lb) {
 
-        if(!userDao.exists(lb.getEmail())) return null;
+        if (!userDao.exists(lb.getEmail())) throw new UserDoesNotExistException(lb.getEmail());
 
         User user = userDao.load(lb.getEmail());
 
@@ -29,9 +31,10 @@ public class UserController {
 
     }
 
-    public boolean editUserInfo(RegistrationBean rb) {
+    public void editUserInfo(RegistrationBean rb) {
 
-        if(!userDao.exists(rb.getEmail()) || !rb.isValid()) return false;
+        if(!rb.isValid())  throw new InputException();
+        if(!userDao.exists(rb.getEmail())) throw new UserDoesNotExistException(rb.getEmail());
 
         User user = userDao.load(rb.getEmail());
 
@@ -41,12 +44,11 @@ public class UserController {
 
         userDao.store(user);
 
-        return true;
     }
 
     public Role assertUser(LoginBean lb) {
 
-        if(!userDao.exists(lb.getEmail())) return Role.INVALID;
+        if (!userDao.exists(lb.getEmail())) return Role.INVALID;
 
         User user = userDao.load(lb.getEmail());
 

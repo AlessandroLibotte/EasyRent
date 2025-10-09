@@ -12,6 +12,9 @@ import main.bean.*;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
 import main.control.UserController;
+import main.control.exceptions.InputException;
+import main.control.exceptions.NoAvailableAnnunciException;
+import main.control.exceptions.UserDoesNotExistException;
 import main.model.Role;
 
 import java.io.IOException;
@@ -47,14 +50,21 @@ public class ProfiloViewController {
         this.annuncioController = new AnnuncioController();
 
         this.email = email;
-        this.role = userController.assertUser(new LoginBean(email, ""));
+        this.role = userController.assertUser(new LoginBean(email));
 
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
 
-        RegistrationBean user = userController.getUserInfo(new LoginBean(email));
+        RegistrationBean user;
+        try {
+            user = userController.getUserInfo(new LoginBean(email));
+        } catch(UserDoesNotExistException e) {
+            e.showMessageGUI();
+            viewControllerUtils.gotoLogin(emailLabel.getScene());
+            return;
+        }
 
         String nome = Objects.equals(user.getNome(), "") ? "N.D." :  user.getNome();
         String cognome = Objects.equals(user.getCognome(), "") ? "N.D." : user.getCognome();
@@ -68,18 +78,34 @@ public class ProfiloViewController {
         switch(role) {
             case Role.AFFITTUARIO -> loadStoricoPrenotazioniAffittuario();
             case Role.LOCATORE -> loadStoricoPrenotazioniLocatore();
-            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+            case Role.INVALID -> {
+                viewControllerUtils.mostraErrore("Ruolo non valido", "");
+                viewControllerUtils.gotoLogin(emailLabel.getScene());
+            }
         }
 
     }
 
-    private void loadStoricoPrenotazioniAffittuario(){
+    private void loadStoricoPrenotazioniAffittuario() throws IOException {
 
-        PrenotazioneBean prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
+        PrenotazioneBean prens;
+        try{
+            prens = prenotazioneController.getPrenotazioni(new PrenotazioneBean(email));
+        } catch (UserDoesNotExistException e){
+            e.showMessageGUI();
+            viewControllerUtils.gotoLogin(emailLabel.getScene());
+            return;
+        }
 
         for (String title : prens.getTitoli()) {
 
-            AnnuncioBean ann = annuncioController.getAnnuncio(new AnnuncioBean(title));
+            AnnuncioBean ann;
+            try{
+                ann = annuncioController.getAnnuncio(new AnnuncioBean(title));
+            } catch (NoAvailableAnnunciException e){
+                e.showMessageGUI();
+                continue;
+            }
 
             String periodo = prens.getDateInizio().get(prens.getTitoli().indexOf(title)).toString() + " - " +
                     prens.getDateFine().get(prens.getTitoli().indexOf(title)).toString();
@@ -100,7 +126,13 @@ public class ProfiloViewController {
 
         for(String titolo: anns.getTitoliAnnunci()){
 
-            PrenotazioneBean prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo));
+            PrenotazioneBean prens;
+            try {
+                prens = annuncioController.getPrenotazioniAnnuncio(new AnnuncioBean(titolo));
+            } catch (NoAvailableAnnunciException e){
+                e.showMessageGUI();
+                continue;
+            }
 
             String indirizzo = anns.getIndirizziAnnunci().get(anns.getTitoliAnnunci().indexOf(titolo));
 
@@ -138,22 +170,27 @@ public class ProfiloViewController {
 
             RegistrationBean rb = new RegistrationBean(nomeField.getText(), cognomeField.getText(), email, "", telefonoField.getText(), Role.INVALID);
 
-            if (userController.editUserInfo(rb)) {
-
-                inModifica = false;
-                modificaButton.setText("Modifica Dati");
-
-                nomeLabel.setText(nomeField.getText());
-                cognomeLabel.setText(cognomeField.getText());
-                telefonoLabel.setText(telefonoField.getText());
-
-                viewControllerUtils.replaceNode(nomeField, nomeLabel);
-                viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
-                viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
-
-            } else {
-                viewControllerUtils.mostraErrore("Errore", "Campi non validi", "");
+            try {
+                userController.editUserInfo(rb);
+            } catch (InputException e) {
+                e.showMessageGUI();
+                return;
+            } catch (UserDoesNotExistException e) {
+                e.showMessageGUI();
+                return;
             }
+
+            inModifica = false;
+            modificaButton.setText("Modifica Dati");
+
+            nomeLabel.setText(nomeField.getText());
+            cognomeLabel.setText(cognomeField.getText());
+            telefonoLabel.setText(telefonoField.getText());
+
+            viewControllerUtils.replaceNode(nomeField, nomeLabel);
+            viewControllerUtils.replaceNode(cognomeField, cognomeLabel);
+            viewControllerUtils.replaceNode(telefonoField, telefonoLabel);
+
         }
     }
 

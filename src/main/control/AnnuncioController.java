@@ -3,6 +3,7 @@ package main.control;
 import main.bean.AnnuncioBean;
 import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
+import main.control.exceptions.*;
 import main.model.Annuncio;
 import main.model.Immobile;
 import main.model.Locatore;
@@ -34,9 +35,10 @@ public class AnnuncioController {
         return imm;
     }
 
-    public boolean creaAnnuncio(AnnuncioBean bean){
+    public void creaAnnuncio(AnnuncioBean bean) throws AnnuncioExistsException {
 
-        if(annuncioDao.exists(bean.getTitolo())) return false;
+        if(bean.isNotValid()) throw new InputException();
+        if(annuncioDao.exists(bean.getTitolo())) throw new AnnuncioExistsException(bean.getTitolo());
 
         Annuncio ann = annuncioDao.create(bean.getTitolo());
         ann.setOwner(bean.getOwner());
@@ -65,15 +67,21 @@ public class AnnuncioController {
         immobileDao.store(imm);
         annuncioDao.store(ann);
 
-        return true;
-
     }
 
     public AnnuncioResultBean searchAnnunci(PrenotazioneBean bean) {
 
-        if(!bean.isValid()) return null;
+        if(!bean.isValid()) throw new InputException();
 
         List<Annuncio> annunci = annuncioDao.loadAll();
+
+        if (annunci.isEmpty()) throw new NoAvailableAnnunciException();
+
+        return getSearchResults(annunci, bean);
+
+    }
+
+    private AnnuncioResultBean getSearchResults(List<Annuncio> annunci, PrenotazioneBean bean) {
 
         List<String> resultsTitolo = new ArrayList<>();
         List<String> resultsIndirizzo = new ArrayList<>();
@@ -82,8 +90,7 @@ public class AnnuncioController {
 
         for (Annuncio ann : annunci) {
 
-            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita())
-                    || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
+            if (!ann.getImmobile().getIndirizzo().contains(bean.getLocalita()) || bean.getNumOspiti() > ann.getImmobile().getMaxOspiti()) continue;
 
             if (!ann.getPrenotazioni().isEmpty()) {
                 for (Prenotazione p : ann.getPrenotazioni()) {
@@ -104,14 +111,17 @@ public class AnnuncioController {
         }
 
         return new AnnuncioResultBean(resultsTitolo, resultsIndirizzo, resultsVoto, resultsPrezzo);
+
     }
 
     public AnnuncioResultBean getAllAnnunci(AnnuncioBean bean){
 
+        if (!userDao.exists(bean.getOwner())) throw new UserDoesNotExistException(bean.getOwner());
+
         Locatore loc = (Locatore) userDao.load(bean.getOwner());
 
         List<Annuncio> anns = loc.getAnnunci();
-        if (anns == null || anns.isEmpty()) {return new AnnuncioResultBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());}
+        if (anns == null || anns.isEmpty()) throw new NoAvailableAnnunciException();
 
         List<String> annTitles = new ArrayList<>();
         List<String> annIndirizzi = new ArrayList<>();
@@ -129,6 +139,8 @@ public class AnnuncioController {
     }
 
     public AnnuncioBean getAnnuncio(AnnuncioBean annBean){
+
+        if (!annuncioDao.exists(annBean.getTitolo())) throw new NoAvailableAnnunciException();
 
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
 
@@ -154,7 +166,12 @@ public class AnnuncioController {
 
     public void eliminaAnnuncio(AnnuncioBean bean){
 
+        if (!userDao.exists(bean.getOwner())) throw new UserDoesNotExistException(bean.getOwner());
+
         Locatore loc = (Locatore) userDao.load(bean.getOwner());
+
+        if (!annuncioDao.exists(bean.getTitolo())) throw new NoAvailableAnnunciException();
+
         Annuncio ann = annuncioDao.load(bean.getTitolo());
 
         List<Annuncio> anns = loc.getAnnunci();
@@ -172,10 +189,11 @@ public class AnnuncioController {
 
     public PrenotazioneBean getPrenotazioniAnnuncio(AnnuncioBean annBean){
 
+        if(!annuncioDao.exists(annBean.getTitolo())) throw new  NoAvailableAnnunciException();
+
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
 
         List<Prenotazione> prens = ann.getPrenotazioni();
-        if(prens == null) return new PrenotazioneBean(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<String> prenotanti = new ArrayList<>();
         List<LocalDate> dateInizio = new ArrayList<>();
@@ -194,6 +212,8 @@ public class AnnuncioController {
     }
 
     public PrenotazioneBean getPrenotazioneInfo(AnnuncioBean annBean){
+
+        if(!annuncioDao.exists(annBean.getTitolo())) throw new  NoAvailableAnnunciException();
 
         Annuncio ann = annuncioDao.load(annBean.getTitolo());
 

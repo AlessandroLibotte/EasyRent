@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import main.bean.AnnuncioBean;
 import main.bean.AnnuncioResultBean;
 import main.control.AnnuncioController;
+import main.control.exceptions.NoAvailableAnnunciException;
+import main.control.exceptions.UserDoesNotExistException;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Objects;
 public class LocatoreViewController {
 
     private final String email;
+    public AnchorPane rootContainer;
     AnnuncioController annuncioController;
     ViewControllerUtils viewControllerUtils;
     List<String> titles;
@@ -38,12 +41,24 @@ public class LocatoreViewController {
     private TilePane annunciTilePane;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
 
         AnnuncioBean bean  = new AnnuncioBean();
         bean.setOwner(email);
 
-        AnnuncioResultBean anns = annuncioController.getAllAnnunci(bean);
+        AnnuncioResultBean anns;
+
+        try {
+            anns = annuncioController.getAllAnnunci(bean);
+        } catch (UserDoesNotExistException e){
+            e.showMessageGUI();
+            viewControllerUtils.gotoLogin(rootContainer.getScene());
+            return;
+        } catch (NoAvailableAnnunciException e){
+            e.showMessageGUI();
+            return;
+        }
+
         titles = anns.getTitoliAnnunci();
         indirizzi = anns.getIndirizziAnnunci();
         voti = anns.getVotiAnnunci();
@@ -73,9 +88,6 @@ public class LocatoreViewController {
         stage.setScene(new Scene(root));
         stage.show();
 
-    }
-
-    public void handleSearchCompagnia(ActionEvent actionEvent) {
     }
 
     public void handleCreateAnnuncio(ActionEvent event) throws IOException {

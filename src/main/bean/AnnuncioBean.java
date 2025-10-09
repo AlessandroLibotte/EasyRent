@@ -25,6 +25,26 @@ public class AnnuncioBean {
         this.owner = owner;
     }
 
+    public boolean isNotValid(){
+        return isOwnerValid() && isTitoloValid() && isIndirizzoValid() && isPriceValid();
+    }
+
+    private boolean isOwnerValid() {
+        return owner != null && !owner.isEmpty();
+    }
+
+    private boolean isTitoloValid() {
+        return titolo != null && !titolo.isEmpty();
+    }
+
+    private boolean isIndirizzoValid() {
+        return indirizzo != null && !indirizzo.isEmpty();
+    }
+
+    private boolean isPriceValid() {
+        return price > 0;
+    }
+
     //getter setter
     public String getOwner() { return owner; }
     public void setOwner(String owner) {
