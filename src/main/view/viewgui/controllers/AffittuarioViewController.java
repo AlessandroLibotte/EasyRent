@@ -101,7 +101,7 @@ public class AffittuarioViewController {
             try {
                 goToAnnuncio(event, titolo);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                viewControllerUtils.mostraErrore("IO Exception", e.getMessage());
             }
         });
         annunciTilePane.getChildren().add(nuovaCard);

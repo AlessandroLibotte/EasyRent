@@ -5,6 +5,7 @@ import main.model.Locatore;
 import main.model.Role;
 import main.model.User;
 import main.persistence.*;
+import main.persistence.exceptions.LoadException;
 
 import java.sql.*;
 
@@ -50,7 +51,7 @@ public class DatabaseUserDao extends DatabaseDao<String, User> implements UserDa
                 loc.setAnnunci(annDao.loadAllWhere("owner", loc.getEmail()));
                 return loc;
             }
-            case Role.INVALID ->  throw new RuntimeException();
+            case Role.INVALID ->  throw new LoadException("Invalid Role");
         }
         return null;
     }

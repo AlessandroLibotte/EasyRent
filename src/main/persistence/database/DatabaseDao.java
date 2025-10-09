@@ -1,5 +1,9 @@
 package main.persistence.database;
 import main.persistence.Dao;
+import main.persistence.exceptions.DeleteException;
+import main.persistence.exceptions.ExistsException;
+import main.persistence.exceptions.LoadException;
+import main.persistence.exceptions.StoreException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,7 +39,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
                 }
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new LoadException(e.getMessage());
         }
         return null;
     }
@@ -44,7 +48,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
         try {
             insert(entity);
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoreException(e.getMessage());
         }
     }
 
@@ -58,7 +62,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
             ps.setObject(1, id);
             ps.executeUpdate();
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new DeleteException(e.getMessage());
         }
     }
 
@@ -72,7 +76,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
                 return rs.getInt(1) > 0;
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new ExistsException(e.getMessage());
         }
     }
 
@@ -86,7 +90,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
                 list.add(mapResultSet(rs));
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new LoadException(e.getMessage());
         }
         return list;
     }
@@ -102,7 +106,7 @@ public abstract class DatabaseDao<K, V> implements Dao<K, V> {
                 }
             }
         } catch(SQLException e) {
-            throw new RuntimeException(e);
+            throw new LoadException(e.getMessage());
         }
         return list;
     }

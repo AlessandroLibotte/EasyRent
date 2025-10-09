@@ -38,7 +38,8 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    mostraErrore("Constructor Instancing", e.getMessage());
+                    return null;
                 }
             }
         });
@@ -65,7 +66,8 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    mostraErrore("Constructor Instancing", e.getMessage());
+                    return null;
                 }
             }
         });
@@ -95,7 +97,8 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    mostraErrore("Constructor Instancing", e.getMessage());
+                    return null;
                 }
             }
         });
@@ -113,14 +116,15 @@ public class ViewControllerUtils {
                 try {
                     return new AnnuncioViewController(titolo, email, prenBean);
                 } catch (IOException e) {
-                    mostraErrore("IO Exception","Errore durante il reindirzzamento di paginaa");
-                    throw new RuntimeException(e);
+                    mostraErrore("IO Exception",e.getMessage());
+                    return null;
                 }
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    mostraErrore("Constructor Instancing", e.getMessage());
+                    return null;
                 }
             }
         });

@@ -111,7 +111,7 @@ public class LocatoreViewController {
             try {
                 viewControllerUtils.goToAnnuncio(event, email, titolo, null);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                viewControllerUtils.mostraErrore("IO Exception", e.getMessage());
             }
         });
         annunciTilePane.getChildren().add(nuovaCard);

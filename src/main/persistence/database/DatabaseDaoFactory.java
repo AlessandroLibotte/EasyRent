@@ -1,16 +1,17 @@
 package main.persistence.database;
 
 import main.persistence.DaoFactory;
+import main.persistence.exceptions.DaoFactoryException;
 
 import java.sql.SQLException;
 
 public class DatabaseDaoFactory extends DaoFactory {
 
-    public DatabaseUserDao getUserDao() {
-        try {
+    public DatabaseUserDao getUserDao()  {
+        try{
             return DatabaseUserDao.getInstance("USERS", "EMAIL");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoFactoryException(e.getMessage());
         }
     }
 
@@ -18,7 +19,7 @@ public class DatabaseDaoFactory extends DaoFactory {
         try {
             return DatabaseAnnuncioDao.getInstance("ANNUNCI", "TITOLO");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoFactoryException(e.getMessage());
         }
     }
 
@@ -26,7 +27,7 @@ public class DatabaseDaoFactory extends DaoFactory {
         try {
             return DatabaseImmobileDao.getInstance("IMMOBILI", "INDIRIZZO");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoFactoryException(e.getMessage());
         }
     }
 
@@ -34,7 +35,7 @@ public class DatabaseDaoFactory extends DaoFactory {
         try {
             return DatabasePrenotazioneDao.getInstance("PRENOTAZIONI", "ID");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoFactoryException(e.getMessage());
         }
 
     }
