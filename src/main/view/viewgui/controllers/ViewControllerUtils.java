@@ -19,6 +19,8 @@ import java.util.Objects;
 
 public class ViewControllerUtils {
 
+    private final String CONSTRUCTORINSTANCING = "Constructor Instancing";
+
     public void goToLocatore(ActionEvent event, String email) throws IOException {
 
         FXMLLoader loader = loadLocatoreScene(email);
@@ -38,7 +40,7 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    mostraErrore("Constructor Instancing", e.getMessage());
+                    mostraErrore(CONSTRUCTORINSTANCING, e.getMessage());
                     return null;
                 }
             }
@@ -66,7 +68,7 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    mostraErrore("Constructor Instancing", e.getMessage());
+                    mostraErrore(CONSTRUCTORINSTANCING, e.getMessage());
                     return null;
                 }
             }
@@ -97,7 +99,7 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    mostraErrore("Constructor Instancing", e.getMessage());
+                    mostraErrore(CONSTRUCTORINSTANCING, e.getMessage());
                     return null;
                 }
             }
@@ -123,7 +125,7 @@ public class ViewControllerUtils {
                 try {
                     return param.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
-                    mostraErrore("Constructor Instancing", e.getMessage());
+                    mostraErrore(CONSTRUCTORINSTANCING, e.getMessage());
                     return null;
                 }
             }
@@ -155,6 +157,11 @@ public class ViewControllerUtils {
     public void mostraErrore(String header, String messaggio) {
 
         showMessage("Errore", header, messaggio);
+    }
+
+    public void mostraErroreRuolo() {
+
+        showMessage("Errore","Ruolo non valido", "");
     }
 
     public VBox creaCardAnnuncio(String titolo, String indirizzo, double prezzo, int valutazione) {

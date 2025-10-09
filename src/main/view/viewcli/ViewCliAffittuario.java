@@ -236,22 +236,7 @@ public class ViewCliAffittuario {
 
         while(!quit) {
 
-            ViewCliUtils.printMsgln("Pagina Annuncio");
-            ViewCliUtils.printMsgln("\tTitolo: " + annBean.getTitolo());
-            ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
-            ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
-            ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
-            if(bean != null) ViewCliUtils.printMsgln("1) Prenota");
-            ViewCliUtils.printMsgln("2) Back");
-
-            ViewCliUtils.printMsg(": ");
-            String action;
-            try{
-                action = reader.readLine();
-            } catch (IOException e) {
-                ViewCliUtils.printMsgln("Errore durante l' operazione");
-                continue;
-            }
+            String action = printAnnuncioMenu(annBean, bean);
 
             switch (action) {
                 case "1":
@@ -271,6 +256,27 @@ public class ViewCliAffittuario {
                     break;
             }
         }
+    }
+
+    private String printAnnuncioMenu(AnnuncioBean annBean, AnnuncioResultBean bean) {
+        ViewCliUtils.printMsgln("Pagina Annuncio");
+        ViewCliUtils.printMsgln("\tTitolo: " + annBean.getTitolo());
+        ViewCliUtils.printMsgln("\tIndirizzo: " + annBean.getIndirizzo());
+        ViewCliUtils.printMsgln("\tDescrizione: " + annBean.getDescrizione());
+        ViewCliUtils.printMsgln("\tServizi: " + Arrays.toString(annBean.getServizi()));
+        if(bean != null) ViewCliUtils.printMsgln("1) Prenota");
+        ViewCliUtils.printMsgln("2) Back");
+
+        ViewCliUtils.printMsg(": ");
+        String action;
+        try{
+            action = reader.readLine();
+        } catch (IOException e) {
+            ViewCliUtils.printMsgln("Errore durante l' operazione");
+            return "-1";
+        }
+
+        return action;
     }
 
 }
