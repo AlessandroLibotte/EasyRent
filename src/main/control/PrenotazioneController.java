@@ -1,7 +1,10 @@
 package main.control;
 
 import main.bean.AnnuncioBean;
+import main.bean.LoginBean;
 import main.bean.PrenotazioneBean;
+import main.control.exceptions.NoAvailableAnnunciException;
+import main.control.exceptions.UserDoesNotExistException;
 import main.model.*;
 import main.persistence.AnnuncioDao;
 import main.persistence.DaoFactory;
@@ -17,18 +20,24 @@ public class PrenotazioneController {
     AnnuncioDao annDao = DaoFactory.getInstance().getAnnuncioDao();
     UserDao userDao = DaoFactory.getInstance().getUserDao();
     PrenotazioneDao prenDao = DaoFactory.getInstance().getPrenotazioneDao();
+    UserController userController = new UserController();
 
     public PrenotazioneBean getPrenotazioni(PrenotazioneBean bean){
+
+        if(!userDao.exists(bean.getCurrentUser())) throw new UserDoesNotExistException(bean.getCurrentUser());
 
         User user = userDao.load(bean.getCurrentUser());
 
         List<Prenotazione> prens = new ArrayList<>();
 
-        if (user instanceof  Affittuario) {
-            prens = ((Affittuario)user).getPrenotazioni();
-        }
-        else if (user instanceof Locatore) {
-            for (Annuncio ann : ((Locatore)user).getAnnunci()) prens.addAll(ann.getPrenotazioni());
+        Role role = userController.assertUser(new LoginBean(bean.getCurrentUser()));
+
+        switch (role) {
+            case Role.AFFITTUARIO -> prens = ((Affittuario)user).getPrenotazioni();
+            case Role.LOCATORE -> {
+                for (Annuncio ann : ((Locatore)user).getAnnunci()) prens.addAll(ann.getPrenotazioni());
+            }
+            case Role.INVALID -> throw new UserDoesNotExistException(bean.getCurrentUser());
         }
 
         List<String> resultPrenotanti = new ArrayList<>();
@@ -61,8 +70,11 @@ public class PrenotazioneController {
 
     public PrenotazioneBean getPrenotazioneInfo(AnnuncioBean annBean){
 
+        if (!userDao.exists(annBean.getOwner())) throw new UserDoesNotExistException(annBean.getOwner());
+
         Affittuario currentUser = (Affittuario) userDao.load(annBean.getOwner());
 
+        if(!annDao.exists(annBean.getTitolo())) throw new NoAvailableAnnunciException();
         Annuncio ann = annDao.load(annBean.getTitolo());
 
         ArrayList<Prenotazione> prens = (ArrayList<Prenotazione>)ann.getPrenotazioni();
@@ -78,6 +90,7 @@ public class PrenotazioneController {
     public void prenota(AnnuncioBean annBean, PrenotazioneBean prenBean){
 
         //Load target annuncio
+        if(!annDao.exists(annBean.getTitolo())) throw new NoAvailableAnnunciException();
         Annuncio ann = annDao.load(annBean.getTitolo());
 
         //get the already present reservations
@@ -96,6 +109,7 @@ public class PrenotazioneController {
         ann.setPrenotazioni(prens);
 
         //update current user's reservations
+        if(!userDao.exists(prenBean.getCurrentUser())) throw new  UserDoesNotExistException(prenBean.getCurrentUser());
         Affittuario aff = (Affittuario) userDao.load(prenBean.getCurrentUser());
         List<Prenotazione> currPrens = aff.getPrenotazioni();
         if (currPrens == null) currPrens = new ArrayList<>();

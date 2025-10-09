@@ -1,6 +1,7 @@
 package main.view.viewgui.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,10 +16,19 @@ import main.bean.PrenotazioneBean;
 import main.model.Role;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ViewControllerUtils {
 
     public void goToLocatore(ActionEvent event, String email) throws IOException {
+
+        FXMLLoader loader = loadLocatoreScene(email);
+
+        loadSetStage(loader, event.getSource());
+
+    }
+
+    public FXMLLoader loadLocatoreScene(String email) {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LocatoreScene.fxml"));
 
@@ -34,11 +44,18 @@ public class ViewControllerUtils {
             }
         });
 
+        return loader;
+    }
+
+    public void goToAffittuario(ActionEvent event, String email) throws IOException {
+
+        FXMLLoader loader = loadAffittuarioScene(email);
+
         loadSetStage(loader, event.getSource());
 
     }
 
-    public void goToAffittuario(ActionEvent event, String email) throws IOException {
+    public FXMLLoader loadAffittuarioScene(String email){
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AffittuarioScene.fxml"));
 
@@ -54,8 +71,18 @@ public class ViewControllerUtils {
             }
         });
 
-        loadSetStage(loader, event.getSource());
+        return loader;
+    }
 
+    public void gotoLogin(Scene scene) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/LoginScene.fxml")));
+        setShowScene(root, scene);
+    }
+
+    public void setShowScene(Parent root, Scene scene) {
+        Stage stage = (Stage) scene.getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     public void goToProfilo(ActionEvent event, String email) throws IOException {
@@ -84,7 +111,12 @@ public class ViewControllerUtils {
 
         loader.setControllerFactory(param -> {
             if (param == AnnuncioViewController.class) {
-                return new AnnuncioViewController(titolo, email, prenBean);
+                try {
+                    return new AnnuncioViewController(titolo, email, prenBean);
+                } catch (IOException e) {
+                    mostraErrore("Errore", "IO Exception","Errore durante il reindirzzamento di paginaa");
+                    throw new RuntimeException(e);
+                }
             } else {
                 try {
                     return param.getDeclaredConstructor().newInstance();

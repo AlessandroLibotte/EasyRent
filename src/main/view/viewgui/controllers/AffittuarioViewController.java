@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
 import main.control.AnnuncioController;
+import main.control.exceptions.InputException;
+import main.control.exceptions.NoAvailableAnnunciException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -64,21 +66,25 @@ public class AffittuarioViewController {
 
         localita = localitaField.getText();
 
-        if (localita.isEmpty()) {
-            viewControllerUtils.mostraErrore("Erroe di ricerca", "Errore", "Località non valida");
-            return;
-        }
-
         startDate = dataInizioField.getValue();
         endDate = dataFineField.getValue();
         numOspiti = Integer.parseInt(Objects.equals(numeroOspitiField.getText(), "") ? "1" : numeroOspitiField.getText());
 
-        AnnuncioResultBean anns = annuncioController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
+        AnnuncioResultBean result;
+        try {
+            result = annuncioController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
+        } catch (InputException e) {
+            viewControllerUtils.mostraErrore("Errore", "Errore di ricerca", e.message);
+            return;
+        }catch (NoAvailableAnnunciException e){
+            viewControllerUtils.mostraErrore("Errore", "Errore di Caricamento", "Impossibile caricare gli annunci");
+            return;
+        }
 
-        List<String> titles = anns.getTitoliAnnunci();
-        List<String> indirizzi = anns.getIndirizziAnnunci();
-        List<Integer> voti = anns.getVotiAnnunci();
-        List<Double> prezzi = anns.getPrezziAnnunci();
+        List<String> titles = result.getTitoliAnnunci();
+        List<String> indirizzi = result.getIndirizziAnnunci();
+        List<Integer> voti = result.getVotiAnnunci();
+        List<Double> prezzi = result.getPrezziAnnunci();
 
         annunciTilePane.getChildren().clear();
 

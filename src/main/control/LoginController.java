@@ -13,7 +13,7 @@ public class LoginController {
     UserDao userDao = DaoFactory.getInstance().getUserDao();
 
     public Role validate(LoginBean lb) {
-        if(!userDao.exists(lb.getEmail())) return Role.INVALID;
+        if(!userDao.exists(lb.getEmail()) || lb.isNotValid()) return Role.INVALID;
 
         User user = userDao.load(lb.getEmail());
         if(user == null || !user.checkPassword(lb.getPassword())) return Role.INVALID;

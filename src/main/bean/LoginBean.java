@@ -14,8 +14,8 @@ public class LoginBean {
         this.password = password;
     }
 
-    public boolean isValid() {
-        return isEmailValid() && isPasswordValid();
+    public boolean isNotValid() {
+        return !isEmailValid() || !isPasswordValid();
     }
 
     private boolean isEmailValid() {

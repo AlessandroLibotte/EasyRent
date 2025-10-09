@@ -2,6 +2,7 @@ package main.view.viewgui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import main.bean.AnnuncioBean;
@@ -10,7 +11,11 @@ import main.bean.PrenotazioneBean;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
 import main.control.UserController;
+import main.control.exceptions.NoAvailableAnnunciException;
+import main.control.exceptions.UserDoesNotExistException;
 import main.model.Role;
+import main.model.User;
+import main.view.viewcli.ViewCliUtils;
 
 import java.io.IOException;
 
@@ -31,26 +36,45 @@ public class AnnuncioViewController {
 
     private final AnnuncioController annuncioController;
     private final PrenotazioneController prenotazioneController;
-    private final AnnuncioBean annBean;
+    private AnnuncioBean annBean;
     private final PrenotazioneBean prenBean;
     private final ViewControllerUtils viewControllerUtils;
 
-    public AnnuncioViewController(String titolo, String email, PrenotazioneBean prenBean) {
+    public AnnuncioViewController(String titolo, String email, PrenotazioneBean prenBean) throws IOException {
 
         annuncioController = new AnnuncioController();
         viewControllerUtils = new ViewControllerUtils();
         prenotazioneController = new PrenotazioneController();
         UserController userController = new UserController();
         this.prenBean = prenBean;
-        annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
 
         this.email = email;
-        this.role = userController.assertUser(new LoginBean(email, ""));
+        this.role = userController.assertUser(new LoginBean(email));
+
+        try {
+            annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
+        } catch (NoAvailableAnnunciException e){
+            viewControllerUtils.mostraErrore("Errore", "Errore di caricmaneto","L'annuncio non esiste");
+            switch (role){
+                case Role.AFFITTUARIO -> {
+                    Parent root = viewControllerUtils.loadAffittuarioScene(email).load();
+                    viewControllerUtils.setShowScene(root, titoloLabel.getScene());
+                }
+                case Role.LOCATORE ->  {
+                    Parent root = viewControllerUtils.loadLocatoreScene(email).load();
+                    viewControllerUtils.setShowScene(root, titoloLabel.getScene());
+                }
+                case Role.INVALID -> {
+                    viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                    viewControllerUtils.gotoLogin(titoloLabel.getScene());
+                }
+            }
+        }
 
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
 
         titoloLabel.setText(annBean.getTitolo());
         indirizzoLabel.setText(annBean.getIndirizzo());
@@ -67,7 +91,10 @@ public class AnnuncioViewController {
         switch(role){
             case Role.AFFITTUARIO -> prenotaButton.setText("Prenota");
             case Role.LOCATORE -> prenotaButton.setText("Elimina");
-            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+            case Role.INVALID -> {
+                viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                viewControllerUtils.gotoLogin(titoloLabel.getScene());
+            }
         }
 
     }
@@ -79,14 +106,32 @@ public class AnnuncioViewController {
     public void handlePrenota(ActionEvent event) throws IOException {
         switch(role){
             case Role.AFFITTUARIO -> {
-                prenotazioneController.prenota(annBean, prenBean);
+                try{
+                    prenotazioneController.prenota(annBean, prenBean);
+                } catch(NoAvailableAnnunciException e){
+                    viewControllerUtils.mostraErrore("Errore", "Errore di caricamento", "L'annuncio non esiste");
+                    viewControllerUtils.goToAffittuario(event, email);
+                } catch (UserDoesNotExistException e){
+                    viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+                    viewControllerUtils.gotoLogin(titoloLabel.getScene());
+                }
                 viewControllerUtils.goToAffittuario(event, email);
             }
             case  Role.LOCATORE -> {
-                annuncioController.eliminaAnnuncio(new AnnuncioBean(titoloLabel.getText(), email));
+                try {
+                    annuncioController.eliminaAnnuncio(new AnnuncioBean(titoloLabel.getText(), email));
+                } catch (UserDoesNotExistException e){
+                    viewControllerUtils.mostraErrore("Errore", "Utente insesistente", "L'utente " + e.email + " non esiste");
+                    viewControllerUtils.gotoLogin(titoloLabel.getScene());
+                } catch(NoAvailableAnnunciException e){
+                    viewControllerUtils.mostraErrore("Errore", "Errore di caricmaneto", "L'annuncio non esiste");
+                }
                 viewControllerUtils.goToLocatore(event, email);
             }
-            case Role.INVALID -> viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+            case Role.INVALID -> {
+                viewControllerUtils.mostraErrore("Errore", "Ruolo non valido", "");
+                viewControllerUtils.gotoLogin(titoloLabel.getScene());
+            }
         }
 
     }

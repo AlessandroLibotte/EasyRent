@@ -5,6 +5,9 @@ import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
 import main.control.AnnuncioController;
 import main.control.PrenotazioneController;
+import main.control.exceptions.InputException;
+import main.control.exceptions.NoAvailableAnnunciException;
+import main.control.exceptions.UserDoesNotExistException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,7 +68,13 @@ public class ViewCliAffittuario {
 
     private void menuPrenotazioni() throws IOException {
 
-        PrenotazioneBean bean = prenotazioneController.getPrenotazioni(new PrenotazioneBean(currentUser));
+        PrenotazioneBean bean;
+        try {
+            bean = prenotazioneController.getPrenotazioni(new PrenotazioneBean(currentUser));
+        } catch (UserDoesNotExistException e) {
+            ViewCliUtils.printMsgln("!ERROR! L'utente " + e.email + "non esiste");
+            return;
+        }
 
         while(!quit) {
 
@@ -85,7 +94,13 @@ public class ViewCliAffittuario {
 
     private void paginaPrenotazione(String titolo) throws IOException {
 
-        PrenotazioneBean bean = prenotazioneController.getPrenotazioneInfo(new AnnuncioBean(titolo, currentUser));
+        PrenotazioneBean bean;
+        try{
+            bean = prenotazioneController.getPrenotazioneInfo(new AnnuncioBean(titolo, currentUser));
+        } catch (UserDoesNotExistException e) {
+            ViewCliUtils.printMsgln("!ERROR! L'utente " + e.email + "non esiste");
+            return;
+        }
 
         while(!quit) {
 
@@ -161,7 +176,19 @@ public class ViewCliAffittuario {
                 case "6":
                     try {
                         PrenotazioneBean prenBean = new PrenotazioneBean(localita, startDate, endDate, numOspiti);
-                        searchResultsPage(annuncioController.searchAnnunci(prenBean), prenBean);
+
+                        AnnuncioResultBean result;
+                        try {
+                            result = annuncioController.searchAnnunci(prenBean);
+                        } catch (InputException e){
+                            ViewCliUtils.printMsgln("!ERRORE! " + e.message);
+                            return;
+                        } catch (NoAvailableAnnunciException e){
+                            ViewCliUtils.printMsgln("!ERRORE! Non è stato possibile caricare gli annunci");
+                            return;
+                        }
+
+                        searchResultsPage(result , prenBean);
                     } catch (DateTimeParseException e){
                         ViewCliUtils.printMsgln("Data inserita non valida");
                     }
@@ -194,7 +221,13 @@ public class ViewCliAffittuario {
 
     private void paginaAnnuncio(AnnuncioResultBean bean, String titolo, PrenotazioneBean prenBean) throws IOException {
 
-        AnnuncioBean annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
+        AnnuncioBean annBean;
+        try {
+            annBean = annuncioController.getAnnuncio(new AnnuncioBean(titolo));
+        } catch (NoAvailableAnnunciException e){
+            ViewCliUtils.printMsgln("!ERRORE! L'annuncio non esiste");
+            return;
+        }
 
         while(!quit) {
 
@@ -212,7 +245,12 @@ public class ViewCliAffittuario {
             switch (action) {
                 case "1":
                     if(bean != null) {
-                        prenotazioneController.prenota(annBean, prenBean);
+                        try{
+                            prenotazioneController.prenota(annBean, prenBean);
+                        } catch (NoAvailableAnnunciException e){
+                            ViewCliUtils.printMsgln("!ERROR! L'Annuncio non esiste");
+                            return;
+                        }
                         ViewCliUtils.printMsgln("Prenotazione riuscita");
                         return;
                     } else break;

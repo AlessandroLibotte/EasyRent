@@ -7,6 +7,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="main.view.viewgui.controllers.LocatoreViewController"
             prefWidth="900.0" prefHeight="600.0"
+            fx:id="rootContainer"
             style="-fx-background-color: #f4f7fb;">
     <children>
 
@@ -53,7 +54,7 @@
                             <TextField fx:id="searchCompagniaField" promptText="Cerca compagnia..."
                                        prefWidth="200.0"
                                        style="-fx-background-radius: 8; -fx-background-color: white;"/>
-                            <Button text="🔍" onAction="#handleSearchCompagnia"
+                            <Button text="🔍"
                                     style="-fx-background-color: #4da6ff; -fx-text-fill: white;
                                            -fx-font-weight: bold; -fx-background-radius: 8;
                                            -fx-pref-width: 40;"/>
