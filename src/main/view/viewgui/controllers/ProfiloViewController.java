@@ -28,10 +28,10 @@ public class ProfiloViewController {
     public Label telefonoLabel;
     public VBox storicoPrenotazioniBox;
     @FXML
-    private Button modificaButton;
-    private TextField nomeField;
-    private TextField cognomeField;
-    private TextField telefonoField;
+    public Button modificaButton;
+    public TextField nomeField;
+    public TextField cognomeField;
+    public TextField telefonoField;
 
     private boolean inModifica = false;
     private final String email;

@@ -17,7 +17,7 @@ public class CreaAnnuncioViewController {
     @FXML
     public TextArea descrizioneArea;
     @FXML
-    private Spinner ospitiSpinner;
+    public Spinner ospitiSpinner;
 
     @FXML
     public void initialize() {

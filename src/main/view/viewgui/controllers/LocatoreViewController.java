@@ -38,7 +38,7 @@ public class LocatoreViewController {
     }
 
     @FXML
-    private TilePane annunciTilePane;
+    public TilePane annunciTilePane;
 
     @FXML
     public void initialize() throws IOException {
