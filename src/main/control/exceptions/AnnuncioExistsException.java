@@ -3,7 +3,7 @@ package main.control.exceptions;
 import javafx.scene.control.Alert;
 import main.view.viewcli.ViewCliUtils;
 
-public class AnnuncioExistsException extends Exception {
+public class AnnuncioExistsException extends EasyRentException {
 
     private final String titolo;
 
@@ -11,6 +11,7 @@ public class AnnuncioExistsException extends Exception {
         this.titolo = titolo;
     }
 
+    @Override
     public void showMessageGUI() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
@@ -19,6 +20,7 @@ public class AnnuncioExistsException extends Exception {
         alert.showAndWait();
     }
 
+    @Override
     public void showMessageCLI() {
         ViewCliUtils.printMsgln("!ERRORE! L'annuncio " + titolo + " è gia esistente");
     }

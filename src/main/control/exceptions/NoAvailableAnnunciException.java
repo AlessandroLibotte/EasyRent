@@ -3,7 +3,9 @@ package main.control.exceptions;
 import javafx.scene.control.Alert;
 import main.view.viewcli.ViewCliUtils;
 
-public class NoAvailableAnnunciException extends RuntimeException {
+public class NoAvailableAnnunciException extends EasyRentException {
+
+    @Override
     public void showMessageGUI() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
@@ -12,6 +14,7 @@ public class NoAvailableAnnunciException extends RuntimeException {
         alert.showAndWait();
     }
 
+    @Override
     public void showMessageCLI() {
         ViewCliUtils.printMsgln("!ERRORE! Impossibile caricare l'\\gli annunco\\i");
     }

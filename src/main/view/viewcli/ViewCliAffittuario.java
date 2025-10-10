@@ -197,10 +197,7 @@ public class ViewCliAffittuario {
         AnnuncioResultBean result;
         try {
             result = annuncioController.searchAnnunci(prenBean);
-        } catch (InputException e){
-            e.showMessageCLI();
-            return;
-        } catch (NoAvailableAnnunciException e){
+        } catch (InputException | NoAvailableAnnunciException e){
             e.showMessageCLI();
             return;
         }

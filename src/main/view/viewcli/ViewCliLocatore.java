@@ -148,11 +148,7 @@ public class ViewCliLocatore {
 
         try {
             annuncioController.creaAnnuncio(annuncioBean);
-        } catch (AnnuncioExistsException e) {
-            e.showMessageCLI();
-            return false;
-        }
-        catch (InputException e) {
+        } catch (AnnuncioExistsException | InputException e) {
             e.showMessageCLI();
             return false;
         }
@@ -172,10 +168,7 @@ public class ViewCliLocatore {
 
             try{
                 result = annuncioController.getAllAnnunci(bean);
-            } catch (UserDoesNotExistException e){
-                e.showMessageCLI();
-                return;
-            } catch (NoAvailableAnnunciException e){
+            } catch (UserDoesNotExistException | NoAvailableAnnunciException e){
                 e.showMessageCLI();
                 return;
             }
@@ -226,9 +219,7 @@ public class ViewCliLocatore {
                 case "2":
                     try {
                         annuncioController.eliminaAnnuncio(annuncioBean);
-                    } catch (UserDoesNotExistException e){
-                        e.showMessageCLI();
-                    } catch (NoAvailableAnnunciException e){
+                    } catch (UserDoesNotExistException | NoAvailableAnnunciException e){
                         e.showMessageCLI();
                     }
                     return;

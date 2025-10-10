@@ -71,10 +71,7 @@ public class CreaAnnuncioViewController {
 
         try {
             annuncioController.creaAnnuncio(newAnnuncio);
-        } catch (AnnuncioExistsException e){
-            e.showMessageGUI();
-            return;
-        } catch (InputException e){
+        } catch (AnnuncioExistsException | InputException e){
             e.showMessageGUI();
             return;
         }
