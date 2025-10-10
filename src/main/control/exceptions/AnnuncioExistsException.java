@@ -5,7 +5,7 @@ import main.view.viewcli.ViewCliUtils;
 
 public class AnnuncioExistsException extends Exception {
 
-    public String titolo;
+    private final String titolo;
 
     public AnnuncioExistsException(String titolo) {
         this.titolo = titolo;
@@ -15,11 +15,11 @@ public class AnnuncioExistsException extends Exception {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
         alert.setHeaderText("Errore di caricamento");
-        alert.setContentText("Annuncio gia esistente");
+        alert.setContentText("L'annuncio " + titolo + " è gia esistente");
         alert.showAndWait();
     }
 
     public void showMessageCLI() {
-        ViewCliUtils.printMsgln("!ERRORE! Annuncio gia esistente");
+        ViewCliUtils.printMsgln("!ERRORE! L'annuncio " + titolo + " è gia esistente");
     }
 }

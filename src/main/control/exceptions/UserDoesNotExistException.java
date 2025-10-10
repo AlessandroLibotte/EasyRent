@@ -5,7 +5,7 @@ import main.view.viewcli.ViewCliUtils;
 
 public class UserDoesNotExistException extends RuntimeException {
 
-    public String email;
+    private final String email;
 
     public UserDoesNotExistException(String email) {
         this.email = email;
