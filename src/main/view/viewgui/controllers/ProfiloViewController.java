@@ -180,10 +180,7 @@ public class ProfiloViewController {
 
             try {
                 userController.editUserInfo(rb);
-            } catch (InputException e) {
-                e.showMessageGUI();
-                return;
-            } catch (UserDoesNotExistException e) {
+            } catch (InputException | UserDoesNotExistException e) {
                 e.showMessageGUI();
                 return;
             }

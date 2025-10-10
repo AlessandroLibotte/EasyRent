@@ -3,8 +3,9 @@ package main.control.exceptions;
 import javafx.scene.control.Alert;
 import main.view.viewcli.ViewCliUtils;
 
-public class InputException extends RuntimeException {
+public class InputException extends EasyRentException {
 
+    @Override
     public void showMessageGUI() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Errore");
@@ -13,6 +14,7 @@ public class InputException extends RuntimeException {
         alert.showAndWait();
     }
 
+    @Override
     public void showMessageCLI() {
         ViewCliUtils.printMsgln("!ERRORE! Uno o piu campi non sono stati compilati correttamente");
     }

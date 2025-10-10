@@ -78,10 +78,7 @@ public class AffittuarioViewController {
         AnnuncioResultBean result;
         try {
             result = annuncioController.searchAnnunci(new PrenotazioneBean(localita, startDate, endDate, numOspiti));
-        } catch (InputException e) {
-            e.showMessageGUI();
-            return;
-        }catch (NoAvailableAnnunciException e){
+        } catch (InputException | NoAvailableAnnunciException e){
             e.showMessageGUI();
             return;
         }
