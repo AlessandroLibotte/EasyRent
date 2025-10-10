@@ -13,13 +13,14 @@ import java.io.IOException;
 
 public class RegisterViewController {
 
-    @FXML
-    private TextField emailField, nomeField, cognomeField, telefonoField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private RadioButton affittuarioRadio, locatoreRadio;
-    private ToggleGroup roleGroup;
+    public TextField emailField;
+    public TextField nomeField;
+    public TextField cognomeField;
+    public TextField telefonoField;
+    public PasswordField passwordField;
+    public RadioButton affittuarioRadio;
+    public RadioButton locatoreRadio;
+    public ToggleGroup roleGroup;
 
     private final LoginController loginController;
     private final ViewControllerUtils viewControllerUtils;

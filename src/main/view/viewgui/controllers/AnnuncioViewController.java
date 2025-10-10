@@ -27,7 +27,7 @@ public class AnnuncioViewController {
     public Label serviziLabel;
     public Label descrizioneLabel;
     @FXML
-    private Button  prenotaButton;
+    public Button  prenotaButton;
 
     private final String email;
     private final Role role;
