@@ -20,14 +20,12 @@ import java.util.Objects;
 
 public class LocatoreViewController {
 
+    @FXML
+    private AnchorPane rootContainer;
+
     private final String email;
-    public AnchorPane rootContainer;
-    AnnuncioController annuncioController;
-    ViewControllerUtils viewControllerUtils;
-    List<String> titles;
-    List<String> indirizzi;
-    List<Integer> voti;
-    List<Double> prezzi;
+    private final AnnuncioController annuncioController;
+    private final ViewControllerUtils viewControllerUtils;
 
     public LocatoreViewController(String email){
 
@@ -59,10 +57,10 @@ public class LocatoreViewController {
             return;
         }
 
-        titles = anns.getTitoliAnnunci();
-        indirizzi = anns.getIndirizziAnnunci();
-        voti = anns.getVotiAnnunci();
-        prezzi = anns.getPrezziAnnunci();
+        List<String> titles = anns.getTitoliAnnunci();
+        List<String> indirizzi = anns.getIndirizziAnnunci();
+        List<Integer> voti = anns.getVotiAnnunci();
+        List<Double> prezzi = anns.getPrezziAnnunci();
 
         for (String title : titles){
             int index = titles.indexOf(title);

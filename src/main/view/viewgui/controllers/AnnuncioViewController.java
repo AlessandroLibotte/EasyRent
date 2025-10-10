@@ -19,13 +19,20 @@ import java.io.IOException;
 
 public class AnnuncioViewController {
 
-    public Label titoloLabel;
-    public Label locatoreLabel;
-    public Label indirizzoLabel;
-    public Label prezzoLabel;
-    public Label stelleLabel;
-    public Label serviziLabel;
-    public Label descrizioneLabel;
+    @FXML
+    private Label titoloLabel;
+    @FXML
+    private Label locatoreLabel;
+    @FXML
+    private Label indirizzoLabel;
+    @FXML
+    private Label prezzoLabel;
+    @FXML
+    private Label stelleLabel;
+    @FXML
+    private Label serviziLabel;
+    @FXML
+    private Label descrizioneLabel;
     @FXML
     public Button  prenotaButton;
 

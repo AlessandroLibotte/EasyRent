@@ -1,6 +1,7 @@
 package main.view.viewgui.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,11 +24,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class AffittuarioViewController {
-
-    public TextField localitaField;
-    public DatePicker dataInizioField;
-    public DatePicker dataFineField;
-    public TextField numeroOspitiField;
+    @FXML
+    private TextField localitaField;
+    @FXML
+    private DatePicker dataInizioField;
+    @FXML
+    private DatePicker dataFineField;
+    @FXML
+    private TextField numeroOspitiField;
+    @FXML
     public TilePane annunciTilePane;
     private final String email;
     private final AnnuncioController  annuncioController;
