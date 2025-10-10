@@ -22,16 +22,24 @@ import java.util.Objects;
 
 public class ProfiloViewController {
 
-    public Label emailLabel;
-    public Label nomeLabel;
-    public Label cognomeLabel;
-    public Label telefonoLabel;
-    public VBox storicoPrenotazioniBox;
     @FXML
-    public Button modificaButton;
-    public TextField nomeField;
-    public TextField cognomeField;
-    public TextField telefonoField;
+    private Label emailLabel;
+    @FXML
+    private Label nomeLabel;
+    @FXML
+    private Label cognomeLabel;
+    @FXML
+    private Label telefonoLabel;
+    @FXML
+    private VBox storicoPrenotazioniBox;
+    @FXML
+    private Button modificaButton;
+    @FXML
+    private TextField nomeField;
+    @FXML
+    private TextField cognomeField;
+    @FXML
+    private TextField telefonoField;
 
     private boolean inModifica = false;
     private final String email;

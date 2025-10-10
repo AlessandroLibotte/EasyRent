@@ -13,10 +13,9 @@ import java.io.IOException;
 public class LoginViewController {
 
     @FXML
-    public TextField emailField;
-
+    private TextField emailField;
     @FXML
-    public PasswordField passwordField;
+    private PasswordField passwordField;
 
     private final LoginController loginController;
     private final ViewControllerUtils viewControllerUtils;

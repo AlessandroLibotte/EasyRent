@@ -13,11 +13,17 @@ import java.io.IOException;
 public class CreaAnnuncioViewController {
 
     @FXML
-    public TextField titoloField, serviziField, indirizzoField, prezzoField;
+    private TextField titoloField;
     @FXML
-    public TextArea descrizioneArea;
+    private TextField serviziField;
     @FXML
-    public Spinner ospitiSpinner;
+    private TextField indirizzoField;
+    @FXML
+    private TextField prezzoField;
+    @FXML
+    private TextArea descrizioneArea;
+    @FXML
+    private Spinner ospitiSpinner;
 
     @FXML
     public void initialize() {
