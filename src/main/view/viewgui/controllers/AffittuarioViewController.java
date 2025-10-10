@@ -62,7 +62,7 @@ public class AffittuarioViewController {
 
     }
 
-    public void handleSearchAnnuncio(ActionEvent event) {
+    public void handleSearchAnnuncio() {
 
         localita = localitaField.getText();
 

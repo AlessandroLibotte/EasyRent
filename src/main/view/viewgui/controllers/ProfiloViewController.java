@@ -151,7 +151,7 @@ public class ProfiloViewController {
 
     }
 
-    public void handleModifica(ActionEvent event) {
+    public void handleModifica() {
 
         if (!inModifica) {
 

@@ -5,13 +5,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import main.persistence.PersistenceProvider;
+import main.persistence.DaoFactory;
 
 public class DriverGUI extends Application {
 
     public static void main(String[] args) {
 
-        PersistenceProvider.setPersistenceProvider("database");
+        DaoFactory.setPersistenceProvider("database");
 
         launch(args);
     }
