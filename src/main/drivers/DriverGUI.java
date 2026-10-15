@@ -11,7 +11,7 @@ public class DriverGUI extends Application {
 
     public static void main(String[] args) {
 
-        DaoFactory.setPersistenceProvider("in memory");
+        DaoFactory.setPersistenceProvider("database");
 
         launch(args);
     }
