@@ -25,7 +25,7 @@ public class AnnuncioBean {
         this.owner = owner;
     }
 
-    public boolean isNotValid(){
+    public boolean isValid(){
         return isOwnerValid() && isTitoloValid() && isIndirizzoValid() && isPriceValid();
     }
 

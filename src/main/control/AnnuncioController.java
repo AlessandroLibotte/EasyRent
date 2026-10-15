@@ -4,10 +4,7 @@ import main.bean.AnnuncioBean;
 import main.bean.AnnuncioResultBean;
 import main.bean.PrenotazioneBean;
 import main.control.exceptions.*;
-import main.model.Annuncio;
-import main.model.Immobile;
-import main.model.Locatore;
-import main.model.Prenotazione;
+import main.model.*;
 import main.persistence.*;
 
 import java.time.LocalDate;
@@ -37,7 +34,7 @@ public class AnnuncioController {
 
     public void creaAnnuncio(AnnuncioBean bean) throws AnnuncioExistsException {
 
-        if(bean.isNotValid()) throw new InputException();
+        if(!bean.isValid()) throw new InputException();
         if(annuncioDao.exists(bean.getTitolo())) throw new AnnuncioExistsException(bean.getTitolo());
 
         Annuncio ann = annuncioDao.create(bean.getTitolo());
@@ -121,7 +118,6 @@ public class AnnuncioController {
         Locatore loc = (Locatore) userDao.load(bean.getOwner());
 
         List<Annuncio> anns = loc.getAnnunci();
-        if (anns == null || anns.isEmpty()) throw new NoAvailableAnnunciException();
 
         List<String> annTitles = new ArrayList<>();
         List<String> annIndirizzi = new ArrayList<>();
@@ -181,7 +177,17 @@ public class AnnuncioController {
         loc.setAnnunci(anns);
         userDao.store(loc);
 
-        for(Prenotazione p: ann.getPrenotazioni()) prenotazioneDao.delete(p.getId());
+        for(Prenotazione p: ann.getPrenotazioni()) {
+            Affittuario aff = (Affittuario) userDao.load(p.getPrenotante());
+
+            List<Prenotazione> prens = aff.getPrenotazioni();
+            prens.remove(p);
+            aff.setPrenotazioni(prens);
+            userDao.store(aff);
+
+            prenotazioneDao.delete(p.getId());
+        }
+
         annuncioDao.delete(bean.getTitolo());
         immobileDao.delete(ann.getImmobile().getIndirizzo());
 
